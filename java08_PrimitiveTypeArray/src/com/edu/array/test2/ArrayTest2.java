@@ -17,10 +17,11 @@ public class ArrayTest2 {
 		
 		// sources 데이터를 copy해서......[2]~[7] copy \ target 처음부터 끝까지....
 		// target 1,2,3,4,5,6 ===> 8, 7, 6, 5, 4, 3
-		// System.arraycopy()
+		// System.arraycopy(원본데이터,시작점,붙여질배열,시작점,끝점)
 		
 		System.arraycopy(sources, 2, targets, 0, targets.length);//copy 진행되는 행
 		
+		//향상된 for 문..
 		for(int i : targets) System.out.print(i+" ");
 				
 	}

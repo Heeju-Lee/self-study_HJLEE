@@ -44,8 +44,6 @@ public class Customer {
 
 	public String getCustomerInfo() {
 		return name+", "+address;
-		
 	}
-	pr
 	
 }//class
