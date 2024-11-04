@@ -1,8 +1,5 @@
 package com.web.spring.entity;
 
-
-import java.time.LocalDate;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
@@ -12,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -27,36 +25,28 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Plan{
+public class Quiz {
+	
 	@Id
-	@Column(name="plan_num")
+	@Column(name="q_num")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long planNum;
+	private Long qNum;
+
+	private String quiz;
 	
-	private int shopping;
+	private String answer;
 	
-	private int food;
+	private String description;
 	
-	private int transport;
+	@Lob
+	private String videoUrl; 
 	
-	private int cvs;
-	
-	private int saving;
-	
-	private int others;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-	private LocalDate date;	
-	
-    /*소비계획-아이 다대일 연관관계*/
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "c_num")
-    Child child;
-	
+	private String category;
+
 	@Override
 	public String toString() {
-		return "plan [planNum=" + planNum + ", shopping=" + shopping + ", food=" + food + ", transport=" + transport
-				+ ", cvs=" + cvs + ", saving=" + saving + ", others=" + others + ", date=" + date + "]";
+		return "Quiz [qNum=" + qNum + ", quiz=" + quiz + ", answer=" + answer + ", description=" + description
+				+ ", videoUrl=" + videoUrl + ", category=" + category + "]";
 	}
 	
 	

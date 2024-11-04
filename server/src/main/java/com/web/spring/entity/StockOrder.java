@@ -1,9 +1,5 @@
+
 package com.web.spring.entity;
-
-
-import java.time.LocalDate;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,37 +23,30 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Plan{
+public class StockOrder {
 	@Id
-	@Column(name="plan_num")
+	@Column(name="s_num")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long planNum;
+	private Long SNum;
 	
-	private int shopping;
+	private String name;
 	
-	private int food;
+	private String code;
 	
-	private int transport;
+	private int price;
 	
-	private int cvs;
+	private int quantity;
 	
-	private int saving;
+	private int amt;
 	
-	private int others;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-	private LocalDate date;	
-	
-    /*소비계획-아이 다대일 연관관계*/
+    /*주식주문내역-아이 다대일 연관관계*/
     @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "c_num")
     Child child;
-	
+
 	@Override
 	public String toString() {
-		return "plan [planNum=" + planNum + ", shopping=" + shopping + ", food=" + food + ", transport=" + transport
-				+ ", cvs=" + cvs + ", saving=" + saving + ", others=" + others + ", date=" + date + "]";
+		return "StockOrder [SNum=" + SNum + ", name=" + name + ", code=" + code + ", price=" + price + ", quantity="
+				+ quantity + ", amt=" + amt + "]";
 	}
-	
-	
 }

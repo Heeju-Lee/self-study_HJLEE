@@ -1,6 +1,5 @@
 package com.web.spring.entity;
 
-
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -27,37 +26,32 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Plan{
+public class Notification {
+
 	@Id
-	@Column(name="plan_num")
+	@Column(name="n_num")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long planNum;
+	private Long Nnum;
 	
-	private int shopping;
+	private String message;
 	
-	private int food;
-	
-	private int transport;
-	
-	private int cvs;
-	
-	private int saving;
-	
-	private int others;
+	private String category;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private LocalDate date;	
-	
-    /*소비계획-아이 다대일 연관관계*/
+
     @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "c_num")
-    Child child;
+	@JoinColumn(name = "p_num")
+	private Parent parent;
+	
+    @ManyToOne(fetch = FetchType.LAZY) 
+	@JoinColumn(name = "c_num")
+	private Child child;
 	
 	@Override
 	public String toString() {
-		return "plan [planNum=" + planNum + ", shopping=" + shopping + ", food=" + food + ", transport=" + transport
-				+ ", cvs=" + cvs + ", saving=" + saving + ", others=" + others + ", date=" + date + "]";
+		return "Notification [Nnum=" + Nnum + ", message=" + message + ", category=" + category + "]";
 	}
-	
+
 	
 }
