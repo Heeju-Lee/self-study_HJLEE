@@ -3,6 +3,7 @@ package com.web.spring.entity;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.web.spring.global.audit.Auditable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +27,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Notification {
+public class Notification extends Auditable{
 
 	@Id
 	@Column(name="n_num")
@@ -36,9 +37,10 @@ public class Notification {
 	private String message;
 	
 	private String category;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-	private LocalDate date;	
+//	
+//	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+//	@Column(name="notification_date")
+//	private LocalDate date;	
 
     @ManyToOne(fetch = FetchType.LAZY) 
 	@JoinColumn(name = "p_num")
@@ -47,10 +49,12 @@ public class Notification {
     @ManyToOne(fetch = FetchType.LAZY) 
 	@JoinColumn(name = "c_num")
 	private Child child;
-	
+
 	@Override
 	public String toString() {
-		return "Notification [Nnum=" + Nnum + ", message=" + message + ", category=" + category + "]";
+		return "Notification [Nnum=" + Nnum + ", message=" + message + ", category=" + category + ", parent=" + parent
+				+ ", child=" + child + ", getCreatedAt()=" + getCreatedAt() + ", getModifiedAt()=" + getModifiedAt()
+				+ "]";
 	}
 
 	

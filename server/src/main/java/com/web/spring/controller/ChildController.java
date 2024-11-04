@@ -15,11 +15,13 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/childs")
+@RequestMapping("/children")
 public class ChildController {
 
 	private final ChildService childService;
 	
+	
+/* 회원가입*/
 	@PostMapping
 	public ResponseEntity<?> singUp(@RequestBody ChildRequestDto childRequestDto){
 		

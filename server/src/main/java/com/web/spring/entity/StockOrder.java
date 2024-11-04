@@ -1,6 +1,8 @@
 
 package com.web.spring.entity;
 
+import com.web.spring.global.audit.Auditable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,7 +25,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class StockOrder {
+public class StockOrder extends Auditable {
 	@Id
 	@Column(name="s_num")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,14 +41,10 @@ public class StockOrder {
 	
 	private int amt;
 	
-    /*주식주문내역-아이 다대일 연관관계*/
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "c_num")
-    Child child;
 
-	@Override
-	public String toString() {
-		return "StockOrder [SNum=" + SNum + ", name=" + name + ", code=" + code + ", price=" + price + ", quantity="
-				+ quantity + ", amt=" + amt + "]";
-	}
+//	@Override
+//	public String toString() {
+//		return "StockOrder [SNum=" + SNum + ", name=" + name + ", code=" + code + ", price=" + price + ", quantity="
+//				+ quantity + ", amt=" + amt + "]";
+//	}
 }

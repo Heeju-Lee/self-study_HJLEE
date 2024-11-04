@@ -1,8 +1,12 @@
 package com.web.spring.entity;
 
 import java.util.List;
+
+import com.web.spring.global.audit.Auditable;
+
 import java.util.ArrayList;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +28,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Child {
+public class Child extends Auditable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,15 +58,21 @@ public class Child {
 	@Column(nullable = true)
 	private int qHistory;		// 경제의 역사
 	
+	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@JoinColumn(name = "c_num", nullable = false, updatable = false) 
+	private List<Plan> plans = new ArrayList<>();
 	
-	/* 아이-부모 다대일 연관관게*/
-	@ManyToOne(fetch = FetchType.LAZY) 
-	@JoinColumn(name ="p_num")
-	private Parent parent;
+	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@JoinColumn(name = "c_num", nullable = false, updatable = false) 
+	private List<Payment> payments = new ArrayList<>();
 	
-//	@OneToMany(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "c_num") 
-//	private List<Plan> plans = new ArrayList<>();
+	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@JoinColumn(name = "c_num", nullable = false, updatable = false) 
+	private List<Wish> wishs = new ArrayList<>();
+	
+	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@JoinColumn(name = "c_num", nullable = false, updatable = false) 
+	private List<StockOrder> stockOrders = new ArrayList<>();
 	
 	@Override
 	public String toString() {

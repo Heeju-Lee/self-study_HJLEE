@@ -1,4 +1,4 @@
-package com.web.spring.dto.plan;
+package com.web.spring.dto.child.plan;
 
 import java.time.LocalDate;
 
@@ -22,7 +22,8 @@ public class PlanResponseDto {
 	private int food;
 	private int others;
 	private int saving;
-	private LocalDate date;
+    private LocalDate createdAt;       
+    private LocalDate modifiedAt;       
 	
 	public PlanResponseDto(Plan plan) {
 	    this.plan_num = plan.getPlanNum();
@@ -32,7 +33,7 @@ public class PlanResponseDto {
 	    this.food = plan.getFood();
 	    this.others = plan.getOthers();
 	    this.saving = plan.getSaving();
-	    this.date = plan.getDate();
+	    //this.Local
 	}
 	
 }

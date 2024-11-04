@@ -3,6 +3,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.web.spring.global.audit.Auditable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,29 +27,30 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Order {
+public class PointOrder extends Auditable{
 	
 	@Id
 	@Column(name = "o_num")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderNum;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-	private Date date;
+//	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+//	@Column(name="order_date")
+//	private Date date;
 	private int amount;
 	private String payType;
 	
-	
-    /*주문-부모 다대일 연관관계*/
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="p_num")
-	Parent parent;
-	
 	@Override
 	public String toString() {
-		return "Order [orderNum=" + orderNum + ", date=" + date + ", amount=" + amount + ", payType=" + payType + "]";
+		return "PointOrder [orderNum=" + orderNum + ", amount=" + amount + ", payType=" + payType + ", getCreatedAt()="
+				+ getCreatedAt() + ", getModifiedAt()=" + getModifiedAt() + "]";
 	}
 	
+//	@Override
+//	public String toString() {
+//		return "Order [orderNum=" + orderNum + ", date=" + date + ", amount=" + amount + ", payType=" + payType + "]";
+//	}
+//	
 	
 	
 

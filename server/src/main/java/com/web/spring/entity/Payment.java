@@ -1,6 +1,10 @@
 package com.web.spring.entity;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.web.spring.global.audit.Auditable;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -24,14 +28,16 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Payment {
+public class Payment extends Auditable{
 
     @Id
     @Column(name = "payment_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentNum;
-
-    private String date;
+//
+//	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+//	@Column(name="payment_date")
+//    private String date;
 
     @Column(name = "card_num")
     private String cardNum;
@@ -43,17 +49,12 @@ public class Payment {
     private int paymentAmt;
 
     private String category;
-    
-    /*결제 내역-아이 다대일 연관관계*/
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "c_num")
-    Child child;
 
 	@Override
 	public String toString() {
-		return "Payment [paymentNum=" + paymentNum + ", date=" + date + ", cardNum=" + cardNum + ", storeName="
-				+ storeName + ", paymentAmt=" + paymentAmt + ", category=" + category + "]";
-	}
-    
+		return "Payment [paymentNum=" + paymentNum + ", cardNum=" + cardNum + ", storeName=" + storeName
+				+ ", paymentAmt=" + paymentAmt + ", category=" + category + ", getCreatedAt()=" + getCreatedAt()
+				+ ", getModifiedAt()=" + getModifiedAt() + "]";
+	}    
     
 }

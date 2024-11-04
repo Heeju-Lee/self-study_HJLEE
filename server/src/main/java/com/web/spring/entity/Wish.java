@@ -1,6 +1,9 @@
 package com.web.spring.entity;
 
 import java.util.List;
+
+import com.web.spring.global.audit.Auditable;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -24,7 +27,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Wish {
+public class Wish extends Auditable{
 
     @Id
     @Column(name = "w_num")
@@ -37,17 +40,20 @@ public class Wish {
 
     @Column(name="saving_amt")
     private String savingAmt;
-    
-    /*위시-아이 다대일 연관관계*/
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "c_num")
-    Child child;
 
 	@Override
 	public String toString() {
 		return "Wish [wNum=" + wNum + ", img=" + img + ", name=" + name + ", price=" + price + ", savingAmt="
-				+ savingAmt + "]";
+				+ savingAmt + ", getCreatedAt()=" + getCreatedAt() + ", getModifiedAt()=" + getModifiedAt() + "]";
 	}
     
+    
+    
+//	@Override
+//	public String toString() {
+//		return "Wish [wNum=" + wNum + ", img=" + img + ", name=" + name + ", price=" + price + ", savingAmt="
+//				+ savingAmt + "]";
+//	}
+//    
     
 }

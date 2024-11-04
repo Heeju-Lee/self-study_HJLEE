@@ -4,6 +4,7 @@ package com.web.spring.entity;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.web.spring.global.audit.Auditable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +28,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Plan{
+public class Plan extends Auditable{
 	@Id
 	@Column(name="plan_num")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,20 +45,25 @@ public class Plan{
 	private int saving;
 	
 	private int others;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-	private LocalDate date;	
-	
-    /*소비계획-아이 다대일 연관관계*/
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "c_num")
-    Child child;
-	
+//	
+//	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+//	private LocalDate date;	
+//	
+
 	@Override
 	public String toString() {
-		return "plan [planNum=" + planNum + ", shopping=" + shopping + ", food=" + food + ", transport=" + transport
-				+ ", cvs=" + cvs + ", saving=" + saving + ", others=" + others + ", date=" + date + "]";
+		return "Plan [planNum=" + planNum + ", shopping=" + shopping + ", food=" + food + ", transport=" + transport
+				+ ", cvs=" + cvs + ", saving=" + saving + ", others=" + others + ", getCreatedAt()=" + getCreatedAt()
+				+ ", getModifiedAt()=" + getModifiedAt() + "]";
 	}
+	
+	
+	
+//	@Override
+//	public String toString() {
+//		return "plan [planNum=" + planNum + ", shopping=" + shopping + ", food=" + food + ", transport=" + transport
+//				+ ", cvs=" + cvs + ", saving=" + saving + ", others=" + others + ", date=" + date + "]";
+//	}
 	
 	
 }

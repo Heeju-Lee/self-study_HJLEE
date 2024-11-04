@@ -3,7 +3,7 @@ package com.web.spring.dto.child;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.web.spring.dto.plan.PlanRequestDto;
+import com.web.spring.dto.child.plan.PlanRequestDto;
 import com.web.spring.entity.Child;
 
 import jakarta.validation.constraints.NotNull;
