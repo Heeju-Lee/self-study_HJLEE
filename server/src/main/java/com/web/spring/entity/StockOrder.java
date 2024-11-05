@@ -27,9 +27,9 @@ import lombok.Setter;
 @Builder
 public class StockOrder extends Auditable {
 	@Id
-	@Column(name="s_num")
+	@Column(name="stock_num")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long SNum;
+	private Long stockNum;
 	
 	private String name;
 	

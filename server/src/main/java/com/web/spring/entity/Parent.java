@@ -29,10 +29,12 @@ import lombok.Setter;
 public class Parent extends Auditable{
 
     @Id
-    @Column(name = "p_num")
+    @Column(name = "parent_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long pNum;
-
+    private Long parentNum;
+    
+    private String id;
+    private String pwd;
     private String name;
     private String birthdate;
     private String phone;
@@ -40,17 +42,17 @@ public class Parent extends Auditable{
     private String address;
     
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST})
-	@JoinColumn(name = "p_num", nullable = false, updatable = false) 
+	@JoinColumn(name = "parent_num", nullable = false, updatable = false) 
 	private List<Child> children = new ArrayList<>();
 	
 	
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn(name = "p_num", nullable = false, updatable = false) 
+	@JoinColumn(name = "parent_num", nullable = false, updatable = false) 
 	private List<PointOrder> orders = new ArrayList<>();
     
 	@Override
 	public String toString() {
-		return "Parent [pNum=" + pNum + ", name=" + name + ", birthdate=" + birthdate + ", phone=" + phone + ", email="
+		return "Parent [parentNum=" + parentNum + ", name=" + name + ", birthdate=" + birthdate + ", phone=" + phone + ", email="
 				+ email + ", address=" + address + "]";
 	}
    

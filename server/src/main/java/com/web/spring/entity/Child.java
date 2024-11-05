@@ -32,7 +32,7 @@ public class Child extends Auditable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "c_num")
+	@Column(name = "child_num")
 	private Long childNum;
 	
 	private String id;
@@ -59,19 +59,19 @@ public class Child extends Auditable{
 	private int qHistory;		// 경제의 역사
 	
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn(name = "c_num", nullable = false, updatable = false) 
+	@JoinColumn(name = "child_num", nullable = false, updatable = false) 
 	private List<Plan> plans = new ArrayList<>();
 	
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn(name = "c_num", nullable = false, updatable = false) 
+	@JoinColumn(name = "child_num", nullable = false, updatable = false) 
 	private List<Payment> payments = new ArrayList<>();
 	
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn(name = "c_num", nullable = false, updatable = false) 
+	@JoinColumn(name = "child_num", nullable = false, updatable = false) 
 	private List<Wish> wishs = new ArrayList<>();
 	
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn(name = "c_num", nullable = false, updatable = false) 
+	@JoinColumn(name = "child_num", nullable = false, updatable = false) 
 	private List<StockOrder> stockOrders = new ArrayList<>();
 	
 	@Override

@@ -30,9 +30,9 @@ import lombok.Setter;
 public class Notification extends Auditable{
 
 	@Id
-	@Column(name="n_num")
+	@Column(name="noti_num")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long Nnum;
+	private Long notiNum;
 	
 	private String message;
 	
@@ -43,16 +43,16 @@ public class Notification extends Auditable{
 //	private LocalDate date;	
 
     @ManyToOne(fetch = FetchType.LAZY) 
-	@JoinColumn(name = "p_num")
+	@JoinColumn(name = "parent_num")
 	private Parent parent;
 	
     @ManyToOne(fetch = FetchType.LAZY) 
-	@JoinColumn(name = "c_num")
+	@JoinColumn(name = "child_num")
 	private Child child;
 
 	@Override
 	public String toString() {
-		return "Notification [Nnum=" + Nnum + ", message=" + message + ", category=" + category + ", parent=" + parent
+		return "Notification [Nnum=" + notiNum + ", message=" + message + ", category=" + category + ", parent=" + parent
 				+ ", child=" + child + ", getCreatedAt()=" + getCreatedAt() + ", getModifiedAt()=" + getModifiedAt()
 				+ "]";
 	}

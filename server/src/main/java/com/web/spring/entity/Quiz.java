@@ -28,9 +28,9 @@ import lombok.Setter;
 public class Quiz {
 	
 	@Id
-	@Column(name="q_num")
+	@Column(name="quiz_num")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long qNum;
+	private Long quizNum;
 
 	private String quiz;
 	
@@ -45,7 +45,7 @@ public class Quiz {
 
 	@Override
 	public String toString() {
-		return "Quiz [qNum=" + qNum + ", quiz=" + quiz + ", answer=" + answer + ", description=" + description
+		return "Quiz [quizNum=" + quizNum + ", quiz=" + quiz + ", answer=" + answer + ", description=" + description
 				+ ", videoUrl=" + videoUrl + ", category=" + category + "]";
 	}
 	
