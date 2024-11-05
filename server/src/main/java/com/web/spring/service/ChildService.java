@@ -20,6 +20,7 @@ import com.web.spring.entity.Parent;
 import com.web.spring.entity.Payment;
 import com.web.spring.repository.ParentRepository;
 
+import org.springframework.scheduling.support.ScheduledTaskObservationDocumentation.LowCardinalityKeyNames;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -177,12 +178,12 @@ public class ChildService {
 
 
 
-	// 이번달 소비내역
+	// 이번달 소비내역 리스트
 	public ArrayList<Payment> showMonthList(String childNum, String year, String month) {
 
 		Child child = findChild(Long.valueOf(childNum));
 
-		ArrayList<Payment> payments = (ArrayList<Payment>) child.getPayments();
+		List<Payment> payments = child.getPayments();
 		ArrayList<Payment> monthPayment = new ArrayList<>();
 
 		payments.forEach( payment -> {
@@ -195,18 +196,39 @@ public class ChildService {
 
 		return monthPayment;
 	}
-
+	
+	//이번달 소비내역 차트
+	@Transactional(readOnly = true)
 	public HashMap<String ,Integer> showMonthChart(String childNum, String year, String month){
 		ArrayList<Payment> payments= showMonthList(childNum,  year,  month);
 
-		payments.forEach( payment -> {
+	       // 카테고리별 paymentAmt의 총합을 구하여 HashMap에 저장
+		HashMap<String, Integer> categoryTotals = (HashMap<String, Integer>) payments.stream()
+            .collect(Collectors.groupingBy(
+                Payment::getCategory,                      // category 기준으로 그룹화
+                Collectors.summingInt(Payment::getPaymentAmt) // paymentAmt의 합계 계산
+            ));
 
-		});
-
-		return null;
+		return categoryTotals;
 	}
-
-
+	
+	//이번달 계획 차트
+	@Transactional(readOnly = true)
+	public HashMap<String, Integer> monthPlan(Long childNum, int year, int month){
+		HashMap<String, Integer> response = new HashMap<>();
+		Plan monthPlan = childRepository.findPlan(childNum,year, month);
+		
+		response.put("shopping", monthPlan.getShopping());
+		response.put("food", monthPlan.getFood());
+		response.put("transport", monthPlan.getTransport());
+		response.put("cvs", monthPlan.getCvs());
+		response.put("saving", monthPlan.getSaving());
+		response.put("others", monthPlan.getOthers());
+		
+		return response;
+	}
+	
+	//퀴즈 결과 확인하기
 	@Transactional(readOnly = true)
 	public  HashMap<String, Integer> showQuizResult(Long child){
 		HashMap<String, Integer> result = new HashMap<>();
@@ -227,7 +249,7 @@ public class ChildService {
 		return result;
 	}
 	
-	
+	//퀴즈결과 Top3만 보기
 	public HashMap<String,Integer> showQuizResultTop3(Long child){
 		HashMap<String, Integer> result = new HashMap<>();
 		
@@ -255,7 +277,7 @@ public class ChildService {
 			        LinkedHashMap::new // 순서를 유지하기 위해 LinkedHashMap 사용
 			    ));
 		
-		System.out.println(sortedResult);
+		
 		return sortedResult;
 		
 	}

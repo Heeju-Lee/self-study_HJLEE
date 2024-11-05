@@ -121,15 +121,34 @@ public class ChildController {
 
 	//이번달 소비리스트
 	@GetMapping("/payments/{childNum}")
-	public ResponseEntity<?> showMonthChart(	@PathVariable String childNum,
+	public ResponseEntity<?> showMonthList(	@PathVariable String childNum,
 			 									 @RequestParam  String year,
 												  @RequestParam  String month) throws Exception{
 
-		HashMap<String, Integer> response = childService.showMonthChart(childNum, year, month);
+		ArrayList<Payment> response = childService.showMonthList(childNum, year, month);
 		System.out.println(response);
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
+	/*이달의 소비내역 도넛차트*/
+	@PostMapping("/payments/chart")
+	public ResponseEntity<?> showMonthChart(@RequestBody Map<String, String> request){
+		
+		
+		HashMap<String, Integer> response = childService.showMonthChart(request.get("childNum"), request.get("year"), request.get("month"));
+		
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+	/*이달의 계획 내역 도넛차트*/
+	@PostMapping("/plan/chart")
+	public ResponseEntity<?> monthPlan(@RequestBody Map<String, String> request) {
+		
+		Long childNum = Long.valueOf(request.get("childNum"));
+		HashMap<String, Integer> response = childService.monthPlan(childNum,Integer.valueOf(request.get("year")), Integer.valueOf(request.get("month")));
+		
+				return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+	
 	
 	/* 포인트 조회 */
 	@GetMapping("/point/{childNum}")
@@ -146,5 +165,7 @@ public class ChildController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 
 	}
+	
+	
 	
 }
