@@ -55,6 +55,4 @@ public class Parent extends Auditable{
 	}
 
 
-   
-
 }

@@ -47,5 +47,4 @@ public class Wish extends Auditable{
 				+ savingAmt + ", getCreatedAt()=" + getCreatedAt() + ", getModifiedAt()=" + getModifiedAt() + "]";
 	}
 
-    
 }
