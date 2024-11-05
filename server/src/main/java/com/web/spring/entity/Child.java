@@ -75,6 +75,7 @@ public class Child extends Auditable{
 	private List<Payment> payments = new ArrayList<>();
 	
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+
 	@JoinColumn(name = "child_num")
 	private List<Wish> wishes = new ArrayList<>();
 
