@@ -60,28 +60,47 @@ public class Child extends Auditable{
 	
 	@Column(nullable = true)
 	private int qHistory;		// 경제의 역사
-	
+
+	//부모-아이 연관관계 매핑
+	@ManyToOne(fetch =FetchType.EAGER)
+	@JoinColumn(name ="parent_num")
+	Parent parent;
+
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn(name = "child_num", nullable = false, updatable = false) 
+	@JoinColumn(name = "child_num")
 	private List<Plan> plans = new ArrayList<>();
 	
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn(name = "child_num", nullable = false, updatable = false) 
+	@JoinColumn(name = "child_num")
 	private List<Payment> payments = new ArrayList<>();
 	
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn(name = "child_num", nullable = false, updatable = false) 
-	private List<Wish> wishs = new ArrayList<>();
-	
+
+	@JoinColumn(name = "child_num")
+	private List<Wish> wishes = new ArrayList<>();
+
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn(name = "child_num", nullable = false, updatable = false) 
+	@JoinColumn(name = "child_num")
 	private List<StockOrder> stockOrders = new ArrayList<>();
-	
+
 	@Override
 	public String toString() {
-		return "Child [childNum=" + childNum + ", id=" + id + ", pwd=" + pwd + ", name=" + name + ", birthdate=" + birthdate
-				+ ", phone=" + phone + ", email=" + email + ", point=" + point + ", qExchangeRate=" + qExchangeRate
-				+ ", qWoard=" + qWord + ", qGoverment=" + qGoverment + ", qHistory=" + qHistory + "]";
+
+		return "Child{" +
+				"qHistory=" + qHistory +
+				", qGoverment=" + qGoverment +
+				", qInvestment=" + qInvestment +
+				", qWord=" + qWord +
+				", qExchangeRate=" + qExchangeRate +
+				", point=" + point +
+				", email='" + email + '\'' +
+				", phone='" + phone + '\'' +
+				", birthdate='" + birthdate + '\'' +
+				", name='" + name + '\'' +
+				", pwd='" + pwd + '\'' +
+				", id='" + id + '\'' +
+				", childNum=" + childNum +
+				'}';
+
 	}
-	
 }

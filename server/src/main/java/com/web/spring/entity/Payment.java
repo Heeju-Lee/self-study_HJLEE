@@ -36,10 +36,6 @@ public class Payment extends Auditable{
     @Column(name = "payment_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentNum;
-//
-//	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-//	@Column(name="payment_date")
-//    private String date;
 
     @Column(name = "card_num")
     private String cardNum;
