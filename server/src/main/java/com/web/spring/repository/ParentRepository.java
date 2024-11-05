@@ -1,4 +1,9 @@
 package com.web.spring.repository;
 
-public interface ParentRepository {
+
+import com.web.spring.entity.Parent;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ParentRepository  extends JpaRepository<Parent,Long> {
+
 }
