@@ -17,6 +17,5 @@ public interface ChildMapper {
 	@Mapping(source = "storeName", target = "storeName")
 	@Mapping(source = "paymentAmt", target = "paymentAmt")
 	@Mapping(source = "category", target = "category")
-	@Mapping(source = "createdAt", target = "createdAt")
 	Payment PayRequestDtoToPayment(PayRequestDto payRequestDto);
 }

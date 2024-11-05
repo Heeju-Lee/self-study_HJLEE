@@ -1,11 +1,13 @@
 package com.web.spring.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,37 +50,7 @@ public class ChildService {
 		
 	}
 
-	@Transactional(readOnly = true)
-	public HashMap<String,Integer> monthPayment(Long child,int year,int month){
-		HashMap<String, Integer> monthlyPay = new HashMap<>(); 
-		int childNum = child.intValue();
-		List<Payment> monthPay = childRepository.findMonthPayment(childNum, year, month);
-		
-		for(Payment p : monthPay) {
-			monthlyPay.put(p.getCategory(), p.getPaymentAmt());
-		}
-		return monthlyPay;
-		
-	}
-	
-	@Transactional(readOnly = true)
-	public HashMap<String, Integer> monthPlan(Long child, int year,int month){
-		HashMap<String, Integer> monthlyPlan = new HashMap<>(); 
-		int childNum = child.intValue();
-		List<Plan> monthPlan = childRepository.findMonthPlan(childNum, year, month);
-		
-		for(Plan p : monthPlan) {
-			monthlyPlan.put("shopping", p.getShopping());
-			monthlyPlan.put("food", p.getFood());
-			monthlyPlan.put("transport", p.getTransport());
-			monthlyPlan.put("cvs", p.getCvs());
-			monthlyPlan.put("saving", p.getSaving());
-			monthlyPlan.put("others", p.getOthers());
-		}
-		
-		return monthlyPlan;
-	}
-	
+
 	@Transactional(readOnly = true)
 	public  HashMap<String, Integer> showQuizResult(Long child){
 		HashMap<String, Integer> result = new HashMap<>();
@@ -100,8 +72,8 @@ public class ChildService {
 	}
 	
 	
-	public LinkedHashMap<String,Integer> showQuizResultTop3(Long child){
-		LinkedHashMap<String, Integer> result = new LinkedHashMap<>();
+	public HashMap<String,Integer> showQuizResultTop3(Long child){
+		HashMap<String, Integer> result = new HashMap<>();
 		
 		Child qr= childRepository.findById(child).get();
 		
@@ -116,11 +88,19 @@ public class ChildService {
 		//경제의 역사 결과 넣기
 		result.put("qHistory", qr.getQHistory());
 		
-		result.entrySet().stream()
-				.sorted(Map.Entry.comparingByValue())
-				.limit(3);
+		HashMap<String, Integer> sortedResult = result.entrySet()
+			    .stream()
+			    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) // 값 내림차순 정렬
+			    .limit(3) // 상위 3개만 선택
+			    .collect(Collectors.toMap(
+			        Map.Entry::getKey,
+			        Map.Entry::getValue,
+			        (e1, e2) -> e1, // 중복 키가 발생할 경우 해결 방법 (여기서는 첫 번째 값 유지)
+			        LinkedHashMap::new // 순서를 유지하기 위해 LinkedHashMap 사용
+			    ));
 		
-		return result;
+		System.out.println(sortedResult);
+		return sortedResult;
 		
 	}
 	

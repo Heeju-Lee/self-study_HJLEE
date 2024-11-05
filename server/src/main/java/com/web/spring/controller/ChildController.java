@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -43,21 +45,31 @@ public class ChildController {
 				 			 .body(response);
 	}
 	
-	/*그날의 소비내역 받기 */
-	 @PostMapping("/payment/{date}")
-	public ResponseEntity<?> monthPayment(@RequestBody PayRequestDto payRequestDto ,@PathVariable String date) throws ParseException{
-		LocalDate formDate = LocalDate.parse(date);
+	/*아이의 퀴즈 결과 보여주기	*/
+	@PostMapping("/quiz")
+	public ResponseEntity<?> showQuizResult(@RequestBody Map<String, String> request){
+		
+		 Long childNum = Long.valueOf(request.get("childNum"));
+		
+		HashMap<String, Integer> response = childService.showQuizResult(childNum);
 		
 		
-		
-		  int month = formDate.getMonthValue();
-		    int year = formDate.getYear();
-		
-		HashMap<String,Integer> payments = childService.monthPayment(payRequestDto.getChildNum(), year, month);
-		
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(payments);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(response);
 	}
 	
+	
+	/*아이의 퀴즈 결과를 */
+	@PostMapping("quiz/top3")
+	public ResponseEntity<?> showQuizResultTop3(@RequestBody Map<String, String> request){
+		
+		Long childNum = Long.valueOf(request.get("childNum"));
+		
+		HashMap<String, Integer> response = childService.showQuizResultTop3(childNum);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(response);
+		
+	}
 	
 }
