@@ -26,12 +26,11 @@ public class WishRequestDto {
 	private String name;
 
 	@NotNull
-	private String price;
+	private int price;
 	
 	public Wish toWish(WishRequestDto wishRequestDto) {
 		
 		return Wish.builder()
-					//.child(Child.builder().childNum(childNum).build())
 					.img(wishRequestDto.getImg())
 					.name(wishRequestDto.getName())
 					.price(wishRequestDto.getPrice())
