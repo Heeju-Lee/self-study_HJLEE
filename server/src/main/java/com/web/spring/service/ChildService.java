@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import com.web.spring.entity.Parent;
 import com.web.spring.entity.Payment;
@@ -17,6 +18,7 @@ import com.web.spring.dto.child.plan.PlanRequestDto;
 import com.web.spring.dto.child.plan.PlanResponseDto;
 import com.web.spring.entity.Child;
 import com.web.spring.entity.Plan;
+import com.web.spring.exception.NotEnoughPointsException;
 import com.web.spring.repository.ChildRepository;
 import com.web.spring.repository.PlanRepository;
 
@@ -123,6 +125,39 @@ public class ChildService {
 		
 		return new PlanResponseDto(plan);
 	}
+	
+
+	// 포인트 조회
+	@Transactional
+	public int showPoint(Long childNum) {
+		return childRepository.showPoint(childNum)
+				.orElseThrow(() -> new NotEnoughPointsException("포인트 값이 존재하지 않습니다."));
+	}
+	
+	// 포인트 업데이트
+	@Transactional
+	public int updatePoint(Long childNum, int point) {
+		// 기존 포인트 잔액 조회
+		Optional<Integer> curPoint = childRepository.showPoint(childNum);
+	    // 기존 포인트 존재유무 체크
+		if (!curPoint.isPresent()) {
+			throw new NotEnoughPointsException("포인트가 존재하지 않습니다.");
+		}
+		
+		int updatedPoint = curPoint.get() + point;
+		
+		// 차감후 포인트 음수인 경우
+		if(updatedPoint < 0) {
+			throw new NotEnoughPointsException("포인트가 부족합니다.");
+		}
+		
+		// 포인트 업데이트
+		childRepository.updatePoint(curPoint.get() + point, childNum);
+		
+		// 변경된 포인트 반환 
+		return updatedPoint;			
+	}
+
 
 
 	// 이번달 소비내역
