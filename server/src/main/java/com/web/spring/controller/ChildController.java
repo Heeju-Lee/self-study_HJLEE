@@ -1,7 +1,9 @@
 package com.web.spring.controller;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 
+import com.web.spring.entity.Payment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,14 +63,26 @@ public class ChildController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
-	
 	@PutMapping("/plans/{planNum}")
-	public ResponseEntity<?>updatePlan (@PathVariable String planNum, 
+	public ResponseEntity<?>updatePlan (@PathVariable String planNum,
 										@RequestBody PlanRequestDto planRequestDto) throws Exception{
 		
 		PlanResponseDto plan = childService.updatePlan(Long.parseLong(planNum), planRequestDto);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(plan);	
+	}
+
+
+	//이번달 소비리스트
+	@GetMapping("/payments/{childNum}")
+	public ResponseEntity<?> showMonthChart(	@PathVariable String childNum,
+			 									 @RequestParam  String year,
+												  @RequestParam  String month) throws Exception{
+
+		HashMap<String, Integer> response = childService.showMonthChart(childNum, year, month);
+		System.out.println(response);
+
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	

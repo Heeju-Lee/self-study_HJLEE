@@ -1,9 +1,12 @@
 package com.web.spring.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 import com.web.spring.entity.Parent;
+import com.web.spring.entity.Payment;
 import com.web.spring.repository.ParentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,6 +83,10 @@ public class ChildService {
 		
 		planRepository.save(plan);
 		child.getPlans().add(plan);
+
+		//목업 데이터 저장
+		ArrayList<Payment> payments = childRepository.showMonthPayments(child.getChildNum());
+		child.setPayments(payments);
 		
 		return new PlanResponseDto(plan);
 	}
@@ -117,5 +124,35 @@ public class ChildService {
 		return new PlanResponseDto(plan);
 	}
 
-	
+
+	// 이번달 소비내역
+	public ArrayList<Payment> showMonthList(String childNum, String year, String month) {
+
+		Child child = findChild(Long.valueOf(childNum));
+
+		ArrayList<Payment> payments = (ArrayList<Payment>) child.getPayments();
+		ArrayList<Payment> monthPayment = new ArrayList<>();
+
+		payments.forEach( payment -> {
+
+			LocalDate date = payment.getCreatedAt();
+			if( date.getMonthValue() == Integer.parseInt(month) && date.getYear() == Integer.parseInt(year)){
+				monthPayment.add(payment);
+			}
+		});
+
+		return monthPayment;
+	}
+
+	public HashMap<String ,Integer> showMonthChart(String childNum, String year, String month){
+		ArrayList<Payment> payments= showMonthList(childNum,  year,  month);
+
+		payments.forEach( payment -> {
+
+		});
+
+		return null;
+	}
+
+
 }
