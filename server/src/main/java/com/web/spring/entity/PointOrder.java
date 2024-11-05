@@ -30,7 +30,7 @@ import lombok.Setter;
 public class PointOrder extends Auditable{
 	
 	@Id
-	@Column(name = "o_num")
+	@Column(name = "order_num")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderNum;
 	

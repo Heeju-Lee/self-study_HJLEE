@@ -30,9 +30,9 @@ import lombok.Setter;
 public class Wish extends Auditable{
 
     @Id
-    @Column(name = "w_num")
+    @Column(name = "wish_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long wNum;
+    private Long wishNum;
 
     private String img;
     private String name;
@@ -43,17 +43,9 @@ public class Wish extends Auditable{
 
 	@Override
 	public String toString() {
-		return "Wish [wNum=" + wNum + ", img=" + img + ", name=" + name + ", price=" + price + ", savingAmt="
+		return "Wish [wNum=" + wishNum + ", img=" + img + ", name=" + name + ", price=" + price + ", savingAmt="
 				+ savingAmt + ", getCreatedAt()=" + getCreatedAt() + ", getModifiedAt()=" + getModifiedAt() + "]";
 	}
-    
-    
-    
-//	@Override
-//	public String toString() {
-//		return "Wish [wNum=" + wNum + ", img=" + img + ", name=" + name + ", price=" + price + ", savingAmt="
-//				+ savingAmt + "]";
-//	}
-//    
+
     
 }
