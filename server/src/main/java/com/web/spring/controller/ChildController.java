@@ -19,6 +19,7 @@ import com.web.spring.dto.child.ChildRequestDto;
 import com.web.spring.dto.child.ChlidResponseDto;
 import com.web.spring.dto.child.plan.PlanRequestDto;
 import com.web.spring.dto.child.plan.PlanResponseDto;
+import com.web.spring.dto.child.point.PointRequestDto;
 import com.web.spring.service.ChildService;
 
 import lombok.RequiredArgsConstructor;
@@ -85,5 +86,19 @@ public class ChildController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
+	/* 포인트 조회 */
+	@GetMapping("/point/{childNum}")
+	public ResponseEntity<?> showPoint(@PathVariable Long childNum){
+		int response = childService.showPoint(childNum);
+		return ResponseEntity.status(HttpStatus.OK)
+							.body(response);
+	}
+	
+	/* 포인트 업데이트 */
+	@PutMapping("/point")
+	public ResponseEntity<?> updatePoint(@RequestBody PointRequestDto request){
+		int response = childService.updatePoint(request.getChildNum(),request.getPoint());
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
 	
 }
