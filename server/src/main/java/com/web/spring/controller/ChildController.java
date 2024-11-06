@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -15,12 +16,17 @@ import java.time.LocalDate;
 import java.util.HashMap;
 
 import com.web.spring.entity.Payment;
+import com.web.spring.entity.Wish;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +36,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.web.spring.dto.child.ChildRequestDto;
 import com.web.spring.dto.child.ChlidResponseDto;
-
+import com.web.spring.dto.child.wish.WishRequestDto;
+import com.web.spring.dto.child.wish.WishResponseDto;
 import com.web.spring.dto.child.payment.PayRequestDto;
 
 import com.web.spring.dto.child.plan.PlanRequestDto;
@@ -38,15 +45,17 @@ import com.web.spring.dto.child.plan.PlanResponseDto;
 import com.web.spring.dto.child.point.PointRequestDto;
 
 import com.web.spring.service.ChildService;
+import com.web.spring.service.WishService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/children")
+//@RequestMapping("/api/children")
 public class ChildController {
 
 	private final ChildService childService;
+	private final WishService wishService;
 	
 	
 /* Child : 회원가입 */
@@ -57,7 +66,6 @@ public class ChildController {
 		return ResponseEntity.status(HttpStatus.CREATED)
 				 			 .body(response);
 	}
-	
 
 	/*아이의 퀴즈 결과 보여주기	*/
 	@PostMapping("/quiz")
@@ -164,6 +172,66 @@ public class ChildController {
 		int response = childService.updatePoint(request.getChildNum(),request.getPoint());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 
+	}
+	
+	/* WISH */
+	//위시 등록하기
+	@PostMapping("/wishes")
+	public ResponseEntity<?> createWish(@RequestBody WishRequestDto wishRequestDto){
+		
+		childService.createWish(wishRequestDto);
+		
+		return ResponseEntity.status(HttpStatus.CREATED)
+				 			 .body("info :: createWish Success");
+	}	
+	
+	//위시 전체리스트 조회(Active)
+	@GetMapping("/wishes/active/{childNum}")
+	public ResponseEntity<?> showActiveWishList(@PathVariable String childNum){
+		
+		List<Wish> wishList = childService.showActiveWishList(childNum);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				 			 .body(wishList);
+	}
+	
+	//위시 전체리스트 조회(Finished)
+	@GetMapping("/wishes/finished/{childNum}")
+	public ResponseEntity<?> showFinishedWishList(@PathVariable String childNum){
+		
+		List<Wish> wishList = childService.showFinishedWishList(childNum);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				 			 .body(wishList);
+	}
+	
+	//위시 상세보기
+	@GetMapping("/wishes/{wishNum}")
+	public ResponseEntity<?> showWishDetail(@PathVariable String wishNum){
+		WishResponseDto response = childService.showWishDetail(wishNum);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+	 			 .body(response);
+	}	
+	
+	//위시 돈모으기 
+	@PutMapping("/wishes")
+	public ResponseEntity<?> savingWish(@RequestParam String wishNum, @RequestParam String savingAmt){
+		
+		childService.savingWish(wishNum, savingAmt);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+				 			 .body("info :: savingWish Success");
+	}
+	
+	
+	//위시 삭제하기
+	@DeleteMapping("/wishes/{wishNum}")
+	public ResponseEntity<?> deleteWish(@PathVariable String wishNum){
+		childService.deleteWish(wishNum);
+		
+		return ResponseEntity.status(HttpStatus.OK)
+	 			 .body("info :: deleteWish Success");
 	}
 	
 	
