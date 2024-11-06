@@ -2,11 +2,20 @@ package com.web.spring.entity;
 
 import com.web.spring.global.audit.Auditable;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,6 +46,8 @@ public class Payment extends Auditable{
 
     private String category;
 
+    
+	
 	@Override
 	public String toString() {
 		return "Payment [paymentNum=" + paymentNum + ", cardNum=" + cardNum + ", storeName=" + storeName
