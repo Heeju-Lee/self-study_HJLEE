@@ -216,7 +216,9 @@ public class ChildService {
 	@Transactional(readOnly = true)
 	public HashMap<String, Integer> monthPlan(Long childNum, int year, int month){
 		HashMap<String, Integer> response = new HashMap<>();
-		Plan monthPlan = childRepository.findPlan(childNum,year, month);
+		Child child = findChild(childNum);
+		Plan monthPlan = child.getPlans().get(Long.valueOf(child.getChildNum()).intValue());
+		
 		
 		response.put("shopping", monthPlan.getShopping());
 		response.put("food", monthPlan.getFood());
