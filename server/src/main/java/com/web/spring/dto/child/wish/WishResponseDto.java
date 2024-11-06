@@ -19,9 +19,9 @@ public class WishResponseDto {
     private String name;
     private int price;
 
-    private String savingAmt;
+    private int savingAmt;
     
-    private Boolean finish;
+    private Boolean isFinish;
     
 	
 	public WishResponseDto(Wish wish) {
@@ -30,6 +30,6 @@ public class WishResponseDto {
 		this.name = wish.getName();
 		this.price = wish.getPrice();
 		this.savingAmt = wish.getSavingAmt();
-		this.finish = wish.getFinish();
+		this.isFinish = wish.getIsFinish();
 	}
 }

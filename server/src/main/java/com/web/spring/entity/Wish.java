@@ -39,14 +39,14 @@ public class Wish extends Auditable{
     private int price;
 
     @Column(name="saving_amt")
-    private String savingAmt;
+    private int savingAmt;
     
-    private Boolean finish;
+    private Boolean isFinish;
 
 	@Override
 	public String toString() {
 		return "Wish [wishNum=" + wishNum + ", img=" + img + ", name=" + name + ", price=" + price + ", savingAmt="
-				+ savingAmt + ", finish=" + finish + "]";
+				+ savingAmt + ", isFinish=" + isFinish + "]";
 	}
 
 }

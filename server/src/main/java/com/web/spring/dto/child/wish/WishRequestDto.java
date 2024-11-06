@@ -28,12 +28,19 @@ public class WishRequestDto {
 	@NotNull
 	private int price;
 	
+	@NotNull
+	private int savingAmt;
+	
+	@NotNull
+	private Boolean isFinish;
+	
 	public Wish toWish(WishRequestDto wishRequestDto) {
 		
 		return Wish.builder()
 					.img(wishRequestDto.getImg())
 					.name(wishRequestDto.getName())
 					.price(wishRequestDto.getPrice())
+	                .isFinish(false)
 					.build();
 	}
 
