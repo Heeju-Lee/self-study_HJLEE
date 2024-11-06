@@ -14,8 +14,12 @@ import java.util.Map;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 
+import com.web.spring.entity.Child;
 import com.web.spring.entity.Payment;
+import com.web.spring.entity.Quiz;
+import com.web.spring.repository.ChildRepository;
 import com.web.spring.entity.Wish;
 
 import org.springframework.http.HttpStatus;
@@ -43,6 +47,7 @@ import com.web.spring.dto.child.payment.PayRequestDto;
 import com.web.spring.dto.child.plan.PlanRequestDto;
 import com.web.spring.dto.child.plan.PlanResponseDto;
 import com.web.spring.dto.child.point.PointRequestDto;
+import com.web.spring.dto.child.quiz.QuizResponseDto;
 
 import com.web.spring.service.ChildService;
 import com.web.spring.service.WishService;
@@ -158,7 +163,7 @@ public class ChildController {
 	}
 	
 	
-	/* 포인트 조회 */
+	//포인트 조회
 	@GetMapping("/point/{childNum}")
 	public ResponseEntity<?> showPoint(@PathVariable Long childNum){
 		int response = childService.showPoint(childNum);
@@ -166,7 +171,7 @@ public class ChildController {
 							.body(response);
 	}
 	
-	/* 포인트 업데이트 */
+	//포인트 업데이트
 	@PutMapping("/point")
 	public ResponseEntity<?> updatePoint(@RequestBody PointRequestDto request){
 		int response = childService.updatePoint(request.getChildNum(),request.getPoint());
@@ -224,7 +229,6 @@ public class ChildController {
 				 			 .body("info :: savingWish Success");
 	}
 	
-	
 	//위시 삭제하기
 	@DeleteMapping("/wishes/{wishNum}")
 	public ResponseEntity<?> deleteWish(@PathVariable String wishNum){
@@ -233,7 +237,23 @@ public class ChildController {
 		return ResponseEntity.status(HttpStatus.OK)
 	 			 .body("info :: deleteWish Success");
 	}
+
+	//퀴즈 문제 내기 (각 카테고리 별 문제 1개씩 랜덤)
+	@GetMapping("/quiz")
+	public ResponseEntity<?> showQuiz() {
+		List<Quiz> quizList = childService.showQuiz();
+		
+		return ResponseEntity.ok(quizList);
+	}
 	
+	//퀴즈 업데이트
+	@PutMapping("/quiz/{childNum}")
+	public ResponseEntity<?> updateScore(@PathVariable Long childNum, @RequestBody List<QuizResponseDto> quizResponse){
+		// 헤당 childNum 에 퀴즈 업데이트
+		childService.updateQuiz(childNum, quizResponse);
+		
+		return ResponseEntity.ok(HttpStatus.OK);
+  }
 	
 	
 }
