@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.web.spring.entity.Child;
 import com.web.spring.entity.Plan;
+import com.web.spring.entity.Quiz;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +34,14 @@ public interface ChildRepository extends JpaRepository<Child, Long>{
 	@Modifying
 	@Query(value ="UPDATE Child c SET c.point = :point WHERE c.childNum = :childNum")
 	int updatePoint(@Param("point")int point, @Param("childNum") Long childNum);
-	
 
 	//MGMT-23(특정 년/월의 소비를 보여주기)
 	@Query("SELECT p FROM Child c JOIN c.payments p where c.childNum =: childNum")
-	ArrayList<Payment> showMonthPayments(@Param("childNum") Long childNum);
+	List<Payment> showMonthPayments(@Param("childNum") Long childNum);
 
-
+	//퀴즈 보여주기 (랜덤)
+    @Query("SELECT q FROM Quiz q WHERE q.category = :category ORDER BY RAND()")
+    List<Quiz> findQuizByCategoryRandom(@Param("category") String category);
+    
+    
 }

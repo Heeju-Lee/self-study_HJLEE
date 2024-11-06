@@ -2,7 +2,9 @@ package com.web.spring.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -16,8 +18,10 @@ import com.web.spring.dto.child.ChildRequestDto;
 import com.web.spring.dto.child.ChlidResponseDto;
 import com.web.spring.dto.child.plan.PlanRequestDto;
 import com.web.spring.dto.child.plan.PlanResponseDto;
+import com.web.spring.dto.child.quiz.QuizResponseDto;
 import com.web.spring.entity.Child;
 import com.web.spring.entity.Plan;
+import com.web.spring.entity.Quiz;
 import com.web.spring.exception.NotEnoughPointsException;
 import com.web.spring.repository.ChildRepository;
 import com.web.spring.repository.PlanRepository;
@@ -87,7 +91,7 @@ public class ChildService {
 		child.getPlans().add(plan);
 
 		//목업 데이터 저장
-		ArrayList<Payment> payments = childRepository.showMonthPayments(child.getChildNum());
+		List<Payment> payments = childRepository.showMonthPayments(child.getChildNum());
 		child.setPayments(payments);
 		
 		return new PlanResponseDto(plan);
@@ -102,8 +106,6 @@ public class ChildService {
 		System.out.println(child);
 		
 		Plan plan = childRepository.findPlanByDate(Integer.parseInt(year), Integer.parseInt(month) );
-		
-		System.out.println("showPlan : " + plan);
 		
 		return new PlanResponseDto(plan);
 	}
@@ -161,12 +163,13 @@ public class ChildService {
 
 
 	// 이번달 소비내역
-	public ArrayList<Payment> showMonthList(String childNum, String year, String month) {
+	@Transactional(readOnly = true)
+	public List<Payment> showMonthList(String childNum, String year, String month) {
 
 		Child child = findChild(Long.valueOf(childNum));
-
-		ArrayList<Payment> payments = (ArrayList<Payment>) child.getPayments();
-		ArrayList<Payment> monthPayment = new ArrayList<>();
+		System.out.println(child);
+		List<Payment> payments = child.getPayments();
+		List<Payment> monthPayment = new ArrayList<>();
 
 		payments.forEach( payment -> {
 
@@ -178,16 +181,80 @@ public class ChildService {
 
 		return monthPayment;
 	}
+	
+	// 이번달 카테고리별 소비내역
+	@Transactional(readOnly = true)
+	public HashMap<String, Integer> showMonthChart(String childNum, String year, String month) {
+	    List<Payment> payments = showMonthList(childNum, year, month);
+	    
+	    HashMap<String, Integer> categoryTotal = new HashMap<>();
 
-	public HashMap<String ,Integer> showMonthChart(String childNum, String year, String month){
-		ArrayList<Payment> payments= showMonthList(childNum,  year,  month);
+	    payments.forEach(payment -> {
+	        String category = payment.getCategory();
+	        int amount = payment.getPaymentAmt();
+	        
+	        categoryTotal.put(category, categoryTotal.getOrDefault(category, 0) + amount);
+	    });
 
-		payments.forEach( payment -> {
-
-		});
-
-		return null;
+	    return categoryTotal;
 	}
+	
+	// 퀴즈문제 보여주기
+	@Transactional(readOnly = true)
+	public List<Quiz> showQuiz() {	
+		// 카테고리 리스트 생성
+        List<String> categories = Arrays.asList("history", "investment", "government", "exchangeRate", "word");
+        List<Quiz> quizList = new ArrayList<>();
 
+        for (String category : categories) {
+            List<Quiz> result = childRepository.findQuizByCategoryRandom(category);
+            // 결과가 비어있지 않은 경우 첫 번째 퀴즈를 선택하여 리스트에 추
+            if (!result.isEmpty()) {
+            	quizList.add(result.get(0));
+            }
+        }
+
+        return quizList;
+    }
+	
+	// 퀴즈 업데이트
+	/* 
+	 * 과정
+	 * 문제를 클라이언트에 전달
+	 * 유저가 문제를 풀때마다 문제 정답과 비교하여 QuizResponseDto 형태로 넣음 (클라이언트 작업)
+	 * 문제 완료후 list<QuizResponseDto> 를 받아 updateQuiz 진행
+	 */
+	@Transactional
+	public void updateQuiz(Long childNum, List<QuizResponseDto> quizResponse) {
+		Child child = childRepository.findById(childNum).orElseThrow();
+		
+		// 각 퀴즈 답 확인해서 점수 업데이트 함
+		for(QuizResponseDto response: quizResponse) {
+			if(response.getScore() == 1) { //문제 맞춘 경우
+                switch (response.getCategory()) {
+                case "history":
+                    child.setQHistory(child.getQHistory() + 1);
+                    System.out.println("history");
+                    break;
+                case "investment":
+                    child.setQInvestment(child.getQInvestment() + 1);
+                    break;
+                case "government":
+                    child.setQGoverment(child.getQGoverment() + 1);
+                    break;
+                case "word":
+                    child.setQWord(child.getQWord() + 1);
+                    break;
+                case "exchangeRate":
+                    child.setQExchangeRate(child.getQExchangeRate() + 1);
+                    break;
+                default:
+                    break;
+                }
+			}
+		}
+		
+		childRepository.save(child);
+	}
 
 }
