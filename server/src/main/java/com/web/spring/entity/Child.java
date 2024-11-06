@@ -50,10 +50,10 @@ public class Child extends Auditable{
 	private int qExchangeRate; 	// 환율
 	
 	@Column(nullable = true)
-	private int qWord;			// 경제 용어
-
+	private int qInvestment;    //투자
+	
 	@Column(nullable = true)
-	private int qInvestment;	// 투자
+	private int qWord;			// 경제 용어
 	
 	@Column(nullable = true)
 	private int qGoverment;		// 정부
@@ -85,6 +85,7 @@ public class Child extends Auditable{
 
 	@Override
 	public String toString() {
+
 		return "Child{" +
 				"qHistory=" + qHistory +
 				", qGoverment=" + qGoverment +
@@ -100,5 +101,6 @@ public class Child extends Auditable{
 				", id='" + id + '\'' +
 				", childNum=" + childNum +
 				'}';
+
 	}
 }
