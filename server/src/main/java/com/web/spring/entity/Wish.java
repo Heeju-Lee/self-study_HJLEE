@@ -48,5 +48,5 @@ public class Wish extends Auditable{
 		return "Wish [wishNum=" + wishNum + ", img=" + img + ", name=" + name + ", price=" + price + ", savingAmt="
 				+ savingAmt + ", finish=" + finish + "]";
 	}
- 
+
 }
