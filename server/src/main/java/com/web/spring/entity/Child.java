@@ -28,7 +28,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Child extends Auditable{
+public class Child extends Member{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +41,6 @@ public class Child extends Auditable{
 	private String birthdate;
 	private String phone;
 	private String email;
-	private String role;
 	
 	@Column(nullable = true)
 	private int point;
@@ -93,7 +92,6 @@ public class Child extends Auditable{
 				", birthdate='" + birthdate + '\'' +
 				", phone='" + phone + '\'' +
 				", email='" + email + '\'' +
-				", role='" + role + '\'' +
 				", point=" + point +
 				", qExchangeRate=" + qExchangeRate +
 				", qInvestment=" + qInvestment +

@@ -109,6 +109,8 @@ public class ChildService {
 		else return "아이디 사용 불가";
 		
 	}
+
+
 	
 
 	@Transactional

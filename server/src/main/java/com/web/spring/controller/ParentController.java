@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,6 +21,15 @@ public class ParentController {
 
     private final ChildService childService;
     private final ParentService parentService;
+
+
+    @GetMapping("/{parentNum}")
+    public ResponseEntity<?> getChilde(@PathVariable String parentNum){
+
+        List<Child> children = parentService.findChildren(Long.valueOf(parentNum));
+        return ResponseEntity.status(HttpStatus.OK).body(children);
+    }
+
 
     /* 월간 리포트 */
     @GetMapping("/reports/{childNum}")

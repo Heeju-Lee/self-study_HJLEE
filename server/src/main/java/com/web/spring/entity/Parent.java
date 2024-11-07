@@ -26,7 +26,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Parent extends Auditable{
+public class Parent extends Member{
 
     @Id
     @Column(name = "parent_num")
@@ -40,7 +40,6 @@ public class Parent extends Auditable{
     private String phone;
     private String email;
     private String address;
-    private String role;
     
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST})
 	private List<Child> children = new ArrayList<>();
@@ -59,8 +58,7 @@ public class Parent extends Auditable{
                 ", birthdate='" + birthdate + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                ", role='" + role + '\'' +
+                ", address='" + address + '\''+
                 '}';
     }
 }

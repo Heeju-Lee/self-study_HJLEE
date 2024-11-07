@@ -79,6 +79,9 @@ public class ChildController {
 		return childService.duplicateCheck(id);
 	}
 
+
+
+
 /* Plan : 소비 계획 세우기 --------------------------------------------------------------*/
 	@PostMapping("/plans")
 	public ResponseEntity<?> createPlan( @RequestBody PlanRequestDto planRequestDto){

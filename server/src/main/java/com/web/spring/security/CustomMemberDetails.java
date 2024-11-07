@@ -3,10 +3,9 @@ package com.web.spring.security;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.web.spring.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.web.spring.domain.Member;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,7 @@ public class CustomMemberDetails implements UserDetails{
 	public final Member member;
 
 	
-	public CustomMemberDetails(Member member) {		
+	public CustomMemberDetails(Member member) {
 		this.member = member;
 		log.info("CustomMemberDetails() ===> member { }",member);
 	}
@@ -28,7 +27,7 @@ public class CustomMemberDetails implements UserDetails{
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		log.info("getAuthorities() ===>");
 		Collection<GrantedAuthority> collection = new ArrayList<>();
-		collection.add(()->member.getRole());
+		collection.add(()-> member.getRole());
 		return collection;
 	}
 

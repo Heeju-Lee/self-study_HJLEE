@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.web.spring.entity.Member;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,7 +15,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.google.gson.Gson;
-import com.web.spring.domain.Member;
 import com.web.spring.security.CustomMemberDetails;
 
 
@@ -46,7 +46,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
 		//2. 스프링 시큐러티에서는 username, password를 검증하기 위해서 ~~token에 담는다.
 		//지금은 authorization은 없어서  null 로 담았다.
 		UsernamePasswordAuthenticationToken authToken = 
-				new UsernamePasswordAuthenticationToken(username, password,null);
+				new UsernamePasswordAuthenticationToken(username, password,null); //id, password, author
 		
 		//3. token을 ~Manager에 전달...Provoder...DetailsServicve...db연결...CustomMemberDetails생성..Back/Back/...
 		Authentication authentication=authenticationManager.authenticate(authToken);//CustomMemberDetails정보를 반환...
@@ -88,7 +88,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         response.addHeader("Authorization", "Bearer " + token);
 
         Map<String, Object> map = new HashMap<>();
-        Member   member= customMemberDetails.getMember();
+        Member member = customMemberDetails.getMember();
         map.put("memberNo",member.getMemberNo() );
         map.put("id", member.getId());
         map.put("name", member.getName());

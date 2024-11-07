@@ -9,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +21,17 @@ public class ParentService {
     private final ChildService childService;
     private final ParentRepository parentRepository;
 
-    //부모가 자기 자식 찾기
+    //부의 모든 자식 가져오기
+    @Transactional
+    public List<Child> findChildren(Long parentNum) {
+
+        Parent parent = parentRepository.findById(parentNum).orElseThrow();
+
+        return parent.getChildren();
+
+    }
+
+        //부모가 자기 자식 찾기
     @Transactional
     public Child findParentChild(Long parentNum, Long childNum){
     	
