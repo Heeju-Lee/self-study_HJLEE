@@ -174,10 +174,10 @@ public class ChildController {
 	@PostMapping("/wishes")
 	public ResponseEntity<?> createWish(@RequestBody WishRequestDto wishRequestDto){
 		
-		childService.createWish(wishRequestDto);
+		WishResponseDto wish =  childService.createWish(wishRequestDto);
 		
 		return ResponseEntity.status(HttpStatus.CREATED)
-				 			 .body("info :: createWish Success");
+				 			 .body(wish);
 	}	
 	
 	//위시 전체리스트 조회(Active)
@@ -214,19 +214,19 @@ public class ChildController {
 	public ResponseEntity<?> savingWish(@RequestParam String wishNum,
 										@RequestParam String savingAmt){
 		
-		childService.savingWish(wishNum, savingAmt);
+		WishResponseDto wish =childService.savingWish(wishNum, savingAmt);
 		
 		return ResponseEntity.status(HttpStatus.OK)
-				 			 .body("info :: savingWish Success");
+				 			 .body(wish);
 	}
 	
 	//위시 삭제하기
 	@DeleteMapping("/wishes/{wishNum}")
 	public ResponseEntity<?> deleteWish(@PathVariable String wishNum){
-		childService.deleteWish(wishNum);
+		List<Wish> wishList = childService.deleteWish(wishNum);
 		
 		return ResponseEntity.status(HttpStatus.OK)
-	 			 .body("info :: deleteWish Success");
+	 			 .body(wishList);
 	}
 
 	
