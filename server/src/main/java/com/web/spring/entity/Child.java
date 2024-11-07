@@ -41,6 +41,7 @@ public class Child extends Auditable{
 	private String birthdate;
 	private String phone;
 	private String email;
+	private String role;
 	
 	@Column(nullable = true)
 	private int point;
@@ -84,22 +85,22 @@ public class Child extends Auditable{
 
 	@Override
 	public String toString() {
-
 		return "Child{" +
-				"qHistory=" + qHistory +
-				", qGoverment=" + qGoverment +
+				"childNum=" + childNum +
+				", id='" + id + '\'' +
+				", pwd='" + pwd + '\'' +
+				", name='" + name + '\'' +
+				", birthdate='" + birthdate + '\'' +
+				", phone='" + phone + '\'' +
+				", email='" + email + '\'' +
+				", role='" + role + '\'' +
+				", point=" + point +
+				", qExchangeRate=" + qExchangeRate +
 				", qInvestment=" + qInvestment +
 				", qWord=" + qWord +
-				", qExchangeRate=" + qExchangeRate +
-				", point=" + point +
-				", email='" + email + '\'' +
-				", phone='" + phone + '\'' +
-				", birthdate='" + birthdate + '\'' +
-				", name='" + name + '\'' +
-				", pwd='" + pwd + '\'' +
-				", id='" + id + '\'' +
-				", childNum=" + childNum +
+				", qGoverment=" + qGoverment +
+				", qHistory=" + qHistory +
+				", parent=" + parent +
 				'}';
-
 	}
 }

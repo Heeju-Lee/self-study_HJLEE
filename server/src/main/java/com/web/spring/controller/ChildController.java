@@ -64,7 +64,7 @@ public class ChildController {
 	private final ChildService childService;
 	private final WishService wishService;
 	
-/* Child : 회원가입  --------------------------------------------------------------*/
+/* Child : 회원가입 + 중복 체크 --------------------------------------------------------------*/
 	@PostMapping("/children")
 	public ResponseEntity<?> singUp(@RequestBody ChildRequestDto childRequestDto){
 		
@@ -74,8 +74,11 @@ public class ChildController {
 				 			 .body(response);
 	}
 
+	@GetMapping("/childreen/{id}")
+	public String duplicationCheck(@PathVariable String id){
+		return childService.duplicateCheck(id);
+	}
 
-	
 /* Plan : 소비 계획 세우기 --------------------------------------------------------------*/
 	@PostMapping("/plans")
 	public ResponseEntity<?> createPlan( @RequestBody PlanRequestDto planRequestDto){

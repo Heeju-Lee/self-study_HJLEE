@@ -20,9 +20,11 @@ import java.util.Optional;
 
 import com.web.spring.entity.Parent;
 import com.web.spring.entity.Payment;
+import com.web.spring.exception.UserAuthenticationException;
 import com.web.spring.repository.ParentRepository;
 
-import org.springframework.scheduling.support.ScheduledTaskObservationDocumentation.LowCardinalityKeyNames;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,34 +53,50 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChildService {
 
 	private final ChildRepository childRepository;
 	private final PlanRepository planRepository;
 	private final ParentRepository parentRepository;
 	private final WishRepository wishRepository;
+
+	private final PasswordEncoder passwordEncoder;
 	
-/* Child : 회원가입 */	
+/* Child : 회원가입 + 중복 체크 */
 	@Transactional
 	public ChlidResponseDto singUp(ChildRequestDto childRequestDto) {
 		
 		Child child = childRequestDto.toChild(childRequestDto);
 
-		Long parentNum =childRequestDto.getParentNum();
-		System.out.println(parentNum);
+		//BE에서 중복확인 한 번 더 하기
+		if (childRepository.existsById(child.getId()))
+			throw new UserAuthenticationException("중복된 아이디", "Duplicated ID!!");
+
+		//부모 찾기
+		Long parentNum = childRequestDto.getParentNum();
 		Parent parent = parentRepository.findById(parentNum).orElseThrow();
 
 		//아이게 부모 저장
 		child.setParent(parent);
+
+		//비번 암호화
+		String encPwd = passwordEncoder.encode(child.getPwd());
+		log.info("encPwd ==> { }", encPwd);
+		child.setPwd(encPwd);
+
+		//Role 설정
+		child.setRole("ROLE_CHILD");
+
+		// 아이 DB 저장
 		Child rChild = childRepository.save(child);
 		
 		//부모에게 아이 저장
 		parent.getChildren().add(rChild);
-		
-		System.out.println("rChild : " + rChild);
+
+		//System.out.println("rChild : " + rChild);
 		
 		return new ChlidResponseDto(rChild);
-				
 	}
 	
 	@Transactional(readOnly = true)
