@@ -27,7 +27,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
 public class Child extends Member{
 
 	@Id

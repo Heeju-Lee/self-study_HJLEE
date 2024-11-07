@@ -25,7 +25,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-@Builder
 public class Parent extends Member{
 
     @Id

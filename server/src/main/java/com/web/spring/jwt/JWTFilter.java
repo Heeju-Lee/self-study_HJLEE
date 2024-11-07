@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-
+import com.web.spring.entity.Member;
 import com.web.spring.security.CustomMemberDetails;
 
 import jakarta.servlet.FilterChain;

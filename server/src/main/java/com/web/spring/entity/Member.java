@@ -26,6 +26,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @Builder
 public class Member {
+	//그냥 클래스로 수정하고 이 값을 토큰에 넣기
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberNo;
@@ -37,7 +38,10 @@ public class Member {
     @Column(length = 20)
     private String name;
     private String address;
-
+    private String birthdate;
+    private String phone;
+    private String email;
+    
     /* 생성 시간 */
     @CreatedDate
     @Column(updatable = false)
@@ -48,7 +52,7 @@ public class Member {
     private LocalDate modifiedAt;
 
     //추가
-    private String role;
+    private String role;//USER_PARENTS, USER_CHIlD
 
     @Override
     public String toString() {

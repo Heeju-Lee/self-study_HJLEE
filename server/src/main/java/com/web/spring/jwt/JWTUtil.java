@@ -74,7 +74,7 @@ public class JWTUtil {
     //public String createJwt(String username, String role, Long expiredMs) {
     //claim은 payload에 해당하는 정보
     public String createJwt(Member member, String role, Long expiredMs) {
-        log.info("createJwt  call");
+        log.info("createJwt Access  call");
         return Jwts.builder()
                 .claim("username", member.getName()) //이름
                 .claim("id", member.getId()) //아이디
@@ -84,6 +84,21 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + expiredMs)) //만료시간
                 .signWith(secretKey) // 서명과 함께 저장됨
                 .compact();
+    }
+    
+    public String createRefreshJwt(Member member, String role, Long expiredMs) {
+    	log.info("create refresh JWT call");
+    	
+    	   return Jwts.builder()
+                   .claim("username", member.getName()) //이름
+                   .claim("id", member.getId()) //아이디
+                   .claim("role", role) //Role
+                   .claim("memberNo", member.getMemberNo())
+                   .issuedAt(new Date(System.currentTimeMillis())) //현재로그인된 시간
+                   .expiration(new Date(System.currentTimeMillis() + expiredMs)) //만료시간
+                   .signWith(secretKey) // 서명과 함께 저장됨
+                   .compact();
+    	
     }
 }
 

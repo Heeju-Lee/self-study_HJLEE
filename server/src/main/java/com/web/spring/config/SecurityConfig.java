@@ -50,7 +50,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.info("SecurityFilterChain filterChain(HttpSecurity http) call.....");
        /////////////////////////////////
-        //CORS 설정
+        //CORS 설정(Cross-Origin Resource Sharing) 
+        /*http 상의 웹 어플리케이션에서 다른 출처의 리소스에 접근할 수 있는 권한을 부여하는 정책*/
         http.cors((corsCustomizer ->
                         corsCustomizer.configurationSource(new CorsConfigurationSource()
                         {
