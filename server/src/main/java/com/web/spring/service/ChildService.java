@@ -365,14 +365,16 @@ public class ChildService {
 	
 	// Wish : 위시 등록하기
 	@Transactional
-	public void createWish(WishRequestDto wishRequestDto) {
+	public WishResponseDto createWish(WishRequestDto wishRequestDto) {
 		
 		Child child =findChild(1L);
 		Wish wish = wishRequestDto.toWish(wishRequestDto);
 		System.out.println("Createwish ::"+wish);
 		
-		wishRepository.save(wish);
+		Wish rwish = wishRepository.save(wish);
 		child.getWishes().add(wish);
+		
+		return new WishResponseDto(rwish);
 
 	}
 
@@ -411,7 +413,7 @@ public class ChildService {
 	
 	// Wish : 위시 돈모으기
 	@Transactional
-	public void savingWish(String wishNum, String savingAmt) {
+	public WishResponseDto savingWish(String wishNum, String savingAmt) {
 		
 		// 인자값 미리 파싱
 		Long parseWishNum = Long.parseLong(wishNum);
@@ -446,12 +448,16 @@ public class ChildService {
 		int pointResult = updatePoint(child.getChildNum(), -parseSavingAmt);
 		
 		System.out.println("afterSavingWish :: complete ->"+ savingResult );
+		Wish rwish = wishRepository.findById(parseWishNum)
+												.orElseThrow(()-> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
+		rwish.setSavingAmt(totalSaving);
+		return new WishResponseDto(rwish);
 	}
 
 	
 	// Wish : 위시 삭제하기 + savingPoint return(updatePoint 호출)
 	@Transactional
-	public void deleteWish(String wishNum) {
+	public List<Wish> deleteWish(String wishNum) {
 		
 		// 인자값 미리 파싱
 		Long parseWishNum = Long.parseLong(wishNum);
@@ -474,6 +480,11 @@ public class ChildService {
 		// 변경 완료 여부 확인
 		wishRepository.deleteById(parseWishNum);
 		
-		System.out.println("afterDeleteWish :: complete ->"+ findChild(1L) );
+		//포인트 반환 후 child
+		child.setPoint(pointResult);
+		System.out.println("afterDeleteWish :: complete ->"+ child);
+		
+		List<Wish> wishList= childRepository.showActiveWishList(child.getChildNum());		
+		return wishList;
 	}
 }
