@@ -45,7 +45,7 @@ public interface ChildRepository extends JpaRepository<Child, Long>{
 	int updatePoint(@Param("point")int point, @Param("childNum") Long childNum);
 
 	//MGMT-23(특정 년/월의 소비를 보여주기)
-	@Query("SELECT p FROM Child c JOIN c.payments p where c.childNum =: childNum")
+	@Query("SELECT p FROM Child c JOIN c.payments p where c.childNum =:childNum")
 	List<Payment> showMonthPayments(@Param("childNum") Long childNum);
 
 	// Wish :: Active 상태의 위시리스트만 조회

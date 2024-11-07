@@ -44,7 +44,6 @@ public class PlanRequestDto {
 	public Plan toPlan(PlanRequestDto planResponseDto) {
 		
 		return Plan.builder()
-					//.child(Child.builder().childNum(childNum).build())
 					.shopping(planResponseDto.getShopping())
 					.transport(planResponseDto.getTransport())
 					.cvs(planResponseDto.getCvs())

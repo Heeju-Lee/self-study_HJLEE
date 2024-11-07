@@ -65,10 +65,15 @@ public class ChildService {
 		Child child = childRequestDto.toChild(childRequestDto);
 
 		Long parentNum =childRequestDto.getParentNum();
+		System.out.println(parentNum);
 		Parent parent = parentRepository.findById(parentNum).orElseThrow();
 
+		//아이게 부모 저장
 		child.setParent(parent);
 		Child rChild = childRepository.save(child);
+		
+		//부모에게 아이 저장
+		parent.getChildren().add(rChild);
 		
 		System.out.println("rChild : " + rChild);
 		
@@ -138,9 +143,12 @@ public class ChildService {
 	@Transactional
 	public PlanResponseDto updatePlan(Long planNum, PlanRequestDto planRequestDto) throws Exception {
 		
-		Plan plan = planRepository.findById(planNum)
-								  .orElseThrow();
+		System.out.println(planNum);
 		
+		Plan plan = planRepository.findById(planNum)
+								  .orElseThrow( () -> new NoSuchElementException("PlanNum not found"));
+		
+		System.out.println(plan);
 		plan.setShopping(planRequestDto.getShopping());
 		plan.setCvs(planRequestDto.getCvs());
 		plan.setFood(planRequestDto.getFood());
@@ -185,16 +193,16 @@ public class ChildService {
 
 	// 이번달 소비내역
 	@Transactional(readOnly = true)
-	public List<Payment> showMonthList(String childNum, String year, String month) {
+	public List<Payment> showMonthList(Long childNum, int year, int month) {
 
-		Child child = findChild(Long.valueOf(childNum));
+		Child child = findChild(childNum);
 		List<Payment> payments = child.getPayments();
 		List<Payment> monthPayment = new ArrayList<>();
 
 		payments.forEach( payment -> {
 
 			LocalDate date = payment.getCreatedAt();
-			if( date.getMonthValue() == Integer.parseInt(month) && date.getYear() == Integer.parseInt(year)){
+			if( date.getMonthValue() == month && date.getYear() == year){
 				monthPayment.add(payment);
 			}
 		});
@@ -204,7 +212,7 @@ public class ChildService {
 	
 	// 이번달 카테고리별 소비내역
 	@Transactional(readOnly = true)
-	public HashMap<String, Integer> showMonthChart(String childNum, String year, String month) {
+	public HashMap<String, Integer> showMonthChart(Long childNum, int year, int month) {
 	    List<Payment> payments = showMonthList(childNum, year, month);
 	    
 	    HashMap<String, Integer> categoryTotal = new HashMap<>();
@@ -280,11 +288,15 @@ public class ChildService {
 	//이번달 계획 차트
 	@Transactional(readOnly = true)
 	public HashMap<String, Integer> monthPlan(Long childNum, int year, int month){
+
 		HashMap<String, Integer> response = new HashMap<>();
 		Child child = findChild(childNum);
-		Plan monthPlan = child.getPlans().get(Long.valueOf(child.getChildNum()).intValue());
-		
-		
+
+		Plan monthPlan = child.getPlans().stream()
+						.filter(plan -> plan.getModifiedAt().getMonthValue() == month && plan.getModifiedAt().getYear() == year )
+						.findFirst()
+						.orElseThrow();
+
 		response.put("shopping", monthPlan.getShopping());
 		response.put("food", monthPlan.getFood());
 		response.put("transport", monthPlan.getTransport());
@@ -317,7 +329,8 @@ public class ChildService {
 	}
 	
 	//퀴즈결과 Top3만 보기
-	public HashMap<String,Integer> showQuizResultTop3(Long child){
+	public LinkedHashMap<String,Integer> showQuizResultTop3(Long child){
+
 		HashMap<String, Integer> result = new HashMap<>();
 		
 		Child qr= childRepository.findById(child).get();
@@ -332,8 +345,8 @@ public class ChildService {
 		result.put("qGoverment", qr.getQGoverment());
 		//경제의 역사 결과 넣기
 		result.put("qHistory", qr.getQHistory());
-		
-		HashMap<String, Integer> sortedResult = result.entrySet()
+
+		LinkedHashMap<String, Integer> sortedResult = result.entrySet()
 			    .stream()
 			    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) // 값 내림차순 정렬
 			    .limit(3) // 상위 3개만 선택
@@ -346,7 +359,6 @@ public class ChildService {
 		
 		
 		return sortedResult;
-		
 	}
 	
 	/* WISH METHOD */

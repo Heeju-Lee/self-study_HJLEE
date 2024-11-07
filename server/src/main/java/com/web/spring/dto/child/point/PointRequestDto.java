@@ -11,8 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PointRequestDto {
+
 	@NotNull
 	private Long childNum;
+
 	@NotNull
 	private int point;
 }

@@ -20,15 +20,12 @@ public class PayRequestDto {
 
 	@NotNull
 	private Long childNum;
+
 	@NotNull
-	private String cardNum;
+	private int year;
+
 	@NotNull
-	private String storeName;
-	@NotNull
-	private int paymentAmt;
-	@NotNull
-	private String category;
-	@NotNull
-	private LocalDate createdAt;
-	
+	private int month;
+
+
 }
