@@ -1,11 +1,11 @@
 package com.web.spring.security;
 
+import com.web.spring.entity.Member;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.web.spring.domain.Member;
 import com.web.spring.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;

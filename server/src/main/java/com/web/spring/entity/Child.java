@@ -21,26 +21,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 public class Child extends Member{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "child_num")
 	private Long childNum;
-	
-	private String id;
-	private String pwd;
-	private String name;
-	private String birthdate;
-	private String phone;
-	private String email;
 	
 	@Column(nullable = true)
 	private int point;
@@ -86,12 +80,7 @@ public class Child extends Member{
 	public String toString() {
 		return "Child{" +
 				"childNum=" + childNum +
-				", id='" + id + '\'' +
-				", pwd='" + pwd + '\'' +
-				", name='" + name + '\'' +
-				", birthdate='" + birthdate + '\'' +
-				", phone='" + phone + '\'' +
-				", email='" + email + '\'' +
+				", memberFields=" + super.toString() +
 				", point=" + point +
 				", qExchangeRate=" + qExchangeRate +
 				", qInvestment=" + qInvestment +

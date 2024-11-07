@@ -4,6 +4,7 @@ package com.web.spring.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
@@ -24,7 +25,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @AllArgsConstructor
 @Setter
 @Getter
-@Builder
+@SuperBuilder
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +38,10 @@ public class Member {
     @Column(length = 20)
     private String name;
     private String address;
+
+    private String birthdate;
+    private String phone;
+    private String email;
 
     /* 생성 시간 */
     @CreatedDate

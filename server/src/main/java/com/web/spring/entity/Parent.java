@@ -19,27 +19,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
-@Builder
+@SuperBuilder
 public class Parent extends Member{
 
     @Id
     @Column(name = "parent_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long parentNum;
-    
-    private String id;
-    private String pwd;
-    private String name;
-    private String birthdate;
-    private String phone;
-    private String email;
-    private String address;
     
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST})
 	private List<Child> children = new ArrayList<>();
@@ -48,17 +41,6 @@ public class Parent extends Member{
 	@JoinColumn(name = "parent_num")
 	private List<PointOrder> orders = new ArrayList<>();
 
-    @Override
-    public String toString() {
-        return "Parent{" +
-                "parentNum=" + parentNum +
-                ", id='" + id + '\'' +
-                ", pwd='" + pwd + '\'' +
-                ", name='" + name + '\'' +
-                ", birthdate='" + birthdate + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", address='" + address + '\''+
-                '}';
-    }
+
+
 }
