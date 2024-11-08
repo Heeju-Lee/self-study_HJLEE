@@ -77,6 +77,8 @@ public class ChildService {
 		Long parentNum = childRequestDto.getParentNum();
 		Parent parent = parentRepository.findById(parentNum).orElseThrow();
 
+		System.out.println("부모 찾기 ::: " + parent);
+		
 		//아이게 부모 저장
 		child.setParent(parent);
 
@@ -111,7 +113,6 @@ public class ChildService {
 	}
 
 
-	
 
 	@Transactional
 	public Child findChild(Long childNum){
@@ -132,7 +133,7 @@ public class ChildService {
 		//c_num 받았다고 치고.
 		Child child = findChild(planRequestDto.getChildNum());
 		System.out.println(child);
-		
+
 		Plan plan = planRequestDto.toPlan(planRequestDto);
 		
 		planRepository.save(plan);

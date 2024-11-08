@@ -59,13 +59,13 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-public class ChildController {
+public class ChildController { 
 
 	private final ChildService childService;
 	private final WishService wishService;
 	
 /* Child : 회원가입 + 중복 체크 --------------------------------------------------------------*/
-	@PostMapping("/children")
+	@PostMapping("/children/signup")
 	public ResponseEntity<?> singUp(@RequestBody ChildRequestDto childRequestDto){
 		
 		ChlidResponseDto response = childService.singUp(childRequestDto);
@@ -74,7 +74,7 @@ public class ChildController {
 				 			 .body(response);
 	}
 
-	@GetMapping("/childreen/{id}")
+	@GetMapping("/children/{id}")
 	public String duplicationCheck(@PathVariable String id){
 		return childService.duplicateCheck(id);
 	}

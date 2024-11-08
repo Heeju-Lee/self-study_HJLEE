@@ -26,14 +26,25 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Setter
 @Getter
-@SuperBuilder
-public class Parent extends Member{
+@Builder
+public class Parent  extends Auditable{
 
     @Id
     @Column(name = "parent_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long parentNum;
     
+    @Column(unique = true)
+    private String id;
+    private String pwd;
+    private String name;
+    private String birthdate;
+    private String phone;
+    private String email;
+    private String address;
+	private String role;
+    
+
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST})
 	private List<Child> children = new ArrayList<>();
 

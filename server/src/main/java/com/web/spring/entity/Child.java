@@ -28,13 +28,21 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-@SuperBuilder
-public class Child extends Member{
+@Builder
+public class Child  extends Auditable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "child_num")
 	private Long childNum;
+	
+	private String id;
+	private String pwd;
+	private String name;
+	private String birthdate;
+	private String phone;
+	private String email;
+	private String role;
 	
 	@Column(nullable = true)
 	private int point;
