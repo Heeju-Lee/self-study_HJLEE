@@ -2,6 +2,21 @@
   {
     "name": "jwt.security.key",
     "type": "java.lang.String",
-    "description": "5E1DE458844972B3DA2FC6A7DB838"
+    "description": "gAkDVHskJKx5yKMMq8g2BETf9SxI6Gqv"
+  },
+  {
+    "name": "jwt.algorithm",
+    "type": "java.lang.String",
+    "description": "HS256"
+  },
+  {
+    "name": "jwt.response.header",
+    "type": "java.lang.String",
+    "description": "Authorization"
+  },
+  {
+    "name": "jwt.token.prefix",
+    "type": "java.lang.String",
+    "description": "Bearer "
   }
 ]}

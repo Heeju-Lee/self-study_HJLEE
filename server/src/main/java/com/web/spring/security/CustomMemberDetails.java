@@ -16,7 +16,7 @@ public class CustomMemberDetails implements UserDetails{
 	@Getter
 	public final Member member;
 
-	
+	//Member값을 넣어줌
 	public CustomMemberDetails(Member member) {
 		this.member = member;
 		log.info("CustomMemberDetails() ===> member { }",member);
@@ -34,7 +34,7 @@ public class CustomMemberDetails implements UserDetails{
 	@Override
 	public String getPassword() {
 		log.info("getPassword() ===>");
-		return member.getPwd();
+		return member.getPassword();
 	}
 
 	@Override
@@ -42,6 +42,7 @@ public class CustomMemberDetails implements UserDetails{
 		log.info("getUsername() ===>");
 		return member.getId();
 	}
+	
 	////////////////////////////////////////////////////////
 	@Override
     public boolean isAccountNonExpired() { //계정이 Expired 되지 않았다

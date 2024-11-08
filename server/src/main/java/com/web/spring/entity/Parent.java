@@ -25,7 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-public class Parent extends Member{
+public class Parent{
 
     @Id
     @Column(name = "parent_num")

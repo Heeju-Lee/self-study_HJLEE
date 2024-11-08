@@ -24,8 +24,8 @@ public class ChlidResponseDto {
 	private String birthdate;
 	private String phone;
 	private String email;
-	private LocalDate modifiedAt;
-	private LocalDate createdAt;
+//	private LocalDate modifiedAt;
+//	private LocalDate createdAt;
 
 	
 	public ChlidResponseDto(Child child) {
@@ -36,8 +36,8 @@ public class ChlidResponseDto {
 		this.birthdate = child.getBirthdate();
 		this.phone = child.getPhone();
 		this.email = child.getEmail();
-		this.createdAt = child.getCreatedAt();
-		this.modifiedAt = child.getModifiedAt();
+//		this.createdAt = child.getCreatedAt();
+//		this.modifiedAt = child.getModifiedAt();
 
 	}
 

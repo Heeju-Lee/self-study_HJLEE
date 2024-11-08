@@ -36,12 +36,12 @@ public class JWTFilter extends OncePerRequestFilter {
 				
         //request에서 Authorization 헤더를 찾음..인증을 거쳐야하는 서비스에서는 반드시 이 부분이 헤더에 있어야 한다.
     	//헤더에서 Authorization 이름의 키값을 꺼내는 작업을 일단 먼저 한다.
-        String authorization= request.getHeader("Authorization");
+        String authorization= request.getHeader(jwtUtil.jwtHeader);
        
 				
     //Authorization 헤더 검증
     //인증을 거치고 들어온 요청이 아니라면
-        if (authorization == null || !authorization.startsWith("Bearer ")) { //인증후 들어온게 아니거나 검증된  토큰이 아니라면
+        if (authorization == null || !authorization.startsWith(jwtUtil.jwtTokenPrefix)) { //인증후 들어온게 아니거나 검증된  토큰이 아니라면
 
             System.out.println("token null");
             filterChain.doFilter(request, response);//다음에 있는 필터로 가는 부분..갔다가 오면 아래에 있는 사후처리를 하는데..이걸 안하게 하려면 바로 return
@@ -69,8 +69,8 @@ public class JWTFilter extends OncePerRequestFilter {
 
      // 만료된 토큰이 아니라면
      //살아있는 토큰이라면 토큰에서 username과 role 획득
-        String username = jwtUtil.getUsername(token);
-        String id = jwtUtil.getId(token);
+        String id = jwtUtil.getId(token);//아이디 받기
+        String name = jwtUtil.getname(token);//이름 받기
         String role = jwtUtil.getRole(token);
         Long memberNo = jwtUtil.getMemberNo(token);
 				
@@ -80,9 +80,9 @@ public class JWTFilter extends OncePerRequestFilter {
         //예전에는 세션에서 꺼내썼지만 지금은 토큰에서 뽑아서 Claim에 대한 정보를 꺼내서 member객체를 생성
         Member member = new Member();
         member.setId(id);
-        member.setName(username);
+        member.setName(name);
         member.setRole(role);
-        member.setMemberNo(memberNo);
+        member.setMemberNum(memberNo);
 				
         //UserDetails에 회원 정보 객체 담기
         CustomMemberDetails customMemberDetails = new CustomMemberDetails(member);

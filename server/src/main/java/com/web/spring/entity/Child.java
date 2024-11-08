@@ -2,8 +2,10 @@ package com.web.spring.entity;
 
 import java.util.List;
 
+import com.web.spring.dto.child.ChildRequestDto;
 import com.web.spring.global.audit.Auditable;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import jakarta.persistence.CascadeType;
@@ -27,7 +29,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Child extends Member{
+@Builder
+public class Child{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +43,8 @@ public class Child extends Member{
 	private String birthdate;
 	private String phone;
 	private String email;
+	
+
 	
 	@Column(nullable = true)
 	private int point;
@@ -100,4 +105,7 @@ public class Child extends Member{
 				", parent=" + parent +
 				'}';
 	}
+	
+	
+
 }

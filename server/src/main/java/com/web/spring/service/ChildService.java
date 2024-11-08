@@ -85,8 +85,7 @@ public class ChildService {
 		log.info("encPwd ==> { }", encPwd);
 		child.setPwd(encPwd);
 
-		//Role 설정
-		child.setRole("ROLE_CHILD");
+	
 
 		// 아이 DB 저장
 		Child rChild = childRepository.save(child);

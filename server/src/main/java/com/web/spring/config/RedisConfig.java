@@ -6,9 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@EnableRedisRepositories
 public class RedisConfig {
 
     @Value("${spring.data.redis.port}")
@@ -25,8 +27,12 @@ public class RedisConfig {
     @Bean
     public RedisTemplate<String, ?> redisTemplate() {
         RedisTemplate<String, ?> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setKeySerializer(new StringRedisSerializer());//Redis의 직렬화 구현체
+        // 일반적인 key:value의 경우 시리얼라이저
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
+        // 모든 경우
+        redisTemplate.setDefaultSerializer(new StringRedisSerializer());
+        
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;
     }

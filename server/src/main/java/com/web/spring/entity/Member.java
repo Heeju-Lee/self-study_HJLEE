@@ -26,44 +26,39 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @Builder
 public class Member {
-	//그냥 클래스로 수정하고 이 값을 토큰에 넣기
 
-    private Long memberNo;
 
-    @Column(unique = true)
-    private String id;
-    private String pwd;//길이를 주면 안됨..암호화때 길어진다
-
-    @Column(length = 20)
+	private String Id;
+	private String password;//길이를 주면 안됨..암호화때 길어진다
     private String name;
-    private String address;
-    private String birthdate;
-    private String phone;
-    private String email;
-    
-    /* 생성 시간 */
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDate createdAt;
-
-    /* 수정 시간 */
-    @LastModifiedDate
-    private LocalDate modifiedAt;
 
     //추가
     private String role;//USER_PARENTS, USER_CHIlD
+    
+//    private Long childNum;
+//    
+//    private Long parentNum;
+//
+//	@Override
+//	public String toString() {
+//		return "Member [id=" + id + ", pwd=" + pwd + ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt
+//				+ ", role=" + role + ", childNum=" + childNum + ", parentNum=" + parentNum + "]";
+//	}
+    
+	
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "memberNo=" + memberNo +
-                ", id='" + id + '\'' +
-                ", pwd='" + pwd + '\'' +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", createdAt=" + createdAt +
-                ", modifiedAt=" + modifiedAt +
-                ", role='" + role + '\'' +
-                '}';
-    }
+    /*
+     * 아래 코드는 react에서 role을 가지고 구분하고서 해당 num 값을 받기 위해서 존재하는 코드 react코드를 확인 후 변경예정
+     * */
+    private Long memberNum;
+
+	@Override
+	public String toString() {
+		return "Member [Id=" + Id + ", password=" + password + ", name=" + name + ", role=" + role
+				+ ", memberNum=" + memberNum + "]";
+	}
+    
+	
+
+
 }

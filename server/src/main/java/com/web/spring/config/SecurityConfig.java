@@ -83,22 +83,26 @@ public class SecurityConfig {
         //경로별 인가 작업
         http.authorizeHttpRequests((auth) ->
                 auth
-                        .requestMatchers("/test", "/members", "/members/**", "/boards").permitAll()
+                		.requestMatchers("/children").permitAll() 
+                        .requestMatchers("/test", "/children", "/members/**", "/boards","/login","/public/**").permitAll()
                         .requestMatchers("/swagger-ui", "/swagger-ui/**","/api/logistics","/api/swagger-config","/v3/api-docs/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
         );
-
+        System.out.println("request :"+http);
         //세션 설정 - JWT 를 이용 할것이기 때문에 stateless 설정
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+        System.out.println("request :"+http);
         //필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager()
         //메소드에 authenticationConfiguration 객체를 넣어야 함)
        //addFilterAt 은 UsernamePasswordAuthenticationFilter 의 자리에 LoginFilter 가 실행되도록 설정하는 것
         //JWTFilter 등록
-        http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        SecurityFilterChain chain = http.build();
+        
+        log.info("Security Filter Chain : {} +++++++++++++++++++++++++++++++++++++++++++", chain); 
 
-        return http.build();
+        return chain; 
     }
 }
