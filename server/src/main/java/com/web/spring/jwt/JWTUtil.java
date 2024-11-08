@@ -31,8 +31,6 @@ public class JWTUtil {
 
     private SecretKey secretKey;//Decode한 secret key를 담는 객체
 	
-    @Value("${jwt.security.key}")
-    private String secretKeyString; 
     
 	 @Value("${jwt.response.header}")
 	 public String jwtHeader;
@@ -50,21 +48,8 @@ public class JWTUtil {
 	    @Autowired
 	    private UserDetailsService userDetailsService;
 
-	    @PostConstruct
-	    public void init() {
-	        secretKey = new SecretKeySpec(secretKeyString.getBytes(), getAlgorithm(algorithm));
-	    }
+	   
 	    
-	    // 선택된 알고리즘 반환 메서드
-	    private SignatureAlgorithm getAlgorithm(String algorithm) {
-	        switch (algorithm) {
-	            case "HS256": return SignatureAlgorithm.HS256;
-	            case "HS384": return SignatureAlgorithm.HS384;
-	            case "HS512": return SignatureAlgorithm.HS512;
-	            // 필요한 다른 알고리즘 추가 가능
-	            default: throw new IllegalArgumentException("지원하지 않는 알고리즘입니다: " + algorithm);
-	        }
-	    }
 	    
     //검증 name
     public String getId(String token) {
@@ -117,7 +102,7 @@ public class JWTUtil {
                 .claim("username", member.getName()) //이름
                 .claim("id", member.getId()) //아이디
                 .claim("role", role) //Role
-                .claim("memberNo", member.getMemberNum())//유저 이름
+                .claim("memberNo", member.getMemberNum())//유저 num
                 .issuedAt(new Date(System.currentTimeMillis())) //현재로그인된 시간
                 .expiration(new Date(System.currentTimeMillis() + accessTokenValidTime)) //만료시간
                 .signWith(secretKey) // 서명과 함께 저장됨

@@ -83,8 +83,8 @@ public class SecurityConfig {
         //경로별 인가 작업
         http.authorizeHttpRequests((auth) ->
                 auth
-                		.requestMatchers("/children").permitAll() 
-                        .requestMatchers("/test", "/children", "/members/**", "/boards","/login","/public/**").permitAll()
+
+                        .requestMatchers("/test", "/members", "/members/**", "/boards","/children/signup").permitAll()
                         .requestMatchers("/swagger-ui", "/swagger-ui/**","/api/logistics","/api/swagger-config","/v3/api-docs/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
@@ -101,8 +101,7 @@ public class SecurityConfig {
         http.addFilterBefore(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
         SecurityFilterChain chain = http.build();
         
-        log.info("Security Filter Chain : {} +++++++++++++++++++++++++++++++++++++++++++", chain); 
-
+       
         return chain; 
     }
 }

@@ -43,12 +43,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
 	
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 													throws AuthenticationException{
-		log.info("Request Method: {}, Request URI: {}", request.getMethod(), request.getRequestURI());
-		log.info("Content-Type: {}", request.getContentType());
-		log.info("Request Method: {}", request.getMethod());
-		log.info("Request URI: {}", request.getRequestURI());
-		log.info("Request Headers: {}", Collections.list(request.getHeaderNames()));
-		log.info("Request Parameters: {}", Collections.list(request.getParameterNames()));
+//		log.info("Request Method: {}, Request URI: {}", request.getMethod(), request.getRequestURI());
+//		log.info("Content-Type: {}", request.getContentType());
+//		log.info("Request Method: {}", request.getMethod());
+//		log.info("Request URI: {}", request.getRequestURI());
+//		log.info("Request Headers: {}", Collections.list(request.getHeaderNames()));
+//		log.info("Request Parameters: {}", Collections.list(request.getParameterNames()));
 		//1. 클라이언트 로그인 요청시 id, password 받아서 출력
 		   String username = null;
 	        String password = null;

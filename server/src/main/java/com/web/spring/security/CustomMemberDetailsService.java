@@ -1,18 +1,20 @@
 package com.web.spring.security;
 
+
 import java.util.HashMap;
 import java.util.Map;
+
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+
 import com.web.spring.entity.Child;
 import com.web.spring.entity.Member;
 import com.web.spring.entity.Parent;
 import com.web.spring.repository.ChildRepository;
-
 import com.web.spring.repository.ParentRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -26,35 +28,47 @@ public class CustomMemberDetailsService implements UserDetailsService {
 	private final ChildRepository childRepository;
 	private final ParentRepository parentRepository;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	
 
-		Member member = new Member();
-		// 첫 로그인 시
+	
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("UserDetailsService loadUserByUsername...username :: {}", username); //id
 
-		// ChildRepository에서 username으로 조회
-		Child child = childRepository.duplicateCheck(username);
-		if (child != null) {
-			log.info("찾았다!! :: CHILD :: {}", child);
-			// 새로운 Member 생성 후 메모리에 저장
-			 member = new Member(username, child.getPwd(),child.getName(), "USER_CHILD", child.getChildNum());
+        //Parent 테이블에서 조회 시도
+        Member findMember = null;
+        Parent findParent = parentRepository.findById(username);
+        Child findChild = childRepository.findById(username);
+        
+        System.out.println("findParent : " + findParent);
+        System.out.println("findChild : " + findChild);
+        
+        if (findParent == null) {
+        	   findMember = Member.builder()
+            			.id(findChild.getId())
+            			.memberNum(findChild.getChildNum())
+            			.role("ROLE_CHILD")
+            			.name(findChild.getName())
+            			.build();
+        }
+        else if (findChild == null) {
+        	  findMember = Member.builder()
+            			.id(findParent.getId())
+            			.memberNum(findParent.getParentNum())
+            			.role("ROLE_PARENT")
+            			.name(findParent.getName())
+            			.build();
+        }
+        // 둘 다 null일 경우 UsernameNotFoundException 발생
+        else {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
 
-			return new CustomMemberDetails(member);
-		}
 
-		// ParentRepository에서 username으로 조회
-		Parent parent = parentRepository.duplicateCheck(username);
-		if (parent != null) {
-			log.info("찾았다!! :: PARENTS :: {}", parent);
-			// 새로운 Member 생성 후 메모리에 저장
-			 member  = new Member(username, parent.getPwd(),parent.getName(), "USER_PARENT", parent.getParentNum());
-			
-			return new CustomMemberDetails(member);
-		}
+        
+        log.info("findMember...찾았다!! :: {}", findMember);
+        return new CustomMemberDetails(findMember);
+    }
 
-		//아마도 로그인 후 토큰에 있는 값을 확인해주는 크드가 있어야하지 않나?ㄴ
-
-		throw new UsernameNotFoundException("유효하지 않은 사용자 역할입니다: " + member.getRole());
-	}
 
 }

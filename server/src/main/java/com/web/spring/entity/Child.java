@@ -23,6 +23,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @NoArgsConstructor
@@ -30,7 +31,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Child{
+public class Child  extends Auditable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +44,7 @@ public class Child{
 	private String birthdate;
 	private String phone;
 	private String email;
+	private String role;
 	
 
 	
@@ -90,12 +92,7 @@ public class Child{
 	public String toString() {
 		return "Child{" +
 				"childNum=" + childNum +
-				", id='" + id + '\'' +
-				", pwd='" + pwd + '\'' +
-				", name='" + name + '\'' +
-				", birthdate='" + birthdate + '\'' +
-				", phone='" + phone + '\'' +
-				", email='" + email + '\'' +
+				", memberFields=" + super.toString() +
 				", point=" + point +
 				", qExchangeRate=" + qExchangeRate +
 				", qInvestment=" + qInvestment +

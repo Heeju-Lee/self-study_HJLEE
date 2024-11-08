@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.web.spring.entity.Child;
+import com.web.spring.entity.Parent;
 
 import java.util.List;
 import com.web.spring.entity.Payment;
@@ -24,6 +25,7 @@ import jakarta.transaction.Transactional;
 
 public interface ChildRepository extends JpaRepository<Child, Long>{
 
+	Child findById(String id);
 	Boolean existsById(String id);
 
 	@Query(value ="SELECT c FROM Child c WHERE c.id = :id")

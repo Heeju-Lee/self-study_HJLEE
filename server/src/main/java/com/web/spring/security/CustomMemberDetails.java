@@ -30,11 +30,11 @@ public class CustomMemberDetails implements UserDetails{
 		collection.add(()-> member.getRole());
 		return collection;
 	}
-
+	
 	@Override
 	public String getPassword() {
 		log.info("getPassword() ===>");
-		return member.getPassword();
+		return member.getPwd();
 	}
 
 	@Override
@@ -67,6 +67,8 @@ public class CustomMemberDetails implements UserDetails{
         log.info("isEnabled...");
         return true;
     }
+
+
 
 }
 

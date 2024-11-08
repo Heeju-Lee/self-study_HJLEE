@@ -7,6 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ParentRepository  extends JpaRepository<Parent,Long> {
+	
+	
+	Parent findById(String id);
+	
 
 	@Query(value ="SELECT c FROM Parent c WHERE c.id = :id")
 	Parent duplicateCheck(String  id);
