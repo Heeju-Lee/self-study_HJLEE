@@ -1,19 +1,14 @@
 package com.web.spring.security;
 
-
-import java.util.HashMap;
-import java.util.Map;
-
+import com.web.spring.entity.Child;
+import com.web.spring.entity.Member;
+import com.web.spring.entity.Parent;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-
-import com.web.spring.entity.Child;
-import com.web.spring.entity.Member;
-import com.web.spring.entity.Parent;
 import com.web.spring.repository.ChildRepository;
 import com.web.spring.repository.ParentRepository;
 
@@ -23,13 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CustomMemberDetailsService implements UserDetailsService {
+public class CustomMemberDetailsService implements UserDetailsService{
 
-	private final ChildRepository childRepository;
 	private final ParentRepository parentRepository;
-
-	
-
+	private final ChildRepository childRepository;
 	
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -37,8 +29,8 @@ public class CustomMemberDetailsService implements UserDetailsService {
 
         //Parent 테이블에서 조회 시도
         Member findMember = null;
-        Parent findParent = parentRepository.findById(username);
-        Child findChild = childRepository.findById(username);
+        Parent findParent = parentRepository.duplicateCheck(username);
+        Child findChild = childRepository.duplicateCheck(username);
         
         System.out.println("findParent : " + findParent);
         System.out.println("findChild : " + findChild);
@@ -46,7 +38,7 @@ public class CustomMemberDetailsService implements UserDetailsService {
         if (findParent == null) {
         	   findMember = Member.builder()
             			.id(findChild.getId())
-            			.memberNum(findChild.getChildNum())
+            			.pwd(findChild.getPwd())
             			.role("ROLE_CHILD")
             			.name(findChild.getName())
             			.build();
@@ -54,7 +46,7 @@ public class CustomMemberDetailsService implements UserDetailsService {
         else if (findChild == null) {
         	  findMember = Member.builder()
             			.id(findParent.getId())
-            			.memberNum(findParent.getParentNum())
+            			.pwd(findParent.getPwd())
             			.role("ROLE_PARENT")
             			.name(findParent.getName())
             			.build();
@@ -69,6 +61,5 @@ public class CustomMemberDetailsService implements UserDetailsService {
         log.info("findMember...찾았다!! :: {}", findMember);
         return new CustomMemberDetails(findMember);
     }
-
 
 }

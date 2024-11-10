@@ -18,6 +18,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import com.web.spring.jwt.JWTFilter;
 import com.web.spring.jwt.JWTUtil;
 import com.web.spring.jwt.LoginFilter;
+import com.web.spring.jwt.RefreshTokenRepository;
+import com.web.spring.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,8 @@ public class SecurityConfig {
     //AuthenticationManager 가 인자로 받을 AuthenticationConfiguraion 객체 생성자
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final MemberService  memberService;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -97,8 +101,8 @@ public class SecurityConfig {
         //메소드에 authenticationConfiguration 객체를 넣어야 함)
        //addFilterAt 은 UsernamePasswordAuthenticationFilter 의 자리에 LoginFilter 가 실행되도록 설정하는 것
         //JWTFilter 등록
-        http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JWTFilter(jwtUtil,  memberService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,refreshTokenRepository), UsernamePasswordAuthenticationFilter.class);
         SecurityFilterChain chain = http.build();
         
        

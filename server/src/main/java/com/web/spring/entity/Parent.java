@@ -43,7 +43,7 @@ public class Parent  extends Auditable{
     private String phone;
     private String email;
     private String address;
-	private String role;
+
     
 
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST})

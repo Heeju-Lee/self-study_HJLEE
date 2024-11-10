@@ -44,8 +44,7 @@ public class Child  extends Auditable{
 	private String birthdate;
 	private String phone;
 	private String email;
-	private String role;
-	
+
 
 	
 	@Column(nullable = true)

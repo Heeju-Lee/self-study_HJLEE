@@ -1,24 +1,13 @@
 package com.web.spring.entity;
 
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
-
-import jakarta.persistence.Column;
-
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+
 
 
 @NoArgsConstructor
@@ -51,6 +40,17 @@ public class Member {
 	public String toString() {
 		return "Member [Id=" + id + ", =" + pwd + ", name=" + name + ", role=" + role
 				+ ", memberNum=" + memberNum + "]";
+	}
+
+
+
+
+	public Member(String id, String name, String role, Long memberNum) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.role = role;
+		this.memberNum = memberNum;
 	}
     
 	

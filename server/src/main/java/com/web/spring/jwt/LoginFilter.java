@@ -2,8 +2,12 @@ package com.web.spring.jwt;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -23,6 +27,7 @@ import com.web.spring.security.CustomMemberDetails;
 
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -32,23 +37,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
 	private final AuthenticationManager authenticationManager;
 	
 	private final JWTUtil jwtUtil;
+	
+	private final RefreshTokenRepository refreshTokenRepository;
 
-	public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {		
+	public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil,RefreshTokenRepository refreshTokenRepository) {		
 		this.authenticationManager = authenticationManager;
 		this.jwtUtil = jwtUtil;
-		 log.info("LoginFilter initialized with AuthenticationManager and JWTUtil");
+		this.refreshTokenRepository = refreshTokenRepository;
+		 log.info("LoginFilter initialized with AuthenticationManager and JWTUtil and refreshTokenRepository");
 	}
-
+	
 	
 	
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 													throws AuthenticationException{
-//		log.info("Request Method: {}, Request URI: {}", request.getMethod(), request.getRequestURI());
-//		log.info("Content-Type: {}", request.getContentType());
-//		log.info("Request Method: {}", request.getMethod());
-//		log.info("Request URI: {}", request.getRequestURI());
-//		log.info("Request Headers: {}", Collections.list(request.getHeaderNames()));
-//		log.info("Request Parameters: {}", Collections.list(request.getParameterNames()));
+
 		//1. 클라이언트 로그인 요청시 id, password 받아서 출력
 		   String username = null;
 	        String password = null;
@@ -103,7 +106,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         //UserDetailsS 
         CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
         
-        //이 정보는 왜 받아왔을까?
+        //이 정보는 왜 받아왔을까? 리프레쉬 토큰에 해당값을 넣었다.
         String username = customMemberDetails.getUsername();//아이디        
         
         /*
@@ -122,11 +125,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
                 customMemberDetails.getMember(), role);//1초*60*10 10분
         String refreshToken = jwtUtil.createRefreshJwt(
                 customMemberDetails.getMember(), role);//1초*60*60*24 24시간(하루)
+        // 토큰 로그
+        log.info("Access Token 생성: {}", accessToken);
+        log.info("Refresh Token 생성: {}", refreshToken);
+        addRefresh(username, refreshToken, 12*60);
         System.out.println("@@@@@@@@@@@@@@@@@@ getMember "+ customMemberDetails.getMember() +" @@@@@@@@@@@@@@@@@@");
         //응답할 헤더를 설정
         //베어러 뒤에 공백을 준다. 관례적인  prefix
-        response.addHeader(jwtUtil.jwtHeader, jwtUtil.jwtTokenPrefix + accessToken);
-        response.addHeader(jwtUtil.jwtHeader, jwtUtil.jwtTokenPrefix + refreshToken);
+        response.addHeader("Authorization-Access", jwtUtil.jwtTokenPrefix + accessToken);
+        response.addHeader("Authorization-Refresh", jwtUtil.jwtTokenPrefix + refreshToken);
         //아마 로그인시 데이터 확인 용 코드인듯하다. 후에 
         Map<String, Object> map = new HashMap<>();
         Member member = customMemberDetails.getMember();
@@ -158,6 +165,32 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         Gson gson= new Gson();
         String arr = gson.toJson(map);
         response.getWriter().print(arr);
+        log.error("Authentication attempt failed", failed);
+    }
+    
+    
+    protected void addRefresh(String username, String refresh, int expiredMinute){
+    	Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, expiredMinute);
+        Date date = calendar.getTime();
+
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setUsername(username);
+        refreshToken.setToken(refresh);
+        refreshToken.setExpiration(date.toString());
+     // 저장 전 로그
+        log.info("저장할 Refresh Token 정보: Username={}, Token={}, Expiration={}", 
+                 username, refresh, expiredMinute);
+        refreshTokenRepository.save(refreshToken);
+        // 저장 후 확인 로그
+        log.info("Refresh Token 저장 완료");
+    }
+    
+    Cookie createCookie(String key, String value){
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(12*60*60); // 12h
+        cookie.setHttpOnly(true);   //JS로 접근 불가, 탈취 위험 감소
+        return cookie;
     }
 	
 }
