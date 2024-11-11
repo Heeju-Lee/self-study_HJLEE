@@ -1,6 +1,7 @@
-package com.web.spring.dto.child;
+package com.web.spring.dto;
 
 import com.web.spring.entity.Child;
+import com.web.spring.entity.Parent;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +16,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChlidResponseDto {
+public class SignInResponseDto {
 	
-	private Long childNum;
+	private Long num;
 	private String id;
 	private String pwd;
 	private String name;
@@ -27,9 +28,8 @@ public class ChlidResponseDto {
 	private LocalDate modifiedAt;
 	private LocalDate createdAt;
 
-	
-	public ChlidResponseDto(Child child) {
-		this.childNum = child.getChildNum();
+	public SignInResponseDto(Child child) {
+		this.num = child.getChildNum();
 		this.id = child.getId();
 		this.pwd = child.getPwd();
 		this.name = child.getName();
@@ -41,5 +41,18 @@ public class ChlidResponseDto {
 
 	}
 
+	public SignInResponseDto(Parent parent ) {
+		this.num = parent.getParentNum();
+		this.id = parent.getId();
+		this.pwd = parent.getPwd();
+		this.name = parent.getName();
+		this.birthdate = parent.getBirthdate();
+		this.phone = parent.getPhone();
+		this.email = parent.getEmail();
+		this.createdAt = parent.getCreatedAt();
+		this.modifiedAt = parent.getModifiedAt();
+		
+	}
+	
 	
 }

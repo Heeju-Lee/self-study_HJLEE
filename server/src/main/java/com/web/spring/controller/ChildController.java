@@ -1,34 +1,14 @@
 package com.web.spring.controller;
 
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
-
-import com.web.spring.entity.Child;
-import com.web.spring.entity.Parent;
 import com.web.spring.entity.Payment;
 import com.web.spring.entity.Quiz;
-import com.web.spring.repository.ChildRepository;
-import com.web.spring.repository.ParentRepository;
 import com.web.spring.entity.Wish;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,44 +17,40 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.web.spring.dto.child.ChildRequestDto;
-import com.web.spring.dto.child.ChlidResponseDto;
+
 import com.web.spring.dto.child.wish.WishRequestDto;
 import com.web.spring.dto.child.wish.WishResponseDto;
-import com.web.spring.dto.child.payment.PayRequestDto;
-
+import com.web.spring.dto.SignInResponseDto;
+import com.web.spring.dto.SignUpRequestDto;
 import com.web.spring.dto.child.plan.PlanRequestDto;
 import com.web.spring.dto.child.plan.PlanResponseDto;
 import com.web.spring.dto.child.point.PointRequestDto;
 import com.web.spring.dto.child.quiz.QuizResponseDto;
 
 import com.web.spring.service.ChildService;
-import com.web.spring.service.ParentService;
-import com.web.spring.service.WishService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/children")
 public class ChildController { 
 
 	private final ChildService childService;
-	private final WishService wishService;
 	
 /* Child : 회원가입 + 중복 체크 --------------------------------------------------------------*/
-	@PostMapping("/children/signup")
-	public ResponseEntity<?> singUp(@RequestBody ChildRequestDto childRequestDto){
+	@PostMapping("/signup")
+	public ResponseEntity<?> singUp(@RequestBody SignUpRequestDto childRequestDto){
 		
-		ChlidResponseDto response = childService.singUp(childRequestDto);
+		SignInResponseDto response = childService.singUp(childRequestDto);
 				
 		return ResponseEntity.status(HttpStatus.CREATED)
 				 			 .body(response);
 	}
 
-	@GetMapping("/children/{id}")
+	@GetMapping("/{id}")
 	public String duplicationCheck(@PathVariable String id){
 		return childService.duplicateCheck(id);
 	}

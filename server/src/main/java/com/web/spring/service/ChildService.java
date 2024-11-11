@@ -11,12 +11,8 @@ import java.util.stream.Collectors;
 
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import com.web.spring.entity.Parent;
 import com.web.spring.entity.Payment;
@@ -28,8 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.web.spring.dto.child.ChildRequestDto;
-import com.web.spring.dto.child.ChlidResponseDto;
+import com.web.spring.dto.SignInResponseDto;
+import com.web.spring.dto.SignUpRequestDto;
 import com.web.spring.dto.child.plan.PlanRequestDto;
 import com.web.spring.dto.child.plan.PlanResponseDto;
 import com.web.spring.dto.child.quiz.QuizResponseDto;
@@ -37,10 +33,8 @@ import com.web.spring.dto.child.wish.WishRequestDto;
 import com.web.spring.dto.child.wish.WishResponseDto;
 import com.web.spring.entity.Child;
 
-import com.web.spring.entity.Payment;
 import com.web.spring.entity.Plan;
 import com.web.spring.entity.Wish;
-import com.web.spring.entity.Plan;
 import com.web.spring.entity.Quiz;
 import com.web.spring.exception.ExceededAmountException;
 import com.web.spring.exception.NotEnoughPointsException;
@@ -65,16 +59,16 @@ public class ChildService {
 	
 /* Child : 회원가입 + 중복 체크 */
 	@Transactional
-	public ChlidResponseDto singUp(ChildRequestDto childRequestDto) {
+	public SignInResponseDto singUp(SignUpRequestDto signUpRequestDto) {
 		
-		Child child = childRequestDto.toChild(childRequestDto);
+		Child child = signUpRequestDto.toChild(signUpRequestDto);
 
 		//BE에서 중복확인 한 번 더 하기
 		if (childRepository.existsById(child.getId()))
 			throw new UserAuthenticationException("중복된 아이디", "Duplicated ID!!");
 
 		//부모 찾기
-		Long parentNum = childRequestDto.getParentNum();
+		Long parentNum = signUpRequestDto.getParentNum();
 		Parent parent = parentRepository.findById(parentNum).orElseThrow();
 
 		System.out.println("부모 찾기 ::: " + parent);
@@ -97,17 +91,21 @@ public class ChildService {
 		parent.getChildren().add(rChild);
 
 		//System.out.println("rChild : " + rChild);
+
+		//목업 데이터 저장
+		List<Payment> payments = childRepository.showMonthPayments(child.getChildNum());
+		child.setPayments(payments);
 		
-		return new ChlidResponseDto(rChild);
+		return new SignInResponseDto(rChild);
 	}
 	
 	@Transactional(readOnly = true)
 	public String duplicateCheck(String id) {
 		
-		Child rMember = childRepository.duplicateCheck(id);
-		System.out.println( "rMember ==> " +  rMember);
+		Child rChild = childRepository.duplicateCheck(id);
+		System.out.println( "rChild ==> " +  rChild);
 		
-		if(rMember == null) return "아이디 사용 가능";
+		if(rChild == null) return "아이디 사용 가능";
 		else return "아이디 사용 불가";
 		
 	}
@@ -139,10 +137,6 @@ public class ChildService {
 		planRepository.save(plan);
 		child.getPlans().add(plan);
 
-		//목업 데이터 저장
-		List<Payment> payments = childRepository.showMonthPayments(child.getChildNum());
-		child.setPayments(payments);
-		
 		return new PlanResponseDto(plan);
 	}
 	

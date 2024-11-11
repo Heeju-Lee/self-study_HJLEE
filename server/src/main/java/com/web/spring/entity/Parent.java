@@ -52,6 +52,4 @@ public class Parent  extends Auditable{
 	@JoinColumn(name = "parent_num")
 	private List<PointOrder> orders = new ArrayList<>();
 
-
-
 }
