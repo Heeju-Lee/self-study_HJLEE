@@ -36,7 +36,7 @@ public class MemberService {
     	String id = jwtUtil.getId(refreshToken);
     	String name = jwtUtil.getname(refreshToken);
         String role = jwtUtil.getRole(refreshToken);
-        Long memberNum = jwtUtil.getMemberNo(refreshToken);
+        Long memberNum = Long.valueOf(jwtUtil.getMemberNo(refreshToken));
         Member mem = new Member(id, name, role,memberNum);
         
         return jwtUtil.createJwt(mem,role);

@@ -23,7 +23,7 @@ public class RefreshToken {
 	// 유효시간 timeToLive = 14440(4시간)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private  int id;
+	private  Long id;
 
     @Column(nullable = false, unique = true)
     private String username;

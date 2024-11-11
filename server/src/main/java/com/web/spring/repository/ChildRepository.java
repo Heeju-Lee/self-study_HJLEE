@@ -25,7 +25,7 @@ import jakarta.transaction.Transactional;
 
 public interface ChildRepository extends JpaRepository<Child, Long>{
 
-	Child findById(String id);
+//	Child findById(String id);
 	Boolean existsById(String id);
 
 	@Query(value ="SELECT c FROM Child c WHERE c.id = :id")

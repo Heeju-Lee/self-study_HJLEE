@@ -53,20 +53,20 @@ public class ParentController {
     }
 
     /* 용돈 계약서 */
-    @GetMapping("/contracts/{childNum}")
-    public ResponseEntity<?> getContracts(@PathVariable String childNum,
-                                          @RequestParam String year,
-                                          @RequestParam String month) throws Exception {
-
-        //토큰까서 parentNum 넣었다 치고
-        Child child = parentService.findParentChild(1L, Long.parseLong(childNum));
-
-        PlanResponseDto  planResponseDto = childService.showPlan(year,month);
-
-        //추후에 결제 내역 가져오기
-
-        return ResponseEntity.status(HttpStatus.OK).body(planResponseDto);
-    }
+//    @GetMapping("/contracts/{childNum}")
+//    public ResponseEntity<?> getContracts(@PathVariable String childNum,
+//                                          @RequestParam String year,
+//                                          @RequestParam String month) throws Exception {
+//
+//        //토큰까서 parentNum 넣었다 치고
+//        Child child = parentService.findParentChild(1L, Long.parseLong(childNum));
+//
+//        PlanResponseDto  planResponseDto = childService.showPlan(year,month);
+//
+//        //추후에 결제 내역 가져오기
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(planResponseDto);
+//    }
 
     /* 위시 리스트 */
     @GetMapping("/wishes/{childNum}")

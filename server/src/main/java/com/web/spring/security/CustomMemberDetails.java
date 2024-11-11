@@ -7,7 +7,9 @@ import com.web.spring.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,14 +35,18 @@ public class CustomMemberDetails implements UserDetails{
 	
 	@Override
 	public String getPassword() {
-		log.info("getPassword() ===>");
+		log.info("getPassword() ===>{}"+member.getPwd());
 		return member.getPwd();
 	}
 
 	@Override
 	public String getUsername() {
-		log.info("getUsername() ===>");
-		return member.getId();
+		log.info("getUsername() ===>{}"+member.getId());
+		return String.valueOf(member.getMemberNum());
+	}
+	public Long getMemberNum() {
+		log.info("getUsername() ===>{}"+member.getMemberNum());
+		return member.getMemberNum();
 	}
 	
 	////////////////////////////////////////////////////////

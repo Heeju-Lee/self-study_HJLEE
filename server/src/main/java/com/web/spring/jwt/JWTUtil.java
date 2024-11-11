@@ -45,7 +45,6 @@ public class JWTUtil {
 	@Value("${jwt.token.prefix}")
 	public String jwtTokenPrefix;
 
-
 	private long accessTokenValidTime = Duration.ofMinutes(30).toMillis(); // 만료시간 30분
 	private long refreshTokenValidTime = Duration.ofDays(14).toMillis(); // 만료시간 2주
 
@@ -59,21 +58,23 @@ public class JWTUtil {
 		return jwtTokenPrefix;
 	}
 
-	//application.properties에 있는 미리 Base64로 Encode된 Secret key를 가져온다
-    public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
-   
-        secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
-    }
-	// 검증 name
+	// application.properties에 있는 미리 Base64로 Encode된 Secret key를 가져온다
+	public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
+
+		secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8),
+				Jwts.SIG.HS256.key().build().getAlgorithm());
+	}
+
+	// 검증 Id
 	public String getId(String token) {
 		log.info("getUsername(String token)  call");
-		String re = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username",
+		String re = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("id",
 				String.class);
 		log.info("getUsername(String token)  re = {}", re);
 		return re;
 	}
 
-	// 검증 Id
+	// 검증 name
 	public String getname(String token) {
 		log.info("getId(String token)  call");
 		String re = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username",

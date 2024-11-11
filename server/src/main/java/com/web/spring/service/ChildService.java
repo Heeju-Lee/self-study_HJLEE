@@ -36,7 +36,7 @@ import com.web.spring.dto.child.quiz.QuizResponseDto;
 import com.web.spring.dto.child.wish.WishRequestDto;
 import com.web.spring.dto.child.wish.WishResponseDto;
 import com.web.spring.entity.Child;
-
+import com.web.spring.entity.Member;
 import com.web.spring.entity.Payment;
 import com.web.spring.entity.Plan;
 import com.web.spring.entity.Wish;
@@ -114,10 +114,10 @@ public class ChildService {
 
 
 	@Transactional
-	public Child findChild(Long childNum){
+	public Optional<Child> findChild(Long childNum){
 
-		Child child = childRepository.findById(childNum)
-				  					 .orElseThrow( () -> new NoSuchElementException("Child with cNum not found"));
+		Optional<Child> child = childRepository.findById(childNum);
+				  					
 
 		return child;
 	}
@@ -125,34 +125,33 @@ public class ChildService {
 
 /* Plan : 소비 계획 세우기 */
 	@Transactional
-	public PlanResponseDto createPlan(PlanRequestDto planRequestDto ){
+	public PlanResponseDto createPlan(PlanRequestDto planRequestDto, Long num){
 		
 		//1. client에서 c_num 넣어주는 방법 -> PlanRequestDto 사용
 		//2. JWT 토큰 까서 c_num 확인하는 방법
 		//c_num 받았다고 치고.
-		Child child = findChild(planRequestDto.getChildNum());
-		System.out.println(child);
-
+		Optional<Child> child = findChild(num);
+		System.out.println("mem에서 받아온 child"+child);
+		
 		Plan plan = planRequestDto.toPlan(planRequestDto);
 		
 		planRepository.save(plan);
-		child.getPlans().add(plan);
+		child.get().getPlans().add(plan);
 
 		//목업 데이터 저장
-		List<Payment> payments = childRepository.showMonthPayments(child.getChildNum());
-		child.setPayments(payments);
+		List<Payment> payments = childRepository.showMonthPayments(num);
+		child.get().setPayments(payments);
 		
 		return new PlanResponseDto(plan);
 	}
 	
 	//소비 계획 조회하기
 	@Transactional
-	public PlanResponseDto showPlan(String year, String month) throws Exception{
+	public PlanResponseDto showPlan(String year, String month,Member mem) throws Exception{
 	
-		//토큰 까서 childNum 받았다 치고,
-		Child child =findChild(1L);
+		//토큰 까서 childNum 받았다 치고,???? 쓰는 childNum이 없음이해했는데 매번 헷갈림
+		Optional<Child> child = findChild(mem.getMemberNum());
 		System.out.println(child);
-		
 		Plan plan = childRepository.findPlanByDate(Integer.parseInt(year), Integer.parseInt(month) );
 		
 		return new PlanResponseDto(plan);
@@ -215,8 +214,8 @@ public class ChildService {
 	@Transactional(readOnly = true)
 	public List<Payment> showMonthList(Long childNum, int year, int month) {
 
-		Child child = findChild(childNum);
-		List<Payment> payments = child.getPayments();
+		Optional<Child> child = findChild(childNum);
+		List<Payment> payments = child.get().getPayments();
 		List<Payment> monthPayment = new ArrayList<>();
 
 		payments.forEach( payment -> {
@@ -310,9 +309,9 @@ public class ChildService {
 	public HashMap<String, Integer> monthPlan(Long childNum, int year, int month){
 
 		HashMap<String, Integer> response = new HashMap<>();
-		Child child = findChild(childNum);
+		Optional<Child> child = findChild(childNum);
 
-		Plan monthPlan = child.getPlans().stream()
+		Plan monthPlan = child.get().getPlans().stream()
 						.filter(plan -> plan.getModifiedAt().getMonthValue() == month && plan.getModifiedAt().getYear() == year )
 						.findFirst()
 						.orElseThrow();
@@ -387,12 +386,12 @@ public class ChildService {
 	@Transactional
 	public WishResponseDto createWish(WishRequestDto wishRequestDto) {
 		
-		Child child =findChild(1L);
+		Optional<Child> child =findChild(1L);
 		Wish wish = wishRequestDto.toWish(wishRequestDto);
 		System.out.println("Createwish ::"+wish);
 		
 		Wish rwish = wishRepository.save(wish);
-		child.getWishes().add(wish);
+		child.get().getWishes().add(wish);
 		
 		return new WishResponseDto(rwish);
 
@@ -423,7 +422,7 @@ public class ChildService {
 	@Transactional
 	public WishResponseDto showWishDetail(String wishNum) {
 		
-		Child child =findChild(1L);
+		
 		Wish wish = wishRepository.findById(Long.parseLong(wishNum))
 				  .orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
 		System.out.println("showWishDetail :: "+wish);
@@ -441,9 +440,9 @@ public class ChildService {
 		int savingResult = 0;
 		
 		//토큰에 있는 아이디
-		Child child =findChild(1L);
+		Optional<Child> child =findChild(1L);
 		// children 변경전 포인트
-		System.out.println("beforeSaving_ChildPoint :: "+child.getPoint());
+		System.out.println("beforeSaving_ChildPoint :: "+child.get().getPoint());
 		
 		//해당하는 위시 가져오기
 		Wish wish = wishRepository.findById(Long.parseLong(wishNum))
@@ -464,8 +463,8 @@ public class ChildService {
 		}
 		
 		// 포인트 변경
-		System.out.println(child.getChildNum());
-		int pointResult = updatePoint(child.getChildNum(), -parseSavingAmt);
+		System.out.println(child.get().getChildNum());
+		int pointResult = updatePoint(child.get().getChildNum(), -parseSavingAmt);
 		
 		System.out.println("afterSavingWish :: complete ->"+ savingResult );
 		Wish rwish = wishRepository.findById(parseWishNum)
@@ -483,9 +482,9 @@ public class ChildService {
 		Long parseWishNum = Long.parseLong(wishNum);
 		
 		//토큰에 있는 아이디
-		Child child =findChild(1L);
+		Optional<Child> child =findChild(1L);
 		// children 변경전 포인트
-		int curPoint = child.getPoint();
+		int curPoint = child.get().getPoint();
 		System.out.println("beforeDeleteWish_Child :: "+curPoint);
 		
 		//해당하는 위시 가져오기
@@ -495,16 +494,16 @@ public class ChildService {
 		int curSaving = wish.getSavingAmt();
 		
 		// 변경된 포인트
-		int pointResult = updatePoint(child.getChildNum(), curSaving);
+		int pointResult = updatePoint(child.get().getChildNum(), curSaving);
 		
 		// 변경 완료 여부 확인
 		wishRepository.deleteById(parseWishNum);
 		
 		//포인트 반환 후 child
-		child.setPoint(pointResult);
+		child.get().setPoint(pointResult);
 		System.out.println("afterDeleteWish :: complete ->"+ child);
 		
-		List<Wish> wishList= childRepository.showActiveWishList(child.getChildNum());		
+		List<Wish> wishList= childRepository.showActiveWishList(child.get().getChildNum());		
 		return wishList;
 	}
 }
