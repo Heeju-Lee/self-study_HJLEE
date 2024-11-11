@@ -30,8 +30,6 @@ public class NotificationResponseDto {
     private String senderType;
     
 
-    
-    
 	public NotificationResponseDto(Long notiNum, Long parentNum, Long childNum, String message, String category,
 			String senderType) {
 		this.notiNum = notiNum;

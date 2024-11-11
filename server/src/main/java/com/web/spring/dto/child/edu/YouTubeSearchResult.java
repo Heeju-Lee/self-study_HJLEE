@@ -1,8 +1,5 @@
 package com.web.spring.dto.child.edu;
 
-import com.google.api.services.youtube.model.ThumbnailDetails;
-import com.google.api.services.youtube.model.ThumbnailSetResponse;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

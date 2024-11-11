@@ -10,24 +10,22 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import com.web.spring.entity.Parent;
 import com.web.spring.entity.Payment;
+import com.web.spring.exception.UserAuthenticationException;
 import com.web.spring.repository.ParentRepository;
 
-import org.springframework.scheduling.support.ScheduledTaskObservationDocumentation.LowCardinalityKeyNames;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.web.spring.dto.child.ChildRequestDto;
-import com.web.spring.dto.child.ChlidResponseDto;
+import com.web.spring.dto.SignInResponseDto;
+import com.web.spring.dto.SignUpRequestDto;
 import com.web.spring.dto.child.plan.PlanRequestDto;
 import com.web.spring.dto.child.plan.PlanResponseDto;
 import com.web.spring.dto.child.quiz.QuizResponseDto;
@@ -35,10 +33,8 @@ import com.web.spring.dto.child.wish.WishRequestDto;
 import com.web.spring.dto.child.wish.WishResponseDto;
 import com.web.spring.entity.Child;
 
-import com.web.spring.entity.Payment;
 import com.web.spring.entity.Plan;
 import com.web.spring.entity.Wish;
-import com.web.spring.entity.Plan;
 import com.web.spring.entity.Quiz;
 import com.web.spring.exception.ExceededAmountException;
 import com.web.spring.exception.NotEnoughPointsException;
@@ -51,6 +47,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChildService {
 
 	private final ChildRepository childRepository;
@@ -58,41 +55,62 @@ public class ChildService {
 	private final ParentRepository parentRepository;
 	private final WishRepository wishRepository;
 	private final S3Service s3Service;
-
-/* Child : 회원가입 */	
+	private final PasswordEncoder passwordEncoder;
+	
+/* Child : 회원가입 + 중복 체크 */
 	@Transactional
-	public ChlidResponseDto singUp(ChildRequestDto childRequestDto) {
+	public SignInResponseDto singUp(SignUpRequestDto signUpRequestDto) {
 		
-		Child child = childRequestDto.toChild(childRequestDto);
+		Child child = signUpRequestDto.toChild(signUpRequestDto);
 
-		Long parentNum =childRequestDto.getParentNum();
-		System.out.println(parentNum);
+		//BE에서 중복확인 한 번 더 하기
+		if (childRepository.existsById(child.getId()))
+			throw new UserAuthenticationException("중복된 아이디", "Duplicated ID!!");
+
+		//부모 찾기
+		Long parentNum = signUpRequestDto.getParentNum();
 		Parent parent = parentRepository.findById(parentNum).orElseThrow();
 
+		System.out.println("부모 찾기 ::: " + parent);
+		
 		//아이게 부모 저장
 		child.setParent(parent);
+
+		//비번 암호화
+		String encPwd = passwordEncoder.encode(child.getPwd());
+		log.info("encPwd ==> { }", encPwd);
+		child.setPwd(encPwd);
+
+		//Role 설정
+		child.setRole("ROLE_CHILD");
+
+		// 아이 DB 저장
 		Child rChild = childRepository.save(child);
 		
 		//부모에게 아이 저장
 		parent.getChildren().add(rChild);
+
+		//System.out.println("rChild : " + rChild);
+
+		//목업 데이터 저장
+		List<Payment> payments = childRepository.showMonthPayments(child.getChildNum());
+		child.setPayments(payments);
 		
-		System.out.println("rChild : " + rChild);
-		
-		return new ChlidResponseDto(rChild);
-				
+		return new SignInResponseDto(rChild);
 	}
 	
 	@Transactional(readOnly = true)
 	public String duplicateCheck(String id) {
 		
-		Child rMember = childRepository.duplicateCheck(id);
-		System.out.println( "rMember ==> " +  rMember);
+		Child rChild = childRepository.duplicateCheck(id);
+		System.out.println( "rChild ==> " +  rChild);
 		
-		if(rMember == null) return "아이디 사용 가능";
+		if(rChild == null) return "아이디 사용 가능";
 		else return "아이디 사용 불가";
 		
 	}
-	
+
+
 
 	@Transactional
 	public Child findChild(Long childNum){
@@ -113,16 +131,12 @@ public class ChildService {
 		//c_num 받았다고 치고.
 		Child child = findChild(planRequestDto.getChildNum());
 		System.out.println(child);
-		
+
 		Plan plan = planRequestDto.toPlan(planRequestDto);
 		
 		planRepository.save(plan);
 		child.getPlans().add(plan);
 
-		//목업 데이터 저장
-		List<Payment> payments = childRepository.showMonthPayments(child.getChildNum());
-		child.setPayments(payments);
-		
 		return new PlanResponseDto(plan);
 	}
 	
@@ -493,6 +507,7 @@ public class ChildService {
 		System.out.println("afterDeleteWish :: complete ->"+ child);
 		
 		List<Wish> wishList= childRepository.showActiveWishList(child.getChildNum());		
+		
 		return wishList;
 	}
 }
