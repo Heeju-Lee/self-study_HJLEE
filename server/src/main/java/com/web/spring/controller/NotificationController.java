@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class NotificationController {
+	
 	//Parent나 Child가 알림을 보내거나 알림 목록을 조회하는 엔드포인트
 	private final NotificationService notificationService;
 
@@ -55,6 +56,7 @@ public class NotificationController {
 		
 		return notificationService.subscribe(id, response);
 	}
+	
 	// 해당 ID에 대한 데이터를 클라이언트에게 전송한다
 	@PostMapping("/send-data/{id}")
 	public void sendData(@PathVariable Long id, @RequestBody NotificationRequestDto notiRequestDto) {

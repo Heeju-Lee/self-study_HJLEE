@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -23,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.web.spring.dto.SignInResponseDto;
 import com.web.spring.dto.SignUpRequestDto;
@@ -54,7 +54,7 @@ public class ChildService {
 	private final PlanRepository planRepository;
 	private final ParentRepository parentRepository;
 	private final WishRepository wishRepository;
-
+	private final S3Service s3Service;
 	private final PasswordEncoder passwordEncoder;
 	
 /* Child : 회원가입 + 중복 체크 */
@@ -380,10 +380,12 @@ public class ChildService {
 	
 	// Wish : 위시 등록하기
 	@Transactional
-	public WishResponseDto createWish(WishRequestDto wishRequestDto) {
+	public WishResponseDto createWish(WishRequestDto wishRequestDto, MultipartFile wishFile) throws IOException {
 		
 		Child child =findChild(1L);
-		Wish wish = wishRequestDto.toWish(wishRequestDto);
+		String imgUrl = s3Service.upload(wishFile);
+		Wish wish = wishRequestDto.toWish(wishRequestDto, imgUrl);
+
 		System.out.println("Createwish ::"+wish);
 		
 		Wish rwish = wishRepository.save(wish);
@@ -472,7 +474,7 @@ public class ChildService {
 	
 	// Wish : 위시 삭제하기 + savingPoint return(updatePoint 호출)
 	@Transactional
-	public List<Wish> deleteWish(String wishNum) {
+	public List<Wish> deleteWish(String wishNum) throws IOException {
 		
 		// 인자값 미리 파싱
 		Long parseWishNum = Long.parseLong(wishNum);
@@ -486,11 +488,16 @@ public class ChildService {
 		//해당하는 위시 가져오기
 		Wish wish = wishRepository.findById(Long.parseLong(wishNum))
 				  .orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
+		System.out.println(wish);
+
 		// 현재까지 모은 금액
 		int curSaving = wish.getSavingAmt();
 		
 		// 변경된 포인트
 		int pointResult = updatePoint(child.getChildNum(), curSaving);
+		
+		// s3이미지 지우기
+		System.out.println(s3Service.delete(wish.getImg()));
 		
 		// 변경 완료 여부 확인
 		wishRepository.deleteById(parseWishNum);
@@ -500,6 +507,7 @@ public class ChildService {
 		System.out.println("afterDeleteWish :: complete ->"+ child);
 		
 		List<Wish> wishList= childRepository.showActiveWishList(child.getChildNum());		
+		
 		return wishList;
 	}
 }

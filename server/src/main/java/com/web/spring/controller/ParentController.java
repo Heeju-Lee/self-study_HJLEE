@@ -7,7 +7,6 @@ import com.web.spring.dto.parent.ParentReportResponseDto;
 import com.web.spring.dto.parent.PointOrderRequestDto;
 import com.web.spring.dto.parent.PointOrderResponseDto;
 import com.web.spring.entity.Child;
-import com.web.spring.entity.Payment;
 import com.web.spring.entity.PointOrder;
 import com.web.spring.entity.Wish;
 import com.web.spring.service.ChildService;
@@ -104,7 +103,7 @@ public class ParentController {
     /* 포인트 결제*/
     @PostMapping("/orders/{parentNum}")
     public ResponseEntity<PointOrderResponseDto> creatPointOrders(@PathVariable String parentNum,
-    										  @RequestBody PointOrderRequestDto pointOrderRequestDto ){
+    										  						@RequestBody PointOrderRequestDto pointOrderRequestDto ){
     	
     	PointOrderResponseDto pointOrder = parentService.createPointOrders(Long.parseLong(parentNum), pointOrderRequestDto);
     	return ResponseEntity.status(HttpStatus.OK).body(pointOrder);
@@ -115,9 +114,9 @@ public class ParentController {
     /* 포인트 결제 내역 전체 보기*/
     @GetMapping("/orders/{parentNum}/{childNum}")
     public ResponseEntity<List<PointOrder>> getPointOrders(@PathVariable String parentNum,
-    										@PathVariable String childNum,
-							    			@RequestParam String year,
-							    			@RequestParam String month){
+				    										@PathVariable String childNum,
+											    			@RequestParam String year,
+											    			@RequestParam String month){
     	
     	
     	List<PointOrder> pointOrders = parentService.getPointOrders(Long.parseLong(parentNum), Long.parseLong(childNum), year, month ); 
