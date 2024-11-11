@@ -124,12 +124,12 @@ public class ChildService {
 
 /* Plan : 소비 계획 세우기 */
 	@Transactional
-	public PlanResponseDto createPlan(PlanRequestDto planRequestDto ){
+	public PlanResponseDto createPlan(Long childNum, PlanRequestDto planRequestDto ){
 		
 		//1. client에서 c_num 넣어주는 방법 -> PlanRequestDto 사용
 		//2. JWT 토큰 까서 c_num 확인하는 방법
 		//c_num 받았다고 치고.
-		Child child = findChild(planRequestDto.getChildNum());
+		Child child = findChild(childNum);
 		System.out.println(child);
 
 		Plan plan = planRequestDto.toPlan(planRequestDto);
@@ -148,7 +148,7 @@ public class ChildService {
 		Child child =findChild(1L);
 		System.out.println(child);
 		
-		Plan plan = childRepository.findPlanByDate(Integer.parseInt(year), Integer.parseInt(month) );
+		Plan plan = childRepository.findPlan(child.getChildNum(), Integer.parseInt(year), Integer.parseInt(month) );
 		
 		return new PlanResponseDto(plan);
 	}

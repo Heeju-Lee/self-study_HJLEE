@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.web.spring.entity.Child;
 import com.web.spring.entity.Member;
+import com.web.spring.repository.ChildRepository;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,19 +24,29 @@ import com.web.spring.security.CustomMemberDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+//@RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 받는 컨트롤러 역할의 필터
 	private final AuthenticationManager authenticationManager;
+	private final ChildRepository childRepository;
 	
 	private final JWTUtil jwtUtil;
 
-	public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {		
+//	public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, ChildRepository childRepository) {		
+//		this.authenticationManager = authenticationManager;
+//		this.jwtUtil = jwtUtil;
+//		this.childRepository = childRepository;
+//	}
+	
+	public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, ChildRepository childRepository) {
 		this.authenticationManager = authenticationManager;
 		this.jwtUtil = jwtUtil;
+		this.childRepository = childRepository;
 	}
-	
+
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 													throws AuthenticationException{
 		//1. 클라이언트 로그인 요청시 id, password 받아서 출력
@@ -65,8 +78,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         //UserDetailsS
         CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
         
+        //System.out.println("#################response : " + response.get);
+         
+        
         //이 정보는 왜 받아왔을까?
-        String username = customMemberDetails.getUsername();//아이디        
+        String username = customMemberDetails.getUsername();//아이디    
+        
+        Child child=childRepository.findById(username);
+        customMemberDetails.setMemberNo(child.getChildNum());
         
         /*
         하나의 유저가 여러개의 권한을 가질수 있기 때문에 collection으로 반환됨
@@ -81,7 +100,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
 
         //토큰생성과정...이때 password는 JWTUtil에서 안담았다.
         String token = jwtUtil.createJwt(
-                customMemberDetails.getMember(), role, 1000L*60*10L);//1초*60*10 10분
+                customMemberDetails.getMember(), role, 1000L*60*10L *6 *24);//1초*60*10 10분 (10 * 6 = 60분 * 12 = 24시간)
         System.out.println("@@@@@@@@@@@@@@@@@@ getMember "+ customMemberDetails.getMember() +" @@@@@@@@@@@@@@@@@@");
         //응답할 헤더를 설정
         //베어러 뒤에 공백을 준다. 관례적인  prefix
@@ -89,10 +108,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
 
         Map<String, Object> map = new HashMap<>();
         Member member = customMemberDetails.getMember();
+        
+        System.out.println("memberNo : " + member.getMemberNo());
         map.put("memberNo",member.getMemberNo() );
         map.put("id", member.getId());
         map.put("name", member.getName());
-        //map.put("address", member.getAddress());
 
         Gson gson= new Gson();
         String arr = gson.toJson(map);

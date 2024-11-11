@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import com.web.spring.jwt.JWTFilter;
 import com.web.spring.jwt.JWTUtil;
 import com.web.spring.jwt.LoginFilter;
+import com.web.spring.repository.ChildRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class SecurityConfig {
     //AuthenticationManager 가 인자로 받을 AuthenticationConfiguraion 객체 생성자
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+	private final ChildRepository childRepository;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -97,7 +99,7 @@ public class SecurityConfig {
        //addFilterAt 은 UsernamePasswordAuthenticationFilter 의 자리에 LoginFilter 가 실행되도록 설정하는 것
         //JWTFilter 등록
         http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, childRepository), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
