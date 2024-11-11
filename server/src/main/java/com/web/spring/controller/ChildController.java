@@ -322,8 +322,10 @@ public class ChildController<WishService> {
 	@GetMapping("/quiz")
 	public ResponseEntity<List<Quiz>> showQuiz() {
 		List<Quiz> quizList = childService.showQuiz();
-		
-		return ResponseEntity.ok(quizList);
+		quizList.stream().forEach(c->System.out.println(c));
+	
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(quizList);
 	}
 	
 	//퀴즈 업데이트

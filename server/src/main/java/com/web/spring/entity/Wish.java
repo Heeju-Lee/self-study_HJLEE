@@ -2,12 +2,16 @@ package com.web.spring.entity;
 
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
+import com.web.spring.global.BooleanToYNConverter;
 import com.web.spring.global.audit.Auditable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -41,6 +45,8 @@ public class Wish extends Auditable{
     @Column(name="saving_amt")
     private int savingAmt;
     
+    @Convert(converter = BooleanToYNConverter.class)
+    @Column(name = "isFinish", nullable = true, columnDefinition = "CHAR(1) DEFAULT 'N'")
     private Boolean isFinish;
 
 	@Override
