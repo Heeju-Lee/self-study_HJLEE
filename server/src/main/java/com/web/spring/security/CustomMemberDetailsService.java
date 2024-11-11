@@ -29,8 +29,8 @@ public class CustomMemberDetailsService implements UserDetailsService{
 
         //Parent 테이블에서 조회 시도
         Member findMember = null;
-        Parent findParent = parentRepository.duplicateCheck(username);
-        Child findChild = childRepository.duplicateCheck(username);
+        Parent findParent = parentRepository.findById(username);
+        Child findChild = childRepository.findById(username);
         
         System.out.println("findParent : " + findParent);
         System.out.println("findChild : " + findChild);
@@ -41,7 +41,6 @@ public class CustomMemberDetailsService implements UserDetailsService{
             			.pwd(findChild.getPwd())
             			.role("ROLE_CHILD")
             			.name(findChild.getName())
-            			.memberNum(findChild.getChildNum())
             			.build();
         }
         else if (findChild == null) {
@@ -50,7 +49,6 @@ public class CustomMemberDetailsService implements UserDetailsService{
             			.pwd(findParent.getPwd())
             			.role("ROLE_PARENT")
             			.name(findParent.getName())
-            			.memberNum(findParent.getParentNum())
             			.build();
         }
         // 둘 다 null일 경우 UsernameNotFoundException 발생
@@ -65,3 +63,20 @@ public class CustomMemberDetailsService implements UserDetailsService{
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -18,8 +18,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import com.web.spring.jwt.JWTFilter;
 import com.web.spring.jwt.JWTUtil;
 import com.web.spring.jwt.LoginFilter;
-import com.web.spring.jwt.RefreshTokenRepository;
-import com.web.spring.service.MemberService;
+
+import com.web.spring.repository.ChildRepository;
+import com.web.spring.repository.ParentRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +35,8 @@ public class SecurityConfig {
     //AuthenticationManager 가 인자로 받을 AuthenticationConfiguraion 객체 생성자
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final MemberService  memberService;
+	private final ChildRepository childRepository;
+	private final ParentRepository parentRepository;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -87,8 +88,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http.authorizeHttpRequests((auth) ->
                 auth
-
-                        .requestMatchers("/test", "/members", "/members/**", "/boards","/children/signup").permitAll()
+                        .requestMatchers("parents/signup", "/children/signup").permitAll()
                         .requestMatchers("/swagger-ui", "/swagger-ui/**","/api/logistics","/api/swagger-config","/v3/api-docs/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
@@ -101,11 +101,9 @@ public class SecurityConfig {
         //메소드에 authenticationConfiguration 객체를 넣어야 함)
        //addFilterAt 은 UsernamePasswordAuthenticationFilter 의 자리에 LoginFilter 가 실행되도록 설정하는 것
         //JWTFilter 등록
-        http.addFilterBefore(new JWTFilter(jwtUtil,  memberService), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,refreshTokenRepository), UsernamePasswordAuthenticationFilter.class);
-        SecurityFilterChain chain = http.build();
-        
-       
-        return chain; 
+        http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, childRepository,parentRepository), UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+
     }
 }

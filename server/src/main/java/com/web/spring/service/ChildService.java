@@ -8,15 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import com.web.spring.entity.Parent;
 import com.web.spring.entity.Payment;
@@ -27,20 +22,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.web.spring.dto.child.ChildRequestDto;
-import com.web.spring.dto.child.ChlidResponseDto;
+import com.web.spring.dto.SignInResponseDto;
+import com.web.spring.dto.SignUpRequestDto;
 import com.web.spring.dto.child.plan.PlanRequestDto;
 import com.web.spring.dto.child.plan.PlanResponseDto;
 import com.web.spring.dto.child.quiz.QuizResponseDto;
 import com.web.spring.dto.child.wish.WishRequestDto;
 import com.web.spring.dto.child.wish.WishResponseDto;
 import com.web.spring.entity.Child;
-import com.web.spring.entity.Member;
-import com.web.spring.entity.Payment;
+
+
 import com.web.spring.entity.Plan;
 import com.web.spring.entity.Wish;
-import com.web.spring.entity.Plan;
 import com.web.spring.entity.Quiz;
 import com.web.spring.exception.ExceededAmountException;
 import com.web.spring.exception.NotEnoughPointsException;
@@ -60,21 +55,21 @@ public class ChildService {
 	private final PlanRepository planRepository;
 	private final ParentRepository parentRepository;
 	private final WishRepository wishRepository;
-
+	private final S3Service s3Service;
 	private final PasswordEncoder passwordEncoder;
 	
 /* Child : 회원가입 + 중복 체크 */
 	@Transactional
-	public ChlidResponseDto singUp(ChildRequestDto childRequestDto) {
+	public SignInResponseDto singUp(SignUpRequestDto signUpRequestDto) {
 		
-		Child child = childRequestDto.toChild(childRequestDto);
+		Child child = signUpRequestDto.toChild(signUpRequestDto);
 
 		//BE에서 중복확인 한 번 더 하기
 		if (childRepository.existsById(child.getId()))
 			throw new UserAuthenticationException("중복된 아이디", "Duplicated ID!!");
 
 		//부모 찾기
-		Long parentNum = childRequestDto.getParentNum();
+		Long parentNum = signUpRequestDto.getParentNum();
 		Parent parent = parentRepository.findById(parentNum).orElseThrow();
 
 		System.out.println("부모 찾기 ::: " + parent);
@@ -96,17 +91,21 @@ public class ChildService {
 		parent.getChildren().add(rChild);
 
 		//System.out.println("rChild : " + rChild);
+
+		//목업 데이터 저장
+		List<Payment> payments = childRepository.showMonthPayments(child.getChildNum());
+		child.setPayments(payments);
 		
-		return new ChlidResponseDto(rChild);
+		return new SignInResponseDto(rChild);
 	}
 	
 	@Transactional(readOnly = true)
 	public String duplicateCheck(String id) {
 		
-		Child rMember = childRepository.duplicateCheck(id);
-		System.out.println( "rMember ==> " +  rMember);
+		Child rChild = childRepository.duplicateCheck(id);
+		System.out.println( "rChild ==> " +  rChild);
 		
-		if(rMember == null) return "아이디 사용 가능";
+		if(rChild == null) return "아이디 사용 가능";
 		else return "아이디 사용 불가";
 		
 	}
@@ -114,7 +113,7 @@ public class ChildService {
 
 
 	@Transactional
-	public Optional<Child> findChild(Long childNum){
+	public Optional<Child>  findChild(Long childNum){
 
 		Optional<Child> child = childRepository.findById(childNum);
 				  					
@@ -125,34 +124,39 @@ public class ChildService {
 
 /* Plan : 소비 계획 세우기 */
 	@Transactional
-	public PlanResponseDto createPlan(PlanRequestDto planRequestDto, Long num){
-		
+	public PlanResponseDto createPlan(Long childNum, PlanRequestDto planRequestDto ){
+
 		//1. client에서 c_num 넣어주는 방법 -> PlanRequestDto 사용
 		//2. JWT 토큰 까서 c_num 확인하는 방법
 		//c_num 받았다고 치고.
-		Optional<Child> child = findChild(num);
-		System.out.println("mem에서 받아온 child"+child);
-		
+
+	
+
+		Optional<Child>  child = findChild(childNum);
+		System.out.println(child);
+
+
 		Plan plan = planRequestDto.toPlan(planRequestDto);
 		
 		planRepository.save(plan);
 		child.get().getPlans().add(plan);
 
+
 		//목업 데이터 저장
-		List<Payment> payments = childRepository.showMonthPayments(num);
+		List<Payment> payments = childRepository.showMonthPayments(childNum);
 		child.get().setPayments(payments);
 		
+
 		return new PlanResponseDto(plan);
 	}
 	
 	//소비 계획 조회하기
 	@Transactional
-	public PlanResponseDto showPlan(String year, String month,Member mem) throws Exception{
+	public PlanResponseDto showPlan(Long childNum, String year, String month) throws Exception{
 	
-		//토큰 까서 childNum 받았다 치고,???? 쓰는 childNum이 없음이해했는데 매번 헷갈림
-		Optional<Child> child = findChild(mem.getMemberNum());
-		System.out.println(child);
-		Plan plan = childRepository.findPlanByDate(Integer.parseInt(year), Integer.parseInt(month) );
+
+		Plan plan = childRepository.findPlan(childNum, Integer.parseInt(year), Integer.parseInt(month) );
+
 		
 		return new PlanResponseDto(plan);
 	}
@@ -215,7 +219,9 @@ public class ChildService {
 	public List<Payment> showMonthList(Long childNum, int year, int month) {
 
 		Optional<Child> child = findChild(childNum);
+		System.out.println("showMonthList 의 child"+child);
 		List<Payment> payments = child.get().getPayments();
+		System.out.println("showMonthList 의 payments"+payments);
 		List<Payment> monthPayment = new ArrayList<>();
 
 		payments.forEach( payment -> {
@@ -384,10 +390,13 @@ public class ChildService {
 	
 	// Wish : 위시 등록하기
 	@Transactional
-	public WishResponseDto createWish(WishRequestDto wishRequestDto) {
-		
-		Optional<Child> child =findChild(1L);
-		Wish wish = wishRequestDto.toWish(wishRequestDto);
+	public WishResponseDto createWish(Long childNum,WishRequestDto wishRequestDto, MultipartFile wishFile) throws IOException {
+	
+		Optional<Child> child =findChild(childNum);
+		String imgUrl = s3Service.upload(wishFile);
+		Wish wish = wishRequestDto.toWish(wishRequestDto, imgUrl);
+
+
 		System.out.println("Createwish ::"+wish);
 		
 		Wish rwish = wishRepository.save(wish);
@@ -399,9 +408,9 @@ public class ChildService {
 
 	// Wish : Active 위시 전체 조회 
 	@Transactional
-	public List<Wish> showActiveWishList(String childNum) {
+	public List<Wish> showActiveWishList(Long childNum) {
 
-		List<Wish> wishList = childRepository.showActiveWishList(Long.parseLong(childNum));
+		List<Wish> wishList = childRepository.showActiveWishList(childNum);
 		wishList.forEach(c->System.out.println("showActiveWish :: "+c));
 		
 		return wishList;
@@ -409,10 +418,10 @@ public class ChildService {
 	
 	// Wish : finish 위시 전체 조회 
 	@Transactional
-	public List<Wish> showFinishedWishList(String childNum) {
+	public List<Wish> showFinishedWishList(Long childNum) {
 
 
-		List<Wish> wishList = childRepository.showFinishedWishList(Long.parseLong(childNum));
+		List<Wish> wishList = childRepository.showFinishedWishList(childNum);
 		wishList.forEach(c->System.out.println("showFinishedWish :: "+c));
 		
 		return wishList;
@@ -432,20 +441,19 @@ public class ChildService {
 	
 	// Wish : 위시 돈모으기
 	@Transactional
-	public WishResponseDto savingWish(String wishNum, String savingAmt) {
+	public WishResponseDto savingWish(Long childNum,Long wishNum, String savingAmt) {
 		
 		// 인자값 미리 파싱
-		Long parseWishNum = Long.parseLong(wishNum);
 		int parseSavingAmt = Integer.parseInt(savingAmt);
 		int savingResult = 0;
 		
 		//토큰에 있는 아이디
-		Optional<Child> child =findChild(1L);
+		Optional<Child> child =findChild(childNum);
 		// children 변경전 포인트
 		System.out.println("beforeSaving_ChildPoint :: "+child.get().getPoint());
 		
 		//해당하는 위시 가져오기
-		Wish wish = wishRepository.findById(Long.parseLong(wishNum))
+		Wish wish = wishRepository.findById(wishNum)
 				  .orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
 		int totalSaving = wish.getSavingAmt() + parseSavingAmt;
 		int wishPrice = wish.getPrice();
@@ -453,11 +461,12 @@ public class ChildService {
 		// wish 가격과 totalSaving 이 같다면 -> isFinish == True
 		if(wishPrice == totalSaving) {
 			// 변경 완료 여부 확인
-			savingResult = wishRepository.savingWish(parseWishNum, totalSaving);
-			wishRepository.isFinish(parseWishNum, true);
+			savingResult = wishRepository.savingWish(wishNum, totalSaving);
+			int result = wishRepository.isFinish(wishNum,true);
+			System.out.println("isfinish ::: >>>>> "+result);
 		}else if (wishPrice >= totalSaving) {
 			// 변경 완료 여부 확인
-			savingResult = wishRepository.savingWish(parseWishNum, totalSaving);
+			savingResult = wishRepository.savingWish(wishNum, totalSaving);
 		}else {
 			throw new ExceededAmountException("모으려는 금액이 price 보다 많습니다.");
 		}
@@ -467,7 +476,7 @@ public class ChildService {
 		int pointResult = updatePoint(child.get().getChildNum(), -parseSavingAmt);
 		
 		System.out.println("afterSavingWish :: complete ->"+ savingResult );
-		Wish rwish = wishRepository.findById(parseWishNum)
+		Wish rwish = wishRepository.findById(wishNum)
 												.orElseThrow(()-> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
 		rwish.setSavingAmt(totalSaving);
 		return new WishResponseDto(rwish);
@@ -476,34 +485,39 @@ public class ChildService {
 	
 	// Wish : 위시 삭제하기 + savingPoint return(updatePoint 호출)
 	@Transactional
-	public List<Wish> deleteWish(String wishNum) {
+	public List<Wish> deleteWish(Long childNum,Long wishNum) throws IOException {
 		
-		// 인자값 미리 파싱
-		Long parseWishNum = Long.parseLong(wishNum);
-		
+
 		//토큰에 있는 아이디
-		Optional<Child> child =findChild(1L);
+		Optional<Child> child =findChild(childNum);
 		// children 변경전 포인트
 		int curPoint = child.get().getPoint();
 		System.out.println("beforeDeleteWish_Child :: "+curPoint);
 		
 		//해당하는 위시 가져오기
-		Wish wish = wishRepository.findById(Long.parseLong(wishNum))
+		Wish wish = wishRepository.findById(wishNum)
 				  .orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
+		System.out.println(wish);
+
 		// 현재까지 모은 금액
 		int curSaving = wish.getSavingAmt();
 		
 		// 변경된 포인트
 		int pointResult = updatePoint(child.get().getChildNum(), curSaving);
 		
+		// s3이미지 지우기
+		System.out.println(s3Service.delete(wish.getImg()));
+		
 		// 변경 완료 여부 확인
-		wishRepository.deleteById(parseWishNum);
+		wishRepository.deleteById(wishNum);
 		
 		//포인트 반환 후 child
 		child.get().setPoint(pointResult);
 		System.out.println("afterDeleteWish :: complete ->"+ child);
 		
-		List<Wish> wishList= childRepository.showActiveWishList(child.get().getChildNum());		
+List<Wish> wishList= childRepository.showActiveWishList(child.get().getChildNum());		
+
+
 		return wishList;
 	}
 }

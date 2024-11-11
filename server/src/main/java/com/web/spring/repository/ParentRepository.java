@@ -10,9 +10,10 @@ public interface ParentRepository  extends JpaRepository<Parent,Long> {
 	
 	
 	Parent findById(String id);
+
+	@Query(value ="SELECT p FROM Parent p WHERE p.id = :id")
+	Parent duplicateCheck(String id);
 	
 
-	@Query(value ="SELECT c FROM Parent c WHERE c.id = :id")
-	Parent duplicateCheck(String  id);
 
 }

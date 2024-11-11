@@ -34,10 +34,10 @@ public class WishRequestDto {
 	@NotNull
 	private Boolean isFinish;
 	
-	public Wish toWish(WishRequestDto wishRequestDto) {
+	public Wish toWish(WishRequestDto wishRequestDto, String imgUrl) {
 		
 		return Wish.builder()
-					.img(wishRequestDto.getImg())
+					.img(imgUrl)
 					.name(wishRequestDto.getName())
 					.price(wishRequestDto.getPrice())
 	                .isFinish(false)

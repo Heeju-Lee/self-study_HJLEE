@@ -42,11 +42,17 @@ public class CustomMemberDetails implements UserDetails{
 	@Override
 	public String getUsername() {
 		log.info("getUsername() ===>{}"+member.getId());
-		return String.valueOf(member.getMemberNum());
+		return member.getId();
 	}
-	public Long getMemberNum() {
-		log.info("getUsername() ===>{}"+member.getMemberNum());
-		return member.getMemberNum();
+
+	
+	public void setMemberNum(Long num) {
+		 member.setMemberNum(num);
+	}
+	
+	public Long getMemberNo() {
+		 return member.getMemberNum();
+
 	}
 	
 	////////////////////////////////////////////////////////

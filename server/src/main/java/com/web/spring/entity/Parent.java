@@ -43,7 +43,7 @@ public class Parent  extends Auditable{
     private String phone;
     private String email;
     private String address;
-
+    private String role;
     
 
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST})
@@ -52,7 +52,5 @@ public class Parent  extends Auditable{
 	@OneToMany(fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn(name = "parent_num")
 	private List<PointOrder> orders = new ArrayList<>();
-
-
 
 }
