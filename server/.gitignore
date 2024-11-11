@@ -31,9 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
-<<<<<<< HEAD
 
 ### protect sensitive Keys - AWS / YOUTUBE API KEYs ###
 application.yml
-=======
->>>>>>> 46c67db45ae821f4b8f17f40140ad5c7db5c79e7
+
