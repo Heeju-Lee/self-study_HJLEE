@@ -27,7 +27,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Builder
 public class Member {
 	
-    private Long memberNo;
+    private Long memberNum;
   
     @Column(unique = true)
     private String id;

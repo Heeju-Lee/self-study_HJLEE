@@ -43,12 +43,12 @@ public class CustomMemberDetails implements UserDetails{
 		return member.getId();
 	}
 	
-	public void setMemberNo(Long num) {
-		 member.setMemberNo(num);
+	public void setMemberNum(Long num) {
+		 member.setMemberNum(num);
 	}
 	
-	public Long getMemberNo() {
-		 return member.getMemberNo();
+	public Long getMemberNum() {
+		 return member.getMemberNum();
 	}
 	
 	////////////////////////////////////////////////////////

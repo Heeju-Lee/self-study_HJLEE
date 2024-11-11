@@ -142,13 +142,13 @@ public class ChildService {
 	
 	//소비 계획 조회하기
 	@Transactional
-	public PlanResponseDto showPlan(String year, String month) throws Exception{
+	public PlanResponseDto showPlan(Long childNum, int year, int month) throws Exception{
 	
 		//토큰 까서 childNum 받았다 치고,
 		Child child =findChild(1L);
 		System.out.println(child);
 		
-		Plan plan = childRepository.findPlan(child.getChildNum(), Integer.parseInt(year), Integer.parseInt(month) );
+		Plan plan = childRepository.findPlan(child.getChildNum(), year, month);
 		
 		return new PlanResponseDto(plan);
 	}
@@ -397,9 +397,9 @@ public class ChildService {
 
 	// Wish : Active 위시 전체 조회 
 	@Transactional
-	public List<Wish> showActiveWishList(String childNum) {
+	public List<Wish> showActiveWishList(Long childNum) {
 
-		List<Wish> wishList = childRepository.showActiveWishList(Long.parseLong(childNum));
+		List<Wish> wishList = childRepository.showActiveWishList(childNum);
 		wishList.forEach(c->System.out.println("showActiveWish :: "+c));
 		
 		return wishList;

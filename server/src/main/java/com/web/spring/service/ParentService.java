@@ -1,10 +1,10 @@
 package com.web.spring.service;
 
-
 import com.web.spring.dto.SignInResponseDto;
 import com.web.spring.dto.SignUpRequestDto;
+import com.web.spring.dto.parent.ChildResponseDto;
 import com.web.spring.dto.parent.ParentReportResponseDto;
-import com.web.spring.dto.parent.PointOrderRequestDto;
+import com.web.spring.dto.parent.PostPointOrderRequestDto;
 import com.web.spring.dto.parent.PointOrderResponseDto;
 import com.web.spring.entity.Child;
 import com.web.spring.entity.Parent;
@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +51,6 @@ public class ParentService {
 		//Role 설정
 		parent.setRole("ROLE_PARENT");
 
-		// 아이 DB 저장
 		Parent rParent = parentRepository.save(parent);
 		
 		return new SignInResponseDto(rParent);
@@ -68,17 +68,19 @@ public class ParentService {
 	}
     
 
-    //부의 모든 자식 가져오기
+    //부모의 모든 자식 가져오기
     @Transactional
-    public List<Child> findChildren(Long parentNum) {
+    public List<ChildResponseDto> findParentChildren(Long parentNum) {
 
         Parent parent = parentRepository.findById(parentNum).orElseThrow();
 
-        return parent.getChildren();
-
+        return parent.getChildren().stream()
+				                  .map(child -> new ChildResponseDto(child.getChildNum(), child.getName()))
+				                  .toList();
+			
     }
 
-        //부모가 자기 자식 찾기
+    //부모가 자기 자식 찾기
     @Transactional
     public Child findParentChild(Long parentNum, Long childNum){
     	
@@ -101,14 +103,14 @@ public class ParentService {
 
     /* 월간 리포트 */
     @Transactional
-    public ParentReportResponseDto getChildReport(Child child, String year, String month){
+    public ParentReportResponseDto getChildReport(Child child, int year, int month){
 
 
         //Chart1 - 카테고리 별 소비 현황
-        HashMap<String, Integer> chartPayment = childService.showMonthChart(child.getChildNum(), Integer.parseInt(year), Integer.parseInt(month));
+        HashMap<String, Integer> chartPayment = childService.showMonthChart(child.getChildNum(), year, month);
 
         //Chart1- 카테고리 별 계획
-        HashMap<String, Integer> monthPlan =childService.monthPlan(child.getChildNum(), Integer.parseInt(year), Integer.parseInt(month));
+        HashMap<String, Integer> monthPlan =childService.monthPlan(child.getChildNum(), year, month);
 
         //Chart2 - Top3.
         LinkedHashMap<String, Integer> showQuizResultTop3= childService.showQuizResultTop3(child.getChildNum());
@@ -116,12 +118,10 @@ public class ParentService {
         //Chart2 - 방사형 교육 차트
         HashMap<String,Integer> showQuizResult =childService.showQuizResult(child.getChildNum());
 
-
-
         return new ParentReportResponseDto(chartPayment, monthPlan, showQuizResultTop3, showQuizResult);
     }
 
-	public PointOrderResponseDto createPointOrders(Long parentNum, PointOrderRequestDto pointOrderRequestDto) {
+	public PointOrderResponseDto createPointOrders(Long parentNum, PostPointOrderRequestDto pointOrderRequestDto) {
 		
 		Parent parent = parentRepository.findById(parentNum).orElseThrow();
 		
@@ -140,17 +140,17 @@ public class ParentService {
 		return new PointOrderResponseDto(rpointOrder);
 	}
 	
-	public List<PointOrder> getPointOrders(long parentNum, Long childNum, String year, String month) {
+	public List<PointOrder> getPointOrders(Long parentNum, Long childNum, int year, int month) {
 		
 		Parent parent = parentRepository.findById(parentNum).orElseThrow();
+		
 		return parent.getOrders().stream()
-						        .filter(pOrder -> pOrder.getChildNum().equals(childNum) &&
-						                pOrder.getCreatedAt().getYear() == Integer.parseInt(year) &&
-						                pOrder.getCreatedAt().getMonthValue() == Integer.parseInt(month))
+						        .filter(pOrder ->  pOrder.getChildNum().equals(childNum) &&
+									               pOrder.getCreatedAt().getYear() == year &&
+									               pOrder.getCreatedAt().getMonthValue() == month)
 						        .collect(Collectors.toList());
 		
 	}
 	
-
 
 }

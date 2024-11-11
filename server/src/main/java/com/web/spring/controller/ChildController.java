@@ -55,10 +55,11 @@ public class ChildController {
 	private final ChildService childService;
 
 /* Child : 회원가입  --------------------------------------------------------------*/
-	@PostMapping("/children")
+	@PostMapping("/signup")
 	public ResponseEntity<?> singUp(@RequestBody SignUpRequestDto sinUpRequestDto ){
 		
 		SignInResponseDto response = childService.singUp(sinUpRequestDto);
+
 				
 		return ResponseEntity.status(HttpStatus.CREATED)
 				 			 .body(response);
@@ -69,6 +70,9 @@ public class ChildController {
 		return childService.duplicateCheck(id);
 	}
 
+	
+
+	
 
 /* Plan : 소비 계획 세우기 --------------------------------------------------------------*/
 	@PostMapping("/plans")
@@ -89,7 +93,7 @@ public class ChildController {
 		
 		//System.out.println(planRequestDto);
 		
-		PlanResponseDto response = childService.createPlan( m.getMemberNo(), planRequestDto);
+		PlanResponseDto response = childService.createPlan( m.getMemberNum(), planRequestDto);
 		
 		return ResponseEntity.status(HttpStatus.CREATED)
 							 .body(response);
@@ -97,10 +101,11 @@ public class ChildController {
 	
 
 	@GetMapping("/plans")
-	public ResponseEntity<PlanResponseDto> showPlan(	@RequestParam  String year,
+	public ResponseEntity<PlanResponseDto> showPlan(	@PathVariable String childNum,
+														@RequestParam  String year,
 														@RequestParam  String month) throws Exception{
 	
-		PlanResponseDto response = childService.showPlan(year, month);
+		PlanResponseDto response = childService.showPlan( 1L, 2024, 11);
 		System.out.println(response);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -121,8 +126,8 @@ public class ChildController {
 	//이번달 소비리스트
 	@GetMapping("/payments/{childNum}")
 	public ResponseEntity<List<Payment>> showMonthList(	@PathVariable String childNum,
-											@RequestParam  String year,
-											@RequestParam  String month){
+														@RequestParam  String year,
+														@RequestParam  String month){
 
 
 		List<Payment> response = childService.showMonthList(Long.parseLong(childNum), Integer.parseInt(year), Integer.parseInt(month));
@@ -197,7 +202,7 @@ public class ChildController {
 	
 	//위시 전체리스트 조회(Active)
 	@GetMapping("/wishes/active/{childNum}")
-	public ResponseEntity<List<Wish>> showActiveWishList(@PathVariable String childNum){
+	public ResponseEntity<List<Wish>> showActiveWishList(@PathVariable Long childNum){
 		
 		List<Wish> wishList = childService.showActiveWishList(childNum);
 		
