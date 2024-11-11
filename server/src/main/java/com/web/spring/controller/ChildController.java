@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.web.spring.entity.Child;
+import com.web.spring.entity.Notification;
 import com.web.spring.entity.Parent;
 import com.web.spring.entity.Payment;
 import com.web.spring.entity.Quiz;
@@ -73,7 +74,6 @@ public class ChildController {
 		return ResponseEntity.status(HttpStatus.CREATED)
 				 			 .body(response);
 	}
-
 
 	
 /* Plan : 소비 계획 세우기 --------------------------------------------------------------*/
