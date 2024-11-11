@@ -371,6 +371,7 @@ public class ChildService {
 		Child child =findChild(1L);
 		String imgUrl = s3Service.upload(wishFile);
 		Wish wish = wishRequestDto.toWish(wishRequestDto, imgUrl);
+
 		System.out.println("Createwish ::"+wish);
 		
 		Wish rwish = wishRepository.save(wish);
@@ -474,6 +475,7 @@ public class ChildService {
 		Wish wish = wishRepository.findById(Long.parseLong(wishNum))
 				  .orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
 		System.out.println(wish);
+
 		// 현재까지 모은 금액
 		int curSaving = wish.getSavingAmt();
 		

@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.bind.annotation.RestController;
 import com.web.spring.dto.child.ChildRequestDto;
 import com.web.spring.dto.child.ChlidResponseDto;
 import com.web.spring.dto.child.wish.WishRequestDto;
@@ -71,7 +72,7 @@ public class ChildController {
 	private final ChildService childService;
 	private final WishService wishService;
 	private final S3Service s3Service;
-	
+
 /* Child : 회원가입  --------------------------------------------------------------*/
 	@PostMapping("/children")
 	public ResponseEntity<?> singUp(@RequestBody ChildRequestDto childRequestDto){
