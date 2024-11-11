@@ -30,7 +30,7 @@ public class NotificationController {
 
 	// parent가 child에게 알림을 보냄 
 	@PostMapping("/sendToChild")
-	public ResponseEntity<?> sendNotificationToChild(@RequestBody NotificationRequestDto notiRequestDto){ 
+	public ResponseEntity<NotificationResponseDto> sendNotificationToChild(@RequestBody NotificationRequestDto notiRequestDto){ 
 		
 		// service를 통해 알림 생성 및 전송
 		NotificationResponseDto notificationResponseDto = notificationService.sendEvent(
@@ -40,7 +40,7 @@ public class NotificationController {
 	}
 	// child가 parent에게 알림을 보냄
 	@PostMapping("/sendToParent")
-	public ResponseEntity<?> sendNotificationToParent(@RequestBody NotificationRequestDto notiRequestDto) {		
+	public ResponseEntity<NotificationResponseDto> sendNotificationToParent(@RequestBody NotificationRequestDto notiRequestDto) {		
 	    NotificationResponseDto notificationResponseDto = notificationService.sendEvent(
 	            notiRequestDto
 	    );

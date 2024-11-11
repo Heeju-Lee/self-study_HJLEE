@@ -29,7 +29,7 @@ public class ParentController {
     
     /* Parnet : 회원가입 + 중복 체크 --------------------------------------------------------------*/
 	@PostMapping("/signup")
-	public ResponseEntity<?> singUp(@RequestBody SignUpRequestDto childRequestDto){
+	public ResponseEntity<SignInResponseDto> singUp(@RequestBody SignUpRequestDto childRequestDto){
 		
 		SignInResponseDto response = parentService.singUp(childRequestDto);
 				
@@ -44,7 +44,7 @@ public class ParentController {
 
 
     @GetMapping("/{parentNum}")
-    public ResponseEntity<?> getChilde(@PathVariable String parentNum){
+    public ResponseEntity<List<Child>> getChildren(@PathVariable String parentNum){
 
         List<Child> children = parentService.findChildren(Long.valueOf(parentNum));
         return ResponseEntity.status(HttpStatus.OK).body(children);
@@ -53,7 +53,7 @@ public class ParentController {
 
     /* 월간 리포트 */
     @GetMapping("/reports/{childNum}")
-    public ResponseEntity<?> getChildReports(@PathVariable String childNum,
+    public ResponseEntity<ParentReportResponseDto> getChildReports(@PathVariable String childNum,
                                             @RequestParam String year,
                                             @RequestParam String month){
 
@@ -74,7 +74,7 @@ public class ParentController {
 
     /* 용돈 계약서 */
     @GetMapping("/contracts/{childNum}")
-    public ResponseEntity<?> getContracts(@PathVariable String childNum,
+    public ResponseEntity<PlanResponseDto> getContracts(@PathVariable String childNum,
                                           @RequestParam String year,
                                           @RequestParam String month) throws Exception {
 
@@ -90,7 +90,7 @@ public class ParentController {
 
     /* 위시 리스트 */
     @GetMapping("/wishes/{childNum}")
-    public ResponseEntity<?> getWishes(@PathVariable String childNum){
+    public ResponseEntity<List<Wish>> getWishes(@PathVariable String childNum){
 
         //토큰까서 parentNum 넣었다 치고
         Child child = parentService.findParentChild(1L, Long.parseLong(childNum));
@@ -103,7 +103,7 @@ public class ParentController {
     
     /* 포인트 결제*/
     @PostMapping("/orders/{parentNum}")
-    public ResponseEntity<?> creatPointOrders(@PathVariable String parentNum,
+    public ResponseEntity<PointOrderResponseDto> creatPointOrders(@PathVariable String parentNum,
     										  @RequestBody PointOrderRequestDto pointOrderRequestDto ){
     	
     	PointOrderResponseDto pointOrder = parentService.createPointOrders(Long.parseLong(parentNum), pointOrderRequestDto);
@@ -114,7 +114,7 @@ public class ParentController {
     
     /* 포인트 결제 내역 전체 보기*/
     @GetMapping("/orders/{parentNum}/{childNum}")
-    public ResponseEntity<?> getPointOrders(@PathVariable String parentNum,
+    public ResponseEntity<List<PointOrder>> getPointOrders(@PathVariable String parentNum,
     										@PathVariable String childNum,
 							    			@RequestParam String year,
 							    			@RequestParam String month){

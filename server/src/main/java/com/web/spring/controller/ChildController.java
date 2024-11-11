@@ -43,7 +43,7 @@ public class ChildController {
 	
 /* Child : 회원가입 + 중복 체크 --------------------------------------------------------------*/
 	@PostMapping("/signup")
-	public ResponseEntity<?> singUp(@RequestBody SignUpRequestDto childRequestDto){
+	public ResponseEntity<SignInResponseDto> singUp(@RequestBody SignUpRequestDto childRequestDto){
 		
 		SignInResponseDto response = childService.singUp(childRequestDto);
 				
@@ -59,7 +59,7 @@ public class ChildController {
 
 /* Plan : 소비 계획 세우기 --------------------------------------------------------------*/
 	@PostMapping("/plans")
-	public ResponseEntity<?> createPlan( @RequestBody PlanRequestDto planRequestDto){
+	public ResponseEntity<PlanResponseDto> createPlan( @RequestBody PlanRequestDto planRequestDto){
 		
 		System.out.println(planRequestDto);
 		
@@ -71,7 +71,7 @@ public class ChildController {
 	
 
 	@GetMapping("/plans")
-	public ResponseEntity<?> showPlan(	@RequestParam  String year,
+	public ResponseEntity<PlanResponseDto> showPlan(	@RequestParam  String year,
 										@RequestParam  String month) throws Exception{
 	
 		PlanResponseDto response = childService.showPlan(year, month);
@@ -81,7 +81,7 @@ public class ChildController {
 	}
 	
 	@PutMapping("/plans/{planNum}")
-	public ResponseEntity<?>updatePlan (@PathVariable String planNum,
+	public ResponseEntity<PlanResponseDto>updatePlan (@PathVariable String planNum,
 										@RequestBody PlanRequestDto planRequestDto) throws Exception{
 		
 		PlanResponseDto plan = childService.updatePlan(Long.parseLong(planNum), planRequestDto);
@@ -94,7 +94,7 @@ public class ChildController {
 
 	//이번달 소비리스트
 	@GetMapping("/payments/{childNum}")
-	public ResponseEntity<?> showMonthList(	@PathVariable String childNum,
+	public ResponseEntity<List<Payment>> showMonthList(	@PathVariable String childNum,
 											@RequestParam  String year,
 											@RequestParam  String month){
 
@@ -107,7 +107,7 @@ public class ChildController {
 
 	//이번달 소비리스트
 	@GetMapping("/payments/chart/{childNum}")
-	public ResponseEntity<?> showMonthChart(	@PathVariable String childNum,
+	public ResponseEntity<HashMap<String, Integer>> showMonthChart(	@PathVariable String childNum,
 												@RequestParam  String year,
 												@RequestParam  String month){
 
@@ -119,7 +119,7 @@ public class ChildController {
 
 	/*이달의 계획 내역 도넛차트*/
 	@GetMapping("/plan/chart/{childNum}")
-	public ResponseEntity<?> monthPlan(	@PathVariable String childNum,
+	public ResponseEntity<HashMap<String, Integer>> monthPlan(	@PathVariable String childNum,
 										@RequestParam String year,
 									   	@RequestParam String month) {
 
@@ -131,7 +131,7 @@ public class ChildController {
 	
 	//포인트 조회
 	@GetMapping("/point/{childNum}")
-	public ResponseEntity<?> showPoint(@PathVariable Long childNum){
+	public ResponseEntity<Integer> showPoint(@PathVariable Long childNum){
 
 		int response = childService.showPoint(childNum);
 		return ResponseEntity.status(HttpStatus.OK)
@@ -140,7 +140,7 @@ public class ChildController {
 	
 	//포인트 업데이트
 	@PutMapping("/point")
-	public ResponseEntity<?> updatePoint(@RequestBody PointRequestDto request){
+	public ResponseEntity<Integer> updatePoint(@RequestBody PointRequestDto request){
 
 		int response = childService.updatePoint(request.getChildNum(), request.getPoint());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -150,7 +150,7 @@ public class ChildController {
 /* WISH -------------------------------------------------------------------------*/
 	//위시 등록하기
 	@PostMapping("/wishes")
-	public ResponseEntity<?> createWish(@RequestBody WishRequestDto wishRequestDto){
+	public ResponseEntity<WishResponseDto> createWish(@RequestBody WishRequestDto wishRequestDto){
 		
 		WishResponseDto wish =  childService.createWish(wishRequestDto);
 		
@@ -160,7 +160,7 @@ public class ChildController {
 	
 	//위시 전체리스트 조회(Active)
 	@GetMapping("/wishes/active/{childNum}")
-	public ResponseEntity<?> showActiveWishList(@PathVariable String childNum){
+	public ResponseEntity<List<Wish>> showActiveWishList(@PathVariable String childNum){
 		
 		List<Wish> wishList = childService.showActiveWishList(childNum);
 		
@@ -170,7 +170,7 @@ public class ChildController {
 	
 	//위시 전체리스트 조회(Finished)
 	@GetMapping("/wishes/finished/{childNum}")
-	public ResponseEntity<?> showFinishedWishList(@PathVariable String childNum){
+	public ResponseEntity<List<Wish>> showFinishedWishList(@PathVariable String childNum){
 		
 		List<Wish> wishList = childService.showFinishedWishList(childNum);
 		
@@ -180,7 +180,7 @@ public class ChildController {
 	
 	//위시 상세보기
 	@GetMapping("/wishes/{wishNum}")
-	public ResponseEntity<?> showWishDetail(@PathVariable String wishNum){
+	public ResponseEntity<WishResponseDto> showWishDetail(@PathVariable String wishNum){
 		WishResponseDto response = childService.showWishDetail(wishNum);
 		
 		return ResponseEntity.status(HttpStatus.OK)
@@ -189,7 +189,7 @@ public class ChildController {
 	
 	//위시 돈모으기 
 	@PutMapping("/wishes")
-	public ResponseEntity<?> savingWish(@RequestParam String wishNum,
+	public ResponseEntity<WishResponseDto> savingWish(@RequestParam String wishNum,
 										@RequestParam String savingAmt){
 		
 		WishResponseDto wish =childService.savingWish(wishNum, savingAmt);
@@ -200,7 +200,7 @@ public class ChildController {
 	
 	//위시 삭제하기
 	@DeleteMapping("/wishes/{wishNum}")
-	public ResponseEntity<?> deleteWish(@PathVariable String wishNum){
+	public ResponseEntity<List<Wish>> deleteWish(@PathVariable String wishNum){
 		List<Wish> wishList = childService.deleteWish(wishNum);
 		
 		return ResponseEntity.status(HttpStatus.OK)
@@ -211,7 +211,7 @@ public class ChildController {
 /* Quiz : 퀴즈 ----------------------------------------------------------------------------*/	
 	/*아이의 퀴즈 결과 보여주기	*/
 	@GetMapping("/quiz/{childNum}")
-	public ResponseEntity<?> showQuizResult( @PathVariable Long childNum){
+	public ResponseEntity<HashMap<String, Integer>> showQuizResult( @PathVariable Long childNum){
 
 		HashMap<String, Integer> response = childService.showQuizResult(childNum);
 
@@ -222,7 +222,7 @@ public class ChildController {
 	
 	/*아이의 퀴즈 결과를 top3로 나눠서 보여주기*/
 	@GetMapping("quiz/top3/{childNum}")
-	public ResponseEntity<?> showQuizResultTop3(@PathVariable Long childNum){
+	public ResponseEntity<HashMap<String, Integer>> showQuizResultTop3(@PathVariable Long childNum){
 		
 		HashMap<String, Integer> response = childService.showQuizResultTop3(childNum);
 		
@@ -233,7 +233,7 @@ public class ChildController {
 	
 	//퀴즈 문제 내기 (각 카테고리 별 문제 1개씩 랜덤)
 	@GetMapping("/quiz")
-	public ResponseEntity<?> showQuiz() {
+	public ResponseEntity<List<Quiz>> showQuiz() {
 		List<Quiz> quizList = childService.showQuiz();
 		
 		return ResponseEntity.ok(quizList);
