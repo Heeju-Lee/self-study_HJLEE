@@ -2,6 +2,7 @@ package com.web.spring.controller;
 
 import java.util.HashMap;
 import java.util.List;
+
 import com.web.spring.entity.Payment;
 import com.web.spring.entity.Quiz;
 import com.web.spring.entity.Wish;
@@ -54,8 +55,6 @@ public class ChildController {
 	public String duplicationCheck(@PathVariable String id){
 		return childService.duplicateCheck(id);
 	}
-
-
 
 
 /* Plan : 소비 계획 세우기 --------------------------------------------------------------*/
