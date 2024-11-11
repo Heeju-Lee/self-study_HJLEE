@@ -1,6 +1,7 @@
 package com.web.spring.controller;
 
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ import com.web.spring.entity.Wish;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,6 +42,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.RestController;
 import com.web.spring.dto.child.ChildRequestDto;
 import com.web.spring.dto.child.ChlidResponseDto;
@@ -54,6 +61,7 @@ import com.web.spring.dto.child.quiz.QuizResponseDto;
 
 import com.web.spring.service.ChildService;
 import com.web.spring.service.ParentService;
+import com.web.spring.service.S3Service;
 import com.web.spring.service.WishService;
 
 import lombok.RequiredArgsConstructor;
@@ -64,7 +72,8 @@ public class ChildController {
 
 	private final ChildService childService;
 	private final WishService wishService;
-	
+	private final S3Service s3Service;
+
 /* Child : 회원가입  --------------------------------------------------------------*/
 	@PostMapping("/children")
 	public ResponseEntity<?> singUp(@RequestBody ChildRequestDto childRequestDto){
@@ -168,10 +177,21 @@ public class ChildController {
 	
 /* WISH -------------------------------------------------------------------------*/
 	//위시 등록하기
-	@PostMapping("/wishes")
-	public ResponseEntity<?> createWish(@RequestBody WishRequestDto wishRequestDto){
+	@PostMapping(value = "/wishes", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<?> createWish(@RequestParam("wishRequestDtoJson") String wishRequestDtoJson, @RequestPart("wishFile") MultipartFile wishFile) throws IOException{
 		
-		WishResponseDto wish =  childService.createWish(wishRequestDto);
+        // wishRequestDtoJson을 DTO로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        WishRequestDto wishRequestDto = objectMapper.readValue(wishRequestDtoJson, WishRequestDto.class);
+        
+        // DTO 변환이 제대로 되었는지 확인
+        if (wishRequestDto == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            					.body("Invalid wish request data.");
+        }
+        
+        // wish 를 생성
+		WishResponseDto wish =  childService.createWish(wishRequestDto, wishFile);
 		
 		return ResponseEntity.status(HttpStatus.CREATED)
 				 			 .body(wish);
@@ -219,7 +239,7 @@ public class ChildController {
 	
 	//위시 삭제하기
 	@DeleteMapping("/wishes/{wishNum}")
-	public ResponseEntity<?> deleteWish(@PathVariable String wishNum){
+	public ResponseEntity<?> deleteWish(@PathVariable String wishNum) throws IOException{
 		List<Wish> wishList = childService.deleteWish(wishNum);
 		
 		return ResponseEntity.status(HttpStatus.OK)
