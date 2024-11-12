@@ -129,7 +129,9 @@ public class ChildController<WishService> {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
 		Member m = customMemberDetails.getMember();
-		PlanResponseDto response = childService.showPlan(m.getMemberNum(), year, month);
+		
+		
+		PlanResponseDto response = childService.showPlan(m.getMemberNum(), 	Integer.parseInt(year), Integer.parseInt(month));
 
 
 		System.out.println(response);
