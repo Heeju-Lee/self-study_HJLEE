@@ -18,6 +18,7 @@ import WishListPage from "./pages/parent/WishListPage";
 import RegisterPage from "./pages/parent/RegisterPage";
 import LoginPage from "./pages/common/LoginPage";
 import SelectUserType from "./pages/common/SelectUserType";
+import LoginForm from "./components/commons/LoginForm";
 
 const Navirouter = () => {
   return (
@@ -28,7 +29,7 @@ const Navirouter = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/select-user" element={<SelectUserType />} />
 
-        {/* 아이 페이지 */}
+        {/* 아이 페이지 */} 
         <Route path="/child-report" element={<ChildReportPage />} />
         <Route path="/edu" element={<EduPage />} />
         <Route path="/money-plan" element={<MoneyPlanPage />} />
