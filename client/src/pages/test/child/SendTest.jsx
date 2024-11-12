@@ -9,7 +9,7 @@ export default function SendTest() {
   const [notifications, setNotifications] = useState([]); // 알림 목록 상태
 
   const role = "ROLE_CHILD"; // test용
-  const userNum = 3; // test용
+  const userNum = 1; // test용
 
   // 기존 알림 목록 가져오기
   const fetchNotifications = async () => {

@@ -62,6 +62,9 @@ const Header = () => {
             <span>회원가입</span>
           </Link>
         </RightSection>
+
+        <Link to="/test-child">아이테스트</Link>
+        <Link to="/test-parent">부모테스트</Link>
         {/* <Navbar bg="primary" data-bs-theme="dark">
             <Container>
               <Link to="/" className="navbar-brand">
