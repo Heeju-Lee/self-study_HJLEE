@@ -155,9 +155,10 @@ public class ChildService {
 
 	// 소비 계획 조회하기
 	@Transactional
-	public PlanResponseDto showPlan(Long childNum, String year, String month) throws Exception {
+  public PlanResponseDto showPlan(Long childNum, String year, String month) throws Exception {
 
 		Plan plan = childRepository.findPlan(childNum, Integer.parseInt(year), Integer.parseInt(month));
+
 
 		return new PlanResponseDto(plan);
 	}
@@ -436,6 +437,7 @@ public class ChildService {
 		int parseSavingAmt = Integer.parseInt(savingAmt);
 		int savingResult = 0;
 
+
 		// 토큰에 있는 아이디
 		Optional<Child> child = findChild(childNum);
 		// children 변경전 포인트
@@ -464,10 +466,13 @@ public class ChildService {
 			// 변경 완료 여부 확인
 			savingResult = wishRepository.savingWish(wishNum, totalSaving);
 		} else {
+
 			throw new ExceededAmountException("모으려는 금액이 price 보다 많습니다.");
+			//return null;
 		}
 		
 		// 포인트 변경
+
 		System.out.println(child.get().getChildNum());
 		int pointResult = updatePoint(child.get().getChildNum(), -parseSavingAmt);
 		System.out.println("pointResult :: complete ->"+pointResult);
@@ -476,6 +481,7 @@ public class ChildService {
 				.orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
 		rwish.setSavingAmt(totalSaving);
 		System.out.println(rwish);
+
 		return new WishResponseDto(rwish);
 	}
 

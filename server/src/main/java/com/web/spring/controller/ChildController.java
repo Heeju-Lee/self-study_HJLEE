@@ -84,6 +84,7 @@ public class ChildController<WishService> {
 	public String duplicationCheck(@PathVariable String id){
 		return childService.duplicateCheck(id);
 	}
+
 	@GetMapping("/find/MyParent")
 	public ParentResponeseDto findMyParent() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -92,6 +93,7 @@ public class ChildController<WishService> {
 		
 		return childService.findMyParent(m.getMemberNum());
 	}
+
 
 /* Plan : 소비 계획 세우기 --------------------------------------------------------------*/
 	@PostMapping("/plans")
@@ -120,6 +122,7 @@ public class ChildController<WishService> {
 	}
 	
 
+
 	@GetMapping("/show/plans")
 	public ResponseEntity<PlanResponseDto> showPlan(	@RequestParam  String year,
 														@RequestParam  String month) throws Exception{
@@ -127,6 +130,7 @@ public class ChildController<WishService> {
 		CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
 		Member m = customMemberDetails.getMember();
 		PlanResponseDto response = childService.showPlan(m.getMemberNum(), year, month);
+
 
 		System.out.println(response);
 		
@@ -146,6 +150,7 @@ public class ChildController<WishService> {
 /* MGMT  --------------------------------------------------------------*/
 
 	//이번달 소비리스트
+
 	@GetMapping("/payments")
 	public ResponseEntity<List<Payment>> showMonthList(	@RequestParam  String year,
 											@RequestParam  String month){
@@ -155,6 +160,7 @@ public class ChildController<WishService> {
 		Member m = customMemberDetails.getMember();
 		
 		List<Payment> response = childService.showMonthList(m.getMemberNum(), Integer.parseInt(year), Integer.parseInt(month));
+
 		System.out.println(response);
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -238,12 +244,14 @@ public class ChildController<WishService> {
 	}	
 	
 	//위시 전체리스트 조회(Active)
+
 	@GetMapping("/wishes/active")
 	public ResponseEntity<List<Wish>> showActiveWishList(){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
 		Member m = customMemberDetails.getMember();
 		List<Wish> wishList = childService.showActiveWishList(m.getMemberNum());
+
 		
 		return ResponseEntity.status(HttpStatus.OK)
 				 			 .body(wishList);

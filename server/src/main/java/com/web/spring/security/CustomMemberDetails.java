@@ -50,7 +50,8 @@ public class CustomMemberDetails implements UserDetails{
 		 member.setMemberNum(num);
 	}
 	
-	public Long getMemberNo() {
+
+	public Long getMemberNum() {
 		 return member.getMemberNum();
 
 	}

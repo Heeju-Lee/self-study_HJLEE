@@ -39,6 +39,7 @@ public class NotificationController {
         );
 		return ResponseEntity.ok().body(notificationResponseDto);
 	}
+	
 	// child가 parent에게 알림을 보냄
 	@PostMapping("/sendToParent")
 	public ResponseEntity<NotificationResponseDto> sendNotificationToParent(@RequestBody NotificationRequestDto notiRequestDto) {		

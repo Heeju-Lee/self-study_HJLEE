@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/common/HomePage";
-import SaveForm from "./components/pages/MGMT/plan/SaveForm";
-import UpdateForm from "./components/pages/MGMT/plan/UpdateForm";
+import SaveForm from "./components/pages/child/plan/SaveForm";
+import UpdateForm from "./components/pages/child/plan/UpdateForm";
 import PlanPage from "./pages/child/PlanPage";
 
 const Navirouter = () => {
