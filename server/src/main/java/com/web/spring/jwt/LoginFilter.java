@@ -10,6 +10,7 @@ import com.web.spring.entity.Member;
 import com.web.spring.entity.Parent;
 import com.web.spring.repository.ChildRepository;
 import com.web.spring.repository.ParentRepository;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
+
 import com.google.gson.Gson;
 import com.web.spring.security.CustomMemberDetails;
 import jakarta.servlet.FilterChain;
@@ -84,6 +86,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         //UserDetailsS
         CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
         //System.out.println("#################response : " + response.get);
+
         System.out.println("customMemberDetails 의customMemberDetails"+customMemberDetails);
         //이 정보는 왜 받아왔을까?
         String username = customMemberDetails.getUsername();//아이디
@@ -114,6 +117,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         response.addHeader("Authorization", "Bearer " + token);
         Map<String, Object> map = new HashMap<>();
         Member member = customMemberDetails.getMember();
+
         System.out.println("memberNo : " + member.getMemberNum());
         map.put("memberNo",member.getMemberNum() );
         map.put("id", member.getId());
@@ -139,4 +143,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         response.getWriter().print(arr);
     }
 	
+
 }
+ 
+
+
+
+
+
+
+
+
+
+
