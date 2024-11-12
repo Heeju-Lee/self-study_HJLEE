@@ -7,21 +7,21 @@ import { Link, useNavigate } from "react-router-dom";
 const Header = () => {
   const navigate = useNavigate();
 
-  const checkPlanAndNavigate = async () => {
-    try {
-      const response = await axios.get("http://localhost:9999/plans/1");
-      if (response.data) {
-        // 데이터가 있을 경우 PlanForm으로 이동
-        navigate("/planPage");
-      } else {
-        // 데이터가 없을 경우 SaveForm으로 이동
-        navigate("/planPage"); // SaveForm을 보여줄 경로
-      }
-    } catch (error) {
-      console.error("Error fetching plan:", error);
-      navigate("/saveForm"); // 오류 발생 시에도 PlanForm으로 이동
-    }
-  };
+  // const checkPlanAndNavigate = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:9999/plans/1");
+  //     if (response.data) {
+  //       // 데이터가 있을 경우 PlanForm으로 이동
+  //       navigate("/planPage");
+  //     } else {
+  //       // 데이터가 없을 경우 SaveForm으로 이동
+  //       navigate("/planPage"); // SaveForm을 보여줄 경로
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching plan:", error);
+  //     navigate("/saveForm"); // 오류 발생 시에도 PlanForm으로 이동
+  //   }
+  // };
 
   // TODO 부모, 아이 분기
   // TODO 로그인 전후 분기
@@ -44,7 +44,10 @@ const Header = () => {
         </LeftSection>
 
         <MenuSection>
-          <Link to="/plan-page" onClick={checkPlanAndNavigate}>
+          <Link
+          // to="/plan-page"
+          // onClick={checkPlanAndNavigate}
+          >
             <span>용돈계획서</span>
           </Link>
           <Link to="/">
@@ -62,24 +65,9 @@ const Header = () => {
             <span>회원가입</span>
           </Link>
         </RightSection>
-        {/* <Navbar bg="primary" data-bs-theme="dark">
-            <Container>
-              <Link to="/" className="navbar-brand">
-                Home
-              </Link>
-              <Nav className="me-auto">
-                <Link className="nav-link" to="#" onClick={checkPlanAndNavigate}>
-                  소비계획세우기
-                </Link>
-                <Link className="nav-link" to="/join-form">
-                  교육
-                </Link>
-                <Link className="nav-link" to="/login-form">
-                  위시리스트
-                </Link>
-              </Nav>
-            </Container>
-          </Navbar> */}
+
+        {/* <Link to="/test-child">아이테스트</Link>
+        <Link to="/test-parent">부모테스트</Link> */}
       </Container>
     </HeaderSection>
   );
