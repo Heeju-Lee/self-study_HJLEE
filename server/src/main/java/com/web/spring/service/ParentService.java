@@ -108,10 +108,10 @@ public class ParentService {
 
         //Chart1 - 카테고리 별 소비 현황
         HashMap<String, Integer> chartPayment = childService.showMonthChart(child.getChildNum(), year, month);
-
+        
         //Chart1- 카테고리 별 계획
         HashMap<String, Integer> monthPlan =childService.monthPlan(child.getChildNum(), year, month);
-
+        
         //Chart2 - Top3.
         LinkedHashMap<String, Integer> showQuizResultTop3= childService.showQuizResultTop3(child.getChildNum());
 
