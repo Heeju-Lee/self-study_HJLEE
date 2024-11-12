@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.web.spring.entity.IsFinish;
 import com.web.spring.entity.Wish;
 import com.web.spring.global.BooleanToYNConverter;
 
@@ -29,7 +30,7 @@ public interface WishRepository extends JpaRepository<Wish, Long>{
 	@Transactional
 	@Modifying
 	@Query("UPDATE Wish w SET w.isFinish =:isFinish WHERE w.wishNum=:wishNum")
-	int isFinish(@Param("wishNum")Long wishNum, @Param("isFinish") Boolean isFinish);
+	int isFinish(@Param("wishNum")Long wishNum, @Param("isFinish")IsFinish isFinish);
 	
 	
 }

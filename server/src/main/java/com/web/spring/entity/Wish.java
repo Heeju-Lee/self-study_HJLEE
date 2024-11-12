@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -44,10 +46,17 @@ public class Wish extends Auditable{
 
     @Column(name="saving_amt")
     private int savingAmt;
+//    
+//    @Convert(converter = BooleanToYNConverter.class)
+//    @Column(name = "isFinish", nullable = true, columnDefinition = "CHAR(1) DEFAULT 'N'")
+//    private Boolean isFinish;
     
-    @Convert(converter = BooleanToYNConverter.class)
-    @Column(name = "isFinish", nullable = true, columnDefinition = "CHAR(1) DEFAULT 'N'")
-    private Boolean isFinish;
+    @Column(nullable=true)
+    @Enumerated(EnumType.STRING)
+    private IsFinish isFinish;
+    
+//    @ColumnDefault("INCOMPLETE")
+//    private String isFinish;
 
 	@Override
 	public String toString() {

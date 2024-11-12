@@ -45,6 +45,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.web.spring.dto.child.wish.WishRequestDto;
 import com.web.spring.dto.child.wish.WishResponseDto;
+import com.web.spring.dto.parent.ParentResponeseDto;
 import com.web.spring.dto.SignInResponseDto;
 import com.web.spring.dto.SignUpRequestDto;
 import com.web.spring.dto.child.plan.PlanRequestDto;
@@ -83,7 +84,14 @@ public class ChildController<WishService> {
 	public String duplicationCheck(@PathVariable String id){
 		return childService.duplicateCheck(id);
 	}
-
+	@GetMapping("/find/MyParent")
+	public ParentResponeseDto findMyParent() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
+		Member m = customMemberDetails.getMember();
+		
+		return childService.findMyParent(m.getMemberNum());
+	}
 
 /* Plan : 소비 계획 세우기 --------------------------------------------------------------*/
 	@PostMapping("/plans")

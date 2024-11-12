@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.web.spring.entity.Child;
+import com.web.spring.entity.IsFinish;
 import com.web.spring.entity.Wish;
 import com.web.spring.exception.ExceededAmountException;
 import com.web.spring.repository.ChildRepository;
@@ -38,7 +39,7 @@ public class WishRepositoryUnitTest {
                         .img("https://th.bing.com/th/id/OIP.0DsCSYnv9-zstm2UQxwj5wHaHa?w=171&h=180&c=7&r=0&o=5&dpr=2&pid=1.7")
                         .name("iphone16pro")
                         .price(1500000)
-                        .isFinish(false)
+                        .isFinish(IsFinish.INCOMPLETE)
                         .build();
 
         Wish rwish = wishRepository.save(wish);   
@@ -82,7 +83,7 @@ public class WishRepositoryUnitTest {
  		if(wishPrice == totalSaving) {
  			// 변경 완료 여부 확인
  			savingResult = wishRepository.savingWish(parseWishNum, totalSaving);
- 			wishRepository.isFinish(parseWishNum, true);
+ 			wishRepository.isFinish(parseWishNum, IsFinish.COMPLETE);
  		}else if (wishPrice >= totalSaving) {
  			// 변경 완료 여부 확인
  			savingResult = wishRepository.savingWish(parseWishNum, totalSaving);

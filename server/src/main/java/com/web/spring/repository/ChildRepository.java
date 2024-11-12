@@ -50,11 +50,11 @@ public interface ChildRepository extends JpaRepository<Child, Long>{
 	List<Payment> showMonthPayments(@Param("childNum") Long childNum);
 
 	// Wish :: Active 상태의 위시리스트만 조회
-	@Query("SELECT w FROM Child c JOIN c.wishes w where c.childNum =:childNum AND w.isFinish = false")
+	@Query("SELECT w FROM Child c JOIN c.wishes w where c.childNum =:childNum AND w.isFinish = com.web.spring.entity.IsFinish.INCOMPLETE")
     List<Wish> showActiveWishList(@Param("childNum") Long childNum);
 	
 	// Wish :: Finished 상태의 위시리스트만 조회
-	@Query("SELECT w FROM Child c JOIN c.wishes w where c.childNum =:childNum AND w.isFinish = true")
+	@Query("SELECT w FROM Child c JOIN c.wishes w where c.childNum =:childNum AND w.isFinish = com.web.spring.entity.IsFinish.COMPLETE")
     List<Wish> showFinishedWishList(@Param("childNum") Long childNum);
 
 	//퀴즈 보여주기 (랜덤)

@@ -31,8 +31,9 @@ import com.web.spring.dto.child.plan.PlanResponseDto;
 import com.web.spring.dto.child.quiz.QuizResponseDto;
 import com.web.spring.dto.child.wish.WishRequestDto;
 import com.web.spring.dto.child.wish.WishResponseDto;
+import com.web.spring.dto.parent.ParentResponeseDto;
 import com.web.spring.entity.Child;
-
+import com.web.spring.entity.IsFinish;
 import com.web.spring.entity.Plan;
 import com.web.spring.entity.Wish;
 import com.web.spring.entity.Quiz;
@@ -43,6 +44,9 @@ import com.web.spring.repository.ChildRepository;
 import com.web.spring.repository.PlanRepository;
 import com.web.spring.repository.WishRepository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Persistence;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -94,6 +98,15 @@ public class ChildService {
 		child.setPayments(payments);
 
 		return new SignInResponseDto(rChild);
+	}
+	
+	@Transactional(readOnly = true)
+	public ParentResponeseDto findMyParent(Long ChildNum) {
+		Optional<Child> child= childRepository.findById(ChildNum);
+		
+		Parent myParent= child.get().getParent();
+		
+		return new ParentResponeseDto(myParent);
 	}
 
 	@Transactional(readOnly = true)
@@ -433,30 +446,36 @@ public class ChildService {
 				.orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
 		int totalSaving = wish.getSavingAmt() + parseSavingAmt;
 		int wishPrice = wish.getPrice();
+		//int result = wishRepository.isFinish(wishNum, IsFinish.COMPLETE);
 		System.out.println("totalSaving::: >>>>> " + totalSaving);
 		System.out.println("wishPrice::: >>>>> " + wishPrice);
 		// wish 가격과 totalSaving 이 같다면 -> isFinish == True
+		
 		if (wishPrice == totalSaving) {
+		
 			// 변경 완료 여부 확인
 			savingResult = wishRepository.savingWish(wishNum, totalSaving);
-			System.out.println("wishNum ::: >>>>> " + wishNum);
-			int result = wishRepository.isFinish(wishNum, true);
-			System.out.println("isfinish ::: >>>>> " + result);
+			System.out.println("wishNum 이걸 보란다 ::: >>>>> " + wishNum);
+			wish.setIsFinish(IsFinish.COMPLETE);
+//			int result = wishRepository.isFinish(wishNum, IsFinish.COMPLETE);
+			//System.out.println("isfinish ::: >>>>> " + result);
+		   
 		} else if (wishPrice >= totalSaving) {
 			// 변경 완료 여부 확인
 			savingResult = wishRepository.savingWish(wishNum, totalSaving);
 		} else {
 			throw new ExceededAmountException("모으려는 금액이 price 보다 많습니다.");
 		}
-
+		
 		// 포인트 변경
 		System.out.println(child.get().getChildNum());
 		int pointResult = updatePoint(child.get().getChildNum(), -parseSavingAmt);
-
+		System.out.println("pointResult :: complete ->"+pointResult);
 		System.out.println("afterSavingWish :: complete ->" + savingResult);
 		Wish rwish = wishRepository.findById(wishNum)
 				.orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
 		rwish.setSavingAmt(totalSaving);
+		System.out.println(rwish);
 		return new WishResponseDto(rwish);
 	}
 
