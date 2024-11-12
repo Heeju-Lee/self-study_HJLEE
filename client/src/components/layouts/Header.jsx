@@ -26,7 +26,7 @@ const Header = () => {
   // TODO 부모, 아이 분기
   // TODO 로그인 전후 분기
   return (
-    <Outer>
+    <HeaderSection>
       <Container>
         {/* 로고 */}
         <LeftSection>
@@ -44,7 +44,7 @@ const Header = () => {
         </LeftSection>
 
         <MenuSection>
-          <Link to="/" onClick={checkPlanAndNavigate}>
+          <Link to="/plan-page" onClick={checkPlanAndNavigate}>
             <span>용돈계획서</span>
           </Link>
           <Link to="/">
@@ -81,16 +81,22 @@ const Header = () => {
             </Container>
           </Navbar> */}
       </Container>
-    </Outer>
+    </HeaderSection>
   );
 };
 
-const Outer = styled.div`
+const HeaderSection = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
   width: 100%;
   height: 80px;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid white;
 `;
 const Container = styled.div`
   width: 100%;

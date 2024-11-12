@@ -1,5 +1,5 @@
 import React from "react";
-import PlanForm from "../../components/pages/MGMT/plan/PlanForm";
+import PlanForm from "../../components/pages/child/plan/PlanForm";
 
 const PlanPage = () => {
   return (
