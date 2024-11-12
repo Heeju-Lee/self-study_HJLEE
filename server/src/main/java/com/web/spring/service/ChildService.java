@@ -439,35 +439,47 @@ public class ChildService {
 		
 		//토큰에 있는 아이디
 		Child child =findChild(1L);
-		// children 변경전 포인트
-		System.out.println("beforeSaving_ChildPoint :: "+child.getPoint());
+		System.out.println("######### beforeSaving_ChildPoint :: "+child.getPoint());
 		
 		//해당하는 위시 가져오기
 		Wish wish = wishRepository.findById(Long.parseLong(wishNum))
-				  .orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
+				  				  .orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
+		
 		int totalSaving = wish.getSavingAmt() + parseSavingAmt;
 		int wishPrice = wish.getPrice();
 		
+		System.out.println("totalSaving : " + totalSaving);
+		System.out.println("wishPrice : " + wishPrice);
+		
 		// wish 가격과 totalSaving 이 같다면 -> isFinish == True
 		if(wishPrice == totalSaving) {
+			
+			System.out.println("wish == total");
 			// 변경 완료 여부 확인
 			savingResult = wishRepository.savingWish(parseWishNum, totalSaving);
 			wishRepository.isFinish(parseWishNum, true);
+			
 		}else if (wishPrice >= totalSaving) {
+			
+			System.out.println("wish >= total");
 			// 변경 완료 여부 확인
 			savingResult = wishRepository.savingWish(parseWishNum, totalSaving);
+			
 		}else {
 			throw new ExceededAmountException("모으려는 금액이 price 보다 많습니다.");
+			//return null;
 		}
 		
 		// 포인트 변경
 		System.out.println(child.getChildNum());
 		int pointResult = updatePoint(child.getChildNum(), -parseSavingAmt);
 		
-		System.out.println("afterSavingWish :: complete ->"+ savingResult );
+		System.out.println("########## afterSavingWish :: complete ->"+ savingResult );
 		Wish rwish = wishRepository.findById(parseWishNum)
-												.orElseThrow(()-> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
+									.orElseThrow(()-> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
+		
 		rwish.setSavingAmt(totalSaving);
+		
 		return new WishResponseDto(rwish);
 	}
 
