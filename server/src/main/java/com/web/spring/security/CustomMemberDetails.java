@@ -42,6 +42,15 @@ public class CustomMemberDetails implements UserDetails{
 		log.info("getUsername() ===>");
 		return member.getId();
 	}
+	
+	public void setMemberNum(Long num) {
+		 member.setMemberNum(num);
+	}
+	
+	public Long getMemberNum() {
+		 return member.getMemberNum();
+	}
+	
 	////////////////////////////////////////////////////////
 	@Override
     public boolean isAccountNonExpired() { //계정이 Expired 되지 않았다

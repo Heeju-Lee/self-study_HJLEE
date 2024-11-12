@@ -124,12 +124,12 @@ public class ChildService {
 
 /* Plan : 소비 계획 세우기 */
 	@Transactional
-	public PlanResponseDto createPlan(PlanRequestDto planRequestDto ){
+	public PlanResponseDto createPlan(Long childNum, PlanRequestDto planRequestDto ){
 		
 		//1. client에서 c_num 넣어주는 방법 -> PlanRequestDto 사용
 		//2. JWT 토큰 까서 c_num 확인하는 방법
 		//c_num 받았다고 치고.
-		Child child = findChild(planRequestDto.getChildNum());
+		Child child = findChild(childNum);
 		System.out.println(child);
 
 		Plan plan = planRequestDto.toPlan(planRequestDto);
@@ -142,13 +142,13 @@ public class ChildService {
 	
 	//소비 계획 조회하기
 	@Transactional
-	public PlanResponseDto showPlan(String year, String month) throws Exception{
+	public PlanResponseDto showPlan(Long childNum, int year, int month) throws Exception{
 	
 		//토큰 까서 childNum 받았다 치고,
 		Child child =findChild(1L);
 		System.out.println(child);
 		
-		Plan plan = childRepository.findPlanByDate(Integer.parseInt(year), Integer.parseInt(month) );
+		Plan plan = childRepository.findPlan(child.getChildNum(), year, month);
 		
 		return new PlanResponseDto(plan);
 	}
@@ -397,9 +397,9 @@ public class ChildService {
 
 	// Wish : Active 위시 전체 조회 
 	@Transactional
-	public List<Wish> showActiveWishList(String childNum) {
+	public List<Wish> showActiveWishList(Long childNum) {
 
-		List<Wish> wishList = childRepository.showActiveWishList(Long.parseLong(childNum));
+		List<Wish> wishList = childRepository.showActiveWishList(childNum);
 		wishList.forEach(c->System.out.println("showActiveWish :: "+c));
 		
 		return wishList;
@@ -439,35 +439,47 @@ public class ChildService {
 		
 		//토큰에 있는 아이디
 		Child child =findChild(1L);
-		// children 변경전 포인트
-		System.out.println("beforeSaving_ChildPoint :: "+child.getPoint());
+		System.out.println("######### beforeSaving_ChildPoint :: "+child.getPoint());
 		
 		//해당하는 위시 가져오기
 		Wish wish = wishRepository.findById(Long.parseLong(wishNum))
-				  .orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
+				  				  .orElseThrow(() -> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
+		
 		int totalSaving = wish.getSavingAmt() + parseSavingAmt;
 		int wishPrice = wish.getPrice();
 		
+		System.out.println("totalSaving : " + totalSaving);
+		System.out.println("wishPrice : " + wishPrice);
+		
 		// wish 가격과 totalSaving 이 같다면 -> isFinish == True
 		if(wishPrice == totalSaving) {
+			
+			System.out.println("wish == total");
 			// 변경 완료 여부 확인
 			savingResult = wishRepository.savingWish(parseWishNum, totalSaving);
 			wishRepository.isFinish(parseWishNum, true);
+			
 		}else if (wishPrice >= totalSaving) {
+			
+			System.out.println("wish >= total");
 			// 변경 완료 여부 확인
 			savingResult = wishRepository.savingWish(parseWishNum, totalSaving);
+			
 		}else {
 			throw new ExceededAmountException("모으려는 금액이 price 보다 많습니다.");
+			//return null;
 		}
 		
 		// 포인트 변경
 		System.out.println(child.getChildNum());
 		int pointResult = updatePoint(child.getChildNum(), -parseSavingAmt);
 		
-		System.out.println("afterSavingWish :: complete ->"+ savingResult );
+		System.out.println("########## afterSavingWish :: complete ->"+ savingResult );
 		Wish rwish = wishRepository.findById(parseWishNum)
-												.orElseThrow(()-> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
+									.orElseThrow(()-> new NoSuchElementException("Wish with wishNum " + wishNum + " not found"));
+		
 		rwish.setSavingAmt(totalSaving);
+		
 		return new WishResponseDto(rwish);
 	}
 

@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import com.web.spring.entity.Member;
 import com.web.spring.entity.Payment;
 import com.web.spring.entity.Quiz;
 import com.web.spring.entity.Wish;
+import com.web.spring.security.CustomMemberDetails;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,19 +44,22 @@ import com.web.spring.dto.child.quiz.QuizResponseDto;
 import com.web.spring.service.ChildService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/children")
+@Slf4j
 public class ChildController { 
 
 	private final ChildService childService;
 
 /* Child : 회원가입  --------------------------------------------------------------*/
-	@PostMapping("/children")
+	@PostMapping("/signup")
 	public ResponseEntity<?> singUp(@RequestBody SignUpRequestDto sinUpRequestDto ){
 		
 		SignInResponseDto response = childService.singUp(sinUpRequestDto);
+
 				
 		return ResponseEntity.status(HttpStatus.CREATED)
 				 			 .body(response);
@@ -63,14 +70,30 @@ public class ChildController {
 		return childService.duplicateCheck(id);
 	}
 
+	
+
+	
 
 /* Plan : 소비 계획 세우기 --------------------------------------------------------------*/
 	@PostMapping("/plans")
 	public ResponseEntity<PlanResponseDto> createPlan( @RequestBody PlanRequestDto planRequestDto){
 		
-		System.out.println(planRequestDto);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
-		PlanResponseDto response = childService.createPlan(planRequestDto);
+//		System.out.println("### getPrincipal : "+ authentication.getPrincipal().toString());
+//		System.out.println("### getCredentials : "+ authentication.getCredentials()); //password
+//		System.out.println("### getDetails : "+ authentication.getDetails());
+//		System.out.println("### getName : "+ authentication.getName()); //userId
+//		System.out.println("### getClass : "+ authentication.getClass());
+//		
+		CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
+		Member m = customMemberDetails.getMember();
+//		log.info("customMemberDetails =  {} ,{} ,{}, {} ", m.getId(), m.getName(), m.getRole(), m.getMemberNo());
+		
+		
+		//System.out.println(planRequestDto);
+		
+		PlanResponseDto response = childService.createPlan( m.getMemberNum(), planRequestDto);
 		
 		return ResponseEntity.status(HttpStatus.CREATED)
 							 .body(response);
@@ -78,10 +101,11 @@ public class ChildController {
 	
 
 	@GetMapping("/plans")
-	public ResponseEntity<PlanResponseDto> showPlan(	@RequestParam  String year,
-										@RequestParam  String month) throws Exception{
+	public ResponseEntity<PlanResponseDto> showPlan(	@PathVariable String childNum,
+														@RequestParam  String year,
+														@RequestParam  String month) throws Exception{
 	
-		PlanResponseDto response = childService.showPlan(year, month);
+		PlanResponseDto response = childService.showPlan( 1L, 2024, 11);
 		System.out.println(response);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -102,8 +126,8 @@ public class ChildController {
 	//이번달 소비리스트
 	@GetMapping("/payments/{childNum}")
 	public ResponseEntity<List<Payment>> showMonthList(	@PathVariable String childNum,
-											@RequestParam  String year,
-											@RequestParam  String month){
+														@RequestParam  String year,
+														@RequestParam  String month){
 
 
 		List<Payment> response = childService.showMonthList(Long.parseLong(childNum), Integer.parseInt(year), Integer.parseInt(month));
@@ -178,7 +202,7 @@ public class ChildController {
 	
 	//위시 전체리스트 조회(Active)
 	@GetMapping("/wishes/active/{childNum}")
-	public ResponseEntity<List<Wish>> showActiveWishList(@PathVariable String childNum){
+	public ResponseEntity<List<Wish>> showActiveWishList(@PathVariable Long childNum){
 		
 		List<Wish> wishList = childService.showActiveWishList(childNum);
 		

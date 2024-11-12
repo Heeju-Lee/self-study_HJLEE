@@ -17,7 +17,7 @@ public class NotificationRequestDto {
     private String message;
     
 	@NotNull
-    private String category;
+    private String category; //한마디(feedback), 용돈 지급(giveMoney), 용돈 계약서(agreement)
 	
 	@NotNull
 	private String senderType; // "parent" , "child"

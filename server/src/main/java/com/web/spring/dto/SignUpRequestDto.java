@@ -28,10 +28,9 @@ public class SignUpRequestDto {
 	
 	@NotNull
 	private String birthdate;
+	
 	private String phone;
 	private String email;
-
-	@NotNull
 	private Long parentNum;
 	
 	public Child toChild(SignUpRequestDto requestDto) {

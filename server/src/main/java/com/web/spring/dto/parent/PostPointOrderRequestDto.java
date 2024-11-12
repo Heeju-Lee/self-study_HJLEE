@@ -16,13 +16,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PointOrderRequestDto {
+public class PostPointOrderRequestDto {
 
 	int amount;
 	Long childNum;
 	String payType;
 	
-	public PointOrder toPointOrder(PointOrderRequestDto pointOrderRequestDto) {
+	public PointOrder toPointOrder(PostPointOrderRequestDto pointOrderRequestDto) {
 		return PointOrder.builder()
 						 .amount(pointOrderRequestDto.getAmount())
 						 .childNum(pointOrderRequestDto.getChildNum())

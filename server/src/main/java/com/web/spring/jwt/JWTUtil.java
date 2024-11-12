@@ -79,7 +79,7 @@ public class JWTUtil {
                 .claim("username", member.getName()) //이름
                 .claim("id", member.getId()) //아이디
                 .claim("role", role) //Role
-                .claim("memberNo", member.getMemberNo())
+                .claim("memberNo", member.getMemberNum())
                 .issuedAt(new Date(System.currentTimeMillis())) //현재로그인된 시간
                 .expiration(new Date(System.currentTimeMillis() + expiredMs)) //만료시간
                 .signWith(secretKey) // 서명과 함께 저장됨
