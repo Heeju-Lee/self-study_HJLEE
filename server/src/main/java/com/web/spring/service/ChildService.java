@@ -462,7 +462,7 @@ public class ChildService {
 //			int result = wishRepository.isFinish(wishNum, IsFinish.COMPLETE);
 			//System.out.println("isfinish ::: >>>>> " + result);
 		   
-		} else if (wishPrice >= totalSaving) {
+		} else if (wishPrice > totalSaving) {
 			// 변경 완료 여부 확인
 			savingResult = wishRepository.savingWish(wishNum, totalSaving);
 		} else {
