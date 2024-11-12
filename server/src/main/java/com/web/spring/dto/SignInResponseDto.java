@@ -25,8 +25,8 @@ public class SignInResponseDto {
 	private String birthdate;
 	private String phone;
 	private String email;
-	private LocalDate modifiedAt;
-	private LocalDate createdAt;
+//	private LocalDate modifiedAt;
+//	private LocalDate createdAt;
 
 	public SignInResponseDto(Child child) {
 		this.num = child.getChildNum();
@@ -36,8 +36,8 @@ public class SignInResponseDto {
 		this.birthdate = child.getBirthdate();
 		this.phone = child.getPhone();
 		this.email = child.getEmail();
-		this.createdAt = child.getCreatedAt();
-		this.modifiedAt = child.getModifiedAt();
+//		this.createdAt = child.getCreatedAt();
+//		this.modifiedAt = child.getModifiedAt();
 
 	}
 
@@ -49,8 +49,8 @@ public class SignInResponseDto {
 		this.birthdate = parent.getBirthdate();
 		this.phone = parent.getPhone();
 		this.email = parent.getEmail();
-		this.createdAt = parent.getCreatedAt();
-		this.modifiedAt = parent.getModifiedAt();
+//		this.createdAt = parent.getCreatedAt();
+//		this.modifiedAt = parent.getModifiedAt();
 		
 	}
 	

@@ -30,7 +30,7 @@ class DonnyMoneyApplicationTests {
         );
         
         // createWish 메서드 호출
-        System.out.println(childService.createWish(wish, file));
+        System.out.println(childService.createWish(1L,wish, file));
 	}
 	
 	

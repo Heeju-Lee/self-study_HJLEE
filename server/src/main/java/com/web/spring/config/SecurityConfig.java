@@ -15,8 +15,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import com.web.spring.jwt.JWTFilter;
 import com.web.spring.jwt.JWTUtil;
 import com.web.spring.jwt.LoginFilter;
+
 import com.web.spring.repository.ChildRepository;
 import com.web.spring.repository.ParentRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,7 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
 	private final ChildRepository childRepository;
 	private final ParentRepository parentRepository;
+
     //AuthenticationManager Bean 등록
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -44,7 +47,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.info("SecurityFilterChain filterChain(HttpSecurity http) call.....");
        /////////////////////////////////
+
         //CORS 설정(Cross-Origin Resource Sharing)
+
         /*http 상의 웹 어플리케이션에서 다른 출처의 리소스에 접근할 수 있는 권한을 부여하는 정책*/
         http.cors((corsCustomizer ->
                         corsCustomizer.configurationSource(new CorsConfigurationSource()
@@ -73,7 +78,6 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) ->
                 auth
                         .requestMatchers("parents/signup", "/children/signup").permitAll()
-                        //.requestMatchers("*").permitAll()
                         .requestMatchers("/swagger-ui", "/swagger-ui/**","/api/logistics","/api/swagger-config","/v3/api-docs/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
@@ -89,5 +93,6 @@ public class SecurityConfig {
         http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
         http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, childRepository,parentRepository), UsernamePasswordAuthenticationFilter.class);
         return http.build();
+
     }
 }

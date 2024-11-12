@@ -7,7 +7,9 @@ import com.web.spring.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -16,7 +18,7 @@ public class CustomMemberDetails implements UserDetails{
 	@Getter
 	public final Member member;
 
-	
+	//Member값을 넣어줌
 	public CustomMemberDetails(Member member) {
 		this.member = member;
 		log.info("CustomMemberDetails() ===> member { }",member);
@@ -33,22 +35,25 @@ public class CustomMemberDetails implements UserDetails{
 	
 	@Override
 	public String getPassword() {
-		log.info("getPassword() ===>");
+		log.info("getPassword() ===>{}"+member.getPwd());
 		return member.getPwd();
 	}
 
 	@Override
 	public String getUsername() {
-		log.info("getUsername() ===>");
+		log.info("getUsername() ===>{}"+member.getId());
 		return member.getId();
 	}
+
 	
 	public void setMemberNum(Long num) {
 		 member.setMemberNum(num);
 	}
 	
+
 	public Long getMemberNum() {
 		 return member.getMemberNum();
+
 	}
 	
 	////////////////////////////////////////////////////////

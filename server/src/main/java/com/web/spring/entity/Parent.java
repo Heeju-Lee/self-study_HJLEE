@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 @Builder
 public class Parent  extends Auditable{
 
+
     @Id
     @Column(name = "parent_num")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +43,7 @@ public class Parent  extends Auditable{
     private String phone;
     private String email;
     private String address;
-	private String role;
+    private String role;
     
 
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY , cascade = {CascadeType.PERSIST})

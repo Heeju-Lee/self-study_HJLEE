@@ -2,8 +2,10 @@ package com.web.spring.entity;
 
 import java.util.List;
 
+import com.web.spring.dto.child.ChildRequestDto;
 import com.web.spring.global.audit.Auditable;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import jakarta.persistence.CascadeType;
@@ -42,7 +44,8 @@ public class Child  extends Auditable{
 	private String birthdate;
 	private String phone;
 	private String email;
-	private String role;
+    private String role;
+
 	
 	@Column(nullable = true)
 	private int point;
@@ -98,4 +101,9 @@ public class Child  extends Auditable{
 				", parent=" + parent +
 				'}';
 	}
+
+	
+	
+	
+
 }

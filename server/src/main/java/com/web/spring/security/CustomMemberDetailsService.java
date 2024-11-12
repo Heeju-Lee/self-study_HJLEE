@@ -41,7 +41,6 @@ public class CustomMemberDetailsService implements UserDetailsService{
             			.pwd(findChild.getPwd())
             			.role("ROLE_CHILD")
             			.name(findChild.getName())
-            			.isParent(false)
             			.build();
         }
         else if (findChild == null) {
@@ -50,7 +49,6 @@ public class CustomMemberDetailsService implements UserDetailsService{
             			.pwd(findParent.getPwd())
             			.role("ROLE_PARENT")
             			.name(findParent.getName())
-            			.isParent(true)
             			.build();
         }
         // 둘 다 null일 경우 UsernameNotFoundException 발생
@@ -65,7 +63,6 @@ public class CustomMemberDetailsService implements UserDetailsService{
     }
 
 }
-
 
 
 

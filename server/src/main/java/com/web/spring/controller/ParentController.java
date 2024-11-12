@@ -84,14 +84,17 @@ public class ParentController {
     @GetMapping("/contracts")
     public ResponseEntity<PlanResponseDto> getContracts(@RequestBody ChildRequestDto childRequestDto) throws Exception{ 
 
+
     	Long parentNum = getParentNumByToken();
 		
         Child child = parentService.findParentChild(parentNum, childRequestDto.getChildNum());
+
 
         PlanResponseDto  planResponseDto = childService.showPlan( child.getChildNum(), childRequestDto.getYear(), childRequestDto.getMonth());
 
         return ResponseEntity.status(HttpStatus.OK).body(planResponseDto);
     }
+
 
     /* 위시 리스트 */
     @PostMapping("/wishes")
@@ -102,7 +105,7 @@ public class ParentController {
     	Long childNum = data.get("childNum");
         Child child = parentService.findParentChild(parentNum, childNum);
 
-        List<Wish> wishes =childService.showActiveWishList(childNum);
+        List<Wish> wishes =childService.showActiveWishList(child.getChildNum());
 
         return ResponseEntity.status(HttpStatus.OK).body(wishes);
     }
