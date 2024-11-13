@@ -18,7 +18,7 @@ import WishListPage from "./pages/parent/WishListPage";
 import RegisterPage from "./pages/parent/RegisterPage";
 import LoginPage from "./pages/common/LoginPage";
 import SelectUserType from "./pages/common/SelectUserType";
-import LoginForm from "./components/commons/LoginForm";
+import LoginForm from "./components/pages/LoginForm";
 
 const Navirouter = () => {
   return (

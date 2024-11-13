@@ -1,5 +1,6 @@
 import React from 'react';
-import LoginForm from '../../components/commons/LoginForm';
+import styled from "styled-components";
+import LoginForm from '../../components/pages/LoginForm';
 
 const LoginPage = () => {
     return (
@@ -7,6 +8,5 @@ const LoginPage = () => {
             <LoginForm />
         </div>
     );
-};
-
+}
 export default LoginPage;

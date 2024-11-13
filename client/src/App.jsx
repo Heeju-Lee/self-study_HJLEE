@@ -4,12 +4,14 @@ import Header from "./components/layouts/Header";
 import Navirouter from "./Navirouter";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Layout from "./components/layouts/Layout";
+// import PlanReport from "./components/pages/parent/PlanReport";
+// import MonthlyReportPage from "./pages/parent/MonthlyReportPage";
 import { createContext, useEffect, useState } from "react";
 
 /*useContext 를 이용해서 하위 컴포넌트들이 데이터 공유하기*/
 export const LogingedContext = createContext();
-// import PlanReport from "./components/pages/parent/PlanReport";
-// import MonthlyReportPage from "./pages/parent/MonthlyReportPage";
+
+
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
