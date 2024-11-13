@@ -1,12 +1,16 @@
-import { useState } from "react";
-import { Button, InputGroup } from "react-bootstrap";
-import Form from "react-bootstrap/Form";
+import React, { useState } from "react";
+import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 
 const RegisterPage = () => {
-  //
+  const [step, setStep] = useState(1); // 현재 단계 상태
+  const steps = [
+    { number: 1, label: "회원가입 정보" },
+    { number: 2, label: "부모님 연동" },
+    { number: 3, label: "회원가입 완료" },
+  ];
+
   const [child, setChild] = useState({
     id: "",
     pwd: "",
@@ -64,7 +68,6 @@ const RegisterPage = () => {
         });
     }
   };
-
   // 부모님 찾기 버튼을 눌렀을 떄
   const findParent = (e) => {
     setChild({ ...child, [e.target.name]: e.target.value });
@@ -142,129 +145,193 @@ const RegisterPage = () => {
   };
 
   return (
-    <>
-      <StyledBack1>
-        {/* <img src="/donny.png" /> */}
-        <StyledForm>
-          <h2 style={{ padding: "20px", color: "red" }}>아이 회원가입</h2>
-          <Form>
-            <Form.Label htmlFor="id">아이디</Form.Label>
-            <InputGroup className="mb-3">
-              <Form.Control
+    <Container>
+      {/* Progress Bar */}
+      <ProgressBar>
+        {steps.map((item, index) => (
+          <Step key={index} isActive={step === item.number}>
+            <Circle isActive={step >= item.number}>{item.number}</Circle>
+            <CustomLabel isActive={step >= item.number}>
+              {item.label}
+            </CustomLabel>
+            {index < steps.length - 1 && <Line isActive={step > item.number} />}
+          </Step>
+        ))}
+      </ProgressBar>
+
+      {/* 단계별 내용 */}
+      <Content>
+        {step === 1 && (
+          <>
+            <h2>1단계: 회원가입 정보</h2>
+            <InputRow>
+              <Label>아이디</Label>
+              <Input
                 type="text"
-                id="id"
-                name="id"
+                placeholder="아이디 입력"
                 onChange={changeValue}
               />
-              <InputGroup.Text
-                style={isCheckResult ? { color: "red" } : { color: "blue" }}
-              >
+              <p style={isCheckResult ? { color: "red" } : { color: "blue" }}>
                 {idCheckResult}
-              </InputGroup.Text>
-            </InputGroup>
-            <Form.Label htmlFor="name">이름</Form.Label>
-            <Form.Control
-              type="text"
-              id="name"
-              name="name"
-              onChange={changeValue}
-            />
-            <Form.Label htmlFor="pwd">비밀번호</Form.Label>
-            <Form.Control
-              type="password"
-              id="pwd"
-              name="pwd"
-              onChange={changeValue}
-            />
-            <Form.Label htmlFor="name">이름</Form.Label>
-            <Form.Control
-              type="text"
-              id="name"
-              name="name"
-              onChange={changeValue}
-            />
-            <Form.Label htmlFor="birthdate">생일</Form.Label>
-            <Form.Control
-              type="date"
-              id="birthdate"
-              name="birthdate"
-              onChange={changeValue}
-            />
-            <Form.Label htmlFor="phone">전화번호</Form.Label>
-            <Form.Control
-              type="text"
-              id="phone"
-              name="phone"
-              onChange={changeValue}
-            />
-            <Form.Label htmlFor="email">이메일 주소</Form.Label>
-            <Form.Control
-              type="email"
-              id="email"
-              name="email"
-              onChange={changeValue}
-            />
-
-            <h2 style={{ padding: "20px", color: "red" }}>부모님 찾기</h2>
-
-            {/* 부모 이름 연락처 입력 폼 추가 */}
-            <Form.Label htmlFor="pname">부모님 이름</Form.Label>
-            <Form.Control
-              type="text"
-              id="pname"
-              name="pname"
-              value={pname}
-              onChange={(e) => setPname(e.target.value)}
-            />
-
-            <Form.Label htmlFor="pphone">부모님 연락처</Form.Label>
-            <Form.Control
-              type="text"
-              id="pphone"
-              name="pphone"
-              value={pphone}
-              onChange={(e) => setPphone(e.target.value)}
-            />
-
-            <InputGroup className="mb-3">
-              <InputGroup.Text
-                style={isParentExist ? { color: "green" } : { color: "red" }}
-              >
-                {parentExistMessage}
-              </InputGroup.Text>
-            </InputGroup>
-            <Button variant="primary" onClick={findParent}>
-              부모님 찾기
+              </p>
+            </InputRow>
+            <InputRow>
+              <Label>비밀번호</Label>
+              <Input type="password" placeholder="비밀번호 입력" />
+            </InputRow>
+            <InputRow>
+              <Label>이름</Label>
+              <Input type="text" placeholder="이름 입력" />
+            </InputRow>
+            <Button onClick={() => setStep(2)}>다음</Button>
+          </>
+        )}
+        {step === 2 && (
+          <>
+            <h2>부모님 연동하기</h2>
+            <InputRow>
+              <Label>부모님 이름</Label>
+              <Input type="text" placeholder="부모님 이름 입력" />
+            </InputRow>
+            <InputRow>
+              <Label>부모님 연락처</Label>
+              <Input type="text" placeholder="부모님 연락처 입력" />
+            </InputRow>
+            <Button>부모님 확인</Button>
+            <Button
+              onClick={() => {
+                // 부모님 확인 완료
+                submitJoin();
+                setStep(3);
+              }}
+            >
+              가입하기
             </Button>
-            <br />
-            <p>
-              <Button variant="primary" onClick={submitJoin}>
-                회원가입
-              </Button>
-            </p>
-          </Form>
-        </StyledForm>
-      </StyledBack1>
-    </>
+          </>
+        )}
+        {step === 3 && (
+          <>
+            <h2>회원가입 완료</h2>
+            <p>회원가입이 성공적으로 완료되었습니다!</p>
+            <Button onClick={() => alert("홈으로 이동")}>홈으로</Button>
+          </>
+        )}
+      </Content>
+
+      {/* 단계 전환 버튼 */}
+      <Navigation>
+        <Button
+          onClick={() => setStep((prev) => Math.max(prev - 1, 1))}
+          disabled={step === 1}
+        >
+          이전
+        </Button>
+        <Button
+          onClick={() => setStep((prev) => Math.min(prev + 1, steps.length))}
+          disabled={step === steps.length}
+        >
+          다음
+        </Button>
+      </Navigation>
+    </Container>
   );
 };
 
-const StyledBack1 = styled.div`
-  /* background: linear-gradient(to bottom, #9774fb 50%, white 50%);
-  background-attachment: fixed;
-  background-size: 100% 100%; */
-  border: 1px solid red;
-  /* height: 100vh; */
-`;
-
-const StyledForm = styled.form`
-  background-color: white;
-  border-radius: 50px;
-  box-shadow: #9774fb 20px 0px 50px 10px;
-  width: 1280px;
-  margin: 0 auto;
-  /* margin-top: 600px; */
-  padding: 50px;
-`;
-
 export default RegisterPage;
+
+const Container = styled.div`
+  width: 600px;
+  margin: 50px auto;
+`;
+
+const ProgressBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  position: relative;
+  width: 100%;
+`;
+
+const Step = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  flex: 1; /* 각 Step을 동일한 너비로 설정 */
+`;
+
+const Circle = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: ${(props) => (props.isActive ? "#9774FB" : "#e0e0e0")};
+  color: ${(props) => (props.isActive ? "white" : "black")};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  position: relative;
+  z-index: 1;
+`;
+
+const CustomLabel = styled.div`
+  margin-top: 5px;
+  color: ${(props) => (props.isActive ? "#9774FB" : "#a0a0a0")};
+  font-weight: ${(props) => (props.isActive ? "bold" : "normal")};
+`;
+
+const Line = styled.div`
+  width: 100%; /* Step 사이의 간격에 맞게 조정 */
+  height: 2px;
+  background-color: ${(props) => (props.isActive ? "#9774FB" : "#e0e0e0")};
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  /* transform: translateX(-50%); */
+  z-index: -1;
+  transition: background-color 0.3s ease; /* 배경색 변경 애니메이션 */
+`;
+
+const Content = styled.div`
+  text-align: center;
+`;
+
+const InputRow = styled.div`
+  margin-bottom: 20px;
+  text-align: left;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 8px;
+  border: 1px solid gray;
+  border-radius: 5px;
+`;
+
+const Button = styled.button`
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #9774fb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: not-allowed;
+  }
+`;
+
+const Navigation = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+`;
