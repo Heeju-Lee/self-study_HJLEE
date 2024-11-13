@@ -81,13 +81,12 @@ public class ChildController<WishService> {
 				 			 .body(response);
 	}
 
-	//Post로 수정 예정!!!!!!
 	@GetMapping("/signup/{id}")
 	public String duplicationCheck(@PathVariable String id){
 		return childService.duplicateCheck(id);
 	}
 
-	@GetMapping("/signup/findMyParent")
+	@PostMapping("/signup/findMyParent")
 	public ParentResponeseDto findMyParent( @RequestBody FindMyParentDto findMyParentDto) {
 		
 		return childService.findMyParent(findMyParentDto.getChildNum(), findMyParentDto.getName(),findMyParentDto.getPhone());
