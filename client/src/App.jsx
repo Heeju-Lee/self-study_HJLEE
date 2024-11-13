@@ -8,6 +8,8 @@ import { createContext, useEffect, useState } from "react";
 
 /*useContext 를 이용해서 하위 컴포넌트들이 데이터 공유하기*/
 export const LogingedContext = createContext();
+// import PlanReport from "./components/pages/parent/PlanReport";
+// import MonthlyReportPage from "./pages/parent/MonthlyReportPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -41,6 +43,7 @@ createContex 를 이용하여 서로 공유할수 있도록 한다.
         <Header />
         <Layout>
           {/* 각 페이지 */}
+          {/* <MonthlyReportPage /> */}
           <Navirouter />
         </Layout>
       </BrowserRouter>

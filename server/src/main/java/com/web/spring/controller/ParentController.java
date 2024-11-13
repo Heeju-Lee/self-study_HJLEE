@@ -28,6 +28,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/parents")
+@CrossOrigin
 public class ParentController {
 
     private final ChildService childService;
@@ -69,28 +70,32 @@ public class ParentController {
 
     /* 월간 리포트 */
     @GetMapping("/reports")
-    public ResponseEntity<ParentReportResponseDto> getChildReports( @RequestBody ChildRequestDto childRequestDto){
+    public ResponseEntity<ParentReportResponseDto> getChildReports(@RequestParam Long childNum,
+    																@RequestParam int year,
+    																@RequestParam int month){
 
     	Long parentNum = getParentNumByToken();
 		
-        Child child = parentService.findParentChild(parentNum, childRequestDto.getChildNum());
-
-        ParentReportResponseDto reponse = parentService.getChildReport(child, childRequestDto.getYear(), childRequestDto.getMonth());
+        Child child = parentService.findParentChild(parentNum, childNum);
+        System.out.println(year+"/"+month);
+        ParentReportResponseDto reponse = parentService.getChildReport(child, year, month);
         
         return ResponseEntity.status(HttpStatus.OK).body(reponse);
     }
 
     /* 용돈 계약서 */
     @GetMapping("/contracts")
-    public ResponseEntity<PlanResponseDto> getContracts(@RequestBody ChildRequestDto childRequestDto) throws Exception{ 
+    public ResponseEntity<PlanResponseDto> getContracts(@RequestParam Long childNum,
+														@RequestParam int year,
+														@RequestParam int month) throws Exception{ 
 
 
     	Long parentNum = getParentNumByToken();
 		
-        Child child = parentService.findParentChild(parentNum, childRequestDto.getChildNum());
+        Child child = parentService.findParentChild(parentNum, childNum);
 
 
-        PlanResponseDto  planResponseDto = childService.showPlan( child.getChildNum(), childRequestDto.getYear(), childRequestDto.getMonth());
+        PlanResponseDto  planResponseDto = childService.showPlan( child.getChildNum(), year, month);
 
         return ResponseEntity.status(HttpStatus.OK).body(planResponseDto);
     }
@@ -125,11 +130,12 @@ public class ParentController {
     
     /* 포인트 결제 내역 전체 보기*/
     @GetMapping("/orders")
-    public ResponseEntity<List<PointOrder>> getPointOrders(@RequestBody ChildRequestDto childRequestDto){
-    	
+    public ResponseEntity<List<PointOrder>> getPointOrders(@RequestParam Long childNum,
+															@RequestParam int year,
+															@RequestParam int month){
     	Long parentNum = getParentNumByToken();
     	
-    	List<PointOrder> pointOrders = parentService.getPointOrders(parentNum, childRequestDto.getChildNum(), childRequestDto.getYear(), childRequestDto.getMonth());
+    	List<PointOrder> pointOrders = parentService.getPointOrders(parentNum, childNum, year, month);
     	
     	return ResponseEntity.status(HttpStatus.OK).body(pointOrders); 
     	
