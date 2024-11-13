@@ -45,7 +45,6 @@ createContex 를 이용하여 서로 공유할수 있도록 한다.
         <Header />
         <Layout>
           {/* 각 페이지 */}
-          {/* <MonthlyReportPage /> */}
           <Navirouter />
         </Layout>
       </BrowserRouter>
