@@ -51,7 +51,7 @@ public class ParentController {
 				 			 .body(response);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/signup/{id}")
 	public String duplicationCheck(@PathVariable String id){
 		return parentService.duplicateCheck(id);
 	}
@@ -77,7 +77,7 @@ public class ParentController {
     	Long parentNum = getParentNumByToken();
 		
         Child child = parentService.findParentChild(parentNum, childNum);
-        System.out.println(year+"/"+month);
+
         ParentReportResponseDto reponse = parentService.getChildReport(child, year, month);
         
         return ResponseEntity.status(HttpStatus.OK).body(reponse);

@@ -1,5 +1,5 @@
 import React from 'react';
-import PlanReport from '../../components/pages/parent/PlanReport';
+import PlanReport from '../../components/pages/parent/monthly-report/PlanReport';
 
 const MonthlyReportPage = () => {
     return (
