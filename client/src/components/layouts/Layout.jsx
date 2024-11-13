@@ -20,7 +20,7 @@ const Main = styled.main`
   max-width: 1360px;
   padding: 80px 40px 0 40px;
   margin: 0 auto;
-  border: 1px solid gray;
+  /* border: 1px solid gray; */
 `;
 
 const GlobalStyles = styled`
