@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.spring.dto.SignInResponseDto;
 import com.web.spring.dto.SignUpRequestDto;
 import com.web.spring.dto.child.plan.PlanRequestDto;
@@ -235,10 +236,11 @@ public class ChildService {
 
 	// 이번달 카테고리별 소비내역
 	@Transactional(readOnly = true)
-	public HashMap<String, Integer> showMonthChart(Long childNum, int year, int month) {
+	public LinkedHashMap<String, Integer> showMonthChart(Long childNum, int year, int month) {
 		List<Payment> payments = showMonthList(childNum, year, month);
 
-		HashMap<String, Integer> categoryTotal = new HashMap<>();
+		// 합산된 값 저장
+		HashMap<String, Integer> categoryTotal = new LinkedHashMap<>();
 
 		payments.forEach(payment -> {
 			String category = payment.getCategory();
@@ -246,8 +248,18 @@ public class ChildService {
 
 			categoryTotal.put(category, categoryTotal.getOrDefault(category, 0) + amount);
 		});
+		
+	    // 지정된 순서대로 LinkedHashMap에 넣기
+	    LinkedHashMap<String, Integer> orderedCategoryTotal = new LinkedHashMap<>();
+	    orderedCategoryTotal.put("shopping", categoryTotal.getOrDefault("shopping", 0));
+	    orderedCategoryTotal.put("food", categoryTotal.getOrDefault("food", 0));
+	    orderedCategoryTotal.put("transport", categoryTotal.getOrDefault("transport", 0));
+	    orderedCategoryTotal.put("cvs", categoryTotal.getOrDefault("cvs", 0));
+	    orderedCategoryTotal.put("saving", categoryTotal.getOrDefault("saving", 0));
+	    orderedCategoryTotal.put("others", categoryTotal.getOrDefault("others", 0));
 
-		return categoryTotal;
+
+	    return orderedCategoryTotal;  // HashMap으로 변환해서 반환
 	}
 
 	// 퀴즈문제 보여주기
@@ -309,9 +321,9 @@ public class ChildService {
 
 	// 이번달 계획 차트
 	@Transactional(readOnly = true)
-	public HashMap<String, Integer> monthPlan(Long childNum, int year, int month) {
+	public LinkedHashMap<String, Integer> monthPlan(Long childNum, int year, int month) {
 
-		HashMap<String, Integer> response = new HashMap<>();
+		LinkedHashMap<String, Integer> response = new LinkedHashMap<>();
 		Optional<Child> child = findChild(childNum);
 
 		Plan monthPlan = child.get().getPlans().stream()
@@ -350,7 +362,7 @@ public class ChildService {
 	}
 
 	// 퀴즈결과 Top3만 보기
-	public LinkedHashMap<String, Integer> showQuizResultTop3(Long child) {
+	public HashMap<String, Integer> showQuizResultTop3(Long child) {
 
 		HashMap<String, Integer> result = new HashMap<>();
 
@@ -367,7 +379,7 @@ public class ChildService {
 		// 경제의 역사 결과 넣기
 		result.put("qHistory", qr.getQHistory());
 
-		LinkedHashMap<String, Integer> sortedResult = result.entrySet().stream()
+		HashMap<String, Integer> sortedResult = result.entrySet().stream()
 				.sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) // 값 내림차순 정렬
 				.limit(3) // 상위 3개만 선택
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, // 중복 키가 발생할 경우 해결 방법
