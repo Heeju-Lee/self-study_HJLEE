@@ -24,11 +24,40 @@ const PlanReport = () => {
     const [childNum, setChildNum] = useState(1);
     const [year, setYear] = useState(new Date().getFullYear());
     const [month, setMonth] = useState(new Date().getMonth()+1); // 1월이 0이라 add 1
-    const [reportData, setReportData] = useState(null);
+    const [reportData, setReportData] = useState({
+        chartPayment: {},   // 초기값을 빈 객체로 설정해야 함.
+        monthPlan: {},
+        showQuizResult: {},
+        showQuizResultTop3: {}
+    });
 
-    // 이미지 주소
-    const iconLocation = '/donny.png';
+    //  plan vs Aatual Chart 1 & Analysis Data Extraction
+    // Plan 해당 Map 추출
+    const monthPlan = reportData.monthPlan;
+    console.log(monthPlan);
+    // Plan 해당 Map에서 카테고리 추출
+    const monthPlanCategories = Object.keys(monthPlan);
+    console.log(monthPlanCategories);    
+    // Plan 해당 Map에서 값 추출
+    const monthPlanValues = Object.values(monthPlan);
+    console.log(monthPlanValues);        
 
+    // Actual 해당 Map 추출
+    const chartPayment = reportData.chartPayment;
+    console.log(chartPayment);
+    // Actual 해당 Map에서 카테고리 추출
+    const paymentCategories = Object.keys(chartPayment);
+    console.log(paymentCategories);
+    // Actual 해당 Map에서 값 추출
+    const paymentValues = Object.values(chartPayment);
+    console.log(paymentValues);
+
+    //Chart 2) 계획Bar 해당 Map 추출
+    const showQuizResult = reportData.showQuizResult;
+    console.log(showQuizResult);
+
+    const showQuizResultTop3 = reportData.showQuizResultTop3;
+    console.log(showQuizResultTop3);
 
     // childNum, year, month가 변경될 때마다 호출
     useEffect(() => {
@@ -41,7 +70,8 @@ const PlanReport = () => {
                         month: month
                     },
                     headers: {
-                        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuPhOuLiOunmCIsImlkIjoia29zdGEiLCJyb2xlIjoiUk9MRV9QQVJFTlQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNDIwNDU4LCJleHAiOjE3MzE1MDY4NTh9.-ETuBxda0PMn2gDaHHSLsWt_VGIugGL3RcUb5kohZU8`                    }
+                        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuPhOuLiOunmCIsImlkIjoia29zdGEiLCJyb2xlIjoiUk9MRV9QQVJFTlQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNDIwNDU4LCJleHAiOjE3MzE1MDY4NTh9.-ETuBxda0PMn2gDaHHSLsWt_VGIugGL3RcUb5kohZU8`
+                    }
                 });
                 setReportData(response.data);
                 console.log(response.data);
@@ -49,17 +79,17 @@ const PlanReport = () => {
                 console.error("Error fetching child report:", error);
             }
         };
-
-        fetchChildReport();
+         fetchChildReport();
     }, [childNum, year, month]
 );
+
 
     const data = {
         labels: ['shopping'],
         datasets:[
             {
                 label:'plan',
-                data: [3],
+                data: [0],
                 backgroundColor: '#61DBFB'                
             },            
             {
@@ -75,9 +105,9 @@ const PlanReport = () => {
         <>
             <div>
                 {/* map으로 키 value 값 넣어줘야 함. */}
-                <img src={iconLocation} />
+                <img src="/icons/shopping.png" />
                 <div>key값</div>
-                <Bar data = {data} options={options} />
+                    <Bar data = {data} options={options} />
             </div>
             <div>
                 {/* 소비 분석 넣어야함 */}
