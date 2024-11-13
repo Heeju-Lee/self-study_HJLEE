@@ -102,12 +102,11 @@ public class ChildService {
 	}
 	
 	@Transactional(readOnly = true)
-	public ParentResponeseDto findMyParent(Long ChildNum) {
-		Optional<Child> child= childRepository.findById(ChildNum);
+	public ParentResponeseDto findMyParent(Long ChildNum, String ppname ,String pphone) {
 		
-		Parent myParent= child.get().getParent();
+		Parent rParent =parentRepository.findByNameAndPhone(ppname, pphone);
 		
-		return new ParentResponeseDto(myParent);
+		return new ParentResponeseDto(rParent);
 	}
 
 	@Transactional(readOnly = true)

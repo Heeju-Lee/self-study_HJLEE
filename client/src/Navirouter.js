@@ -16,7 +16,9 @@ import MonthlyReportPage from "./pages/parent/MonthlyReportPage";
 import WishListPage from "./pages/parent/WishListPage";
 import LoginPage from "./pages/common/LoginPage";
 import SelectUserType from "./pages/common/SelectUserType";
+import LoginForm from "./components/pages/LoginForm";
 import { RegisterPage } from "./pages/common/RegisterPage";
+
 
 const Navirouter = () => {
   return (
@@ -28,7 +30,7 @@ const Navirouter = () => {
         <Route path="/select-user" element={<SelectUserType />} />
         <Route path="/register" element={<RegisterPage />} />
 
-        {/* 아이 페이지 */}
+        {/* 아이 페이지 */} 
         <Route path="/child-report" element={<ChildReportPage />} />
         <Route path="/edu" element={<EduPage />} />
         <Route path="/money-plan" element={<MoneyPlanPage />} />

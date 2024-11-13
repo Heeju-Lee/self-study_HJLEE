@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 // import { Container, Nav, Navbar } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { LogingedContext } from "../../App";
+import { Button } from "react-bootstrap";
+
 
 const Header = () => {
+
+  let logingedCon = useContext(LogingedContext);
+
   const navigate = useNavigate();
+
+  const logoutCheck = ()=>{
+    localStorage.removeItem("memberNo");
+    localStorage.removeItem("id");
+    localStorage.removeItem("name");
+    localStorage.removeItem("Authorization");
+
+    logingedCon.onLoggedChange(false);
+
+    navigate("/");
+  }
 
   // const checkPlanAndNavigate = async () => {
   //   try {
@@ -58,12 +75,27 @@ const Header = () => {
           </Link>
         </MenuSection>
         <RightSection>
-          <Link to="/login-form">
-            <span>로그인</span>
-          </Link>
-          <Link to="/join-form">
-            <span>회원가입</span>
-          </Link>
+
+          {!logingedCon.isLoggedIn && 
+            <>
+              <Link to="/login">
+                <span>로그인</span>
+              </Link>
+              <Link to="/join-form">
+                <span>회원가입</span>
+              </Link>
+            </>
+          }
+
+          {logingedCon.isLoggedIn &&
+            <>
+              <Button onClick ={logoutCheck}>로그아웃</Button>
+              <BellButton type = "button" className="bell-button" />
+              <span>{localStorage.getItem("name")}님</span>
+
+            </>
+          }
+
         </RightSection>
 
         {/* <Link to="/test-child">아이테스트</Link>
@@ -72,6 +104,15 @@ const Header = () => {
     </HeaderSection>
   );
 };
+
+const BellButton = styled.input`
+  background: url("images/bell_2.png") no-repeat center center;
+  background-size : contain;
+  width: 40px;
+  height: 40px;
+  border : none;
+`;
+
 
 const HeaderSection = styled.div`
   position: sticky;
