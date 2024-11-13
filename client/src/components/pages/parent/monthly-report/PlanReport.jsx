@@ -23,7 +23,7 @@ const PlanReport = () => {
     // 정보를 불러오기 위함
     const [childNum, setChildNum] = useState(1);
     const [year, setYear] = useState(new Date().getFullYear());
-    const [month, setMonth] = useState(new Date().getMonth());
+    const [month, setMonth] = useState(new Date().getMonth()+1); // 1월이 0이라 add 1
     const [reportData, setReportData] = useState(null);
 
     // 이미지 주소
