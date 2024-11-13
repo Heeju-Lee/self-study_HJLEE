@@ -17,7 +17,6 @@ function App() {
         <Header />
         <Layout>
           {/* 각 페이지 */}
-          {/* <MonthlyReportPage /> */}
           <Navirouter />
         </Layout>
       </BrowserRouter>

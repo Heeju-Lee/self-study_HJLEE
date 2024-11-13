@@ -1,9 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import Button from "../../components/layouts/Button";
 
 const LandingPage = () => {
-  return <div>{/* <Button /> */}</div>;
+  return <div>랜딩페이지</div>;
 };
-
 export default LandingPage;
