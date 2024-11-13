@@ -106,7 +106,7 @@ const Header = () => {
 };
 
 const BellButton = styled.input`
-  background: url("images/bell_1.png") no-repeat center center;
+  background: url("images/bell_2.png") no-repeat center center;
   background-size : contain;
   width: 40px;
   height: 40px;
