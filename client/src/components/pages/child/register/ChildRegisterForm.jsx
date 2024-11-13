@@ -42,10 +42,10 @@ const RegisterPage = () => {
     if (e.target.name === "id" && e.target.value !== "") {
       axios({
         method: "GET",
-        url: "http://localhost:9999/children/signup" + e.target.value,
+        url: "http://localhost:9999/children/signup/" + e.target.value,
       })
         .then((res) => {
-          //console.log(res);
+          console.log(res);
           setIdCheckResult(res.data);
           res.data === "중복입니다."
             ? setIsCheckResult(true)

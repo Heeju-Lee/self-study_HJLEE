@@ -80,7 +80,7 @@ public class ChildController<WishService> {
 				 			 .body(response);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/signup/{id}")
 	public String duplicationCheck(@PathVariable String id){
 		return childService.duplicateCheck(id);
 	}
