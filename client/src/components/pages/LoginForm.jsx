@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LogingedContext } from "../../App";
 import styled from "styled-components";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const LoginForm = () => {
   let logingedCon = useContext(LogingedContext);
@@ -32,6 +33,7 @@ const LoginForm = () => {
 
   const submitLogin = (e) => {
     e.preventDefault();
+    console.log("Sending login request with data: ", member); // 요청 데이터 확인
     axios({
       method: "POST",
       url: "http://localhost:9999/login",
@@ -41,6 +43,8 @@ const LoginForm = () => {
       data: JSON.stringify(member),
     })
       .then((res) => {
+        console.log("res = " , res)
+
         localStorage.setItem("memberNo", res.data.memberNo);
         localStorage.setItem("id", res.data.id);
         localStorage.setItem("name", res.data.name);
@@ -49,7 +53,8 @@ const LoginForm = () => {
         logingedCon.onLoggedChange(true);
         navigator("/");
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error("Error: ", err);
         alert("정보를 다시 확인해주세요.");
         setMember({ username: "", password: "" });
       });
@@ -58,13 +63,16 @@ const LoginForm = () => {
   return (
     <LoginFormContainer>
       <ImgContainer>
+      
+        <span>도니머니와 함께 올바른 경제 습관을 길러봐요!</span>
         <img src="images/donnyFamily.png" alt="Donny Family" />
       </ImgContainer>
 
       <LoginContent>
-        <form onSubmit={submitLogin}>
+        <Form onSubmit={submitLogin}>
           <h2 className="title">Welcome</h2>
-          <div className="input-div one">
+
+          <div className="input-div id">
             <div className="i">
               <i className="fas fa-user"></i>
             </div>
@@ -81,7 +89,8 @@ const LoginForm = () => {
               />
             </div>
           </div>
-          <div className="input-div pass">
+
+          <div className="input-div password">
             <div className="i">
               <i className="fas fa-lock"></i>
             </div>
@@ -98,8 +107,9 @@ const LoginForm = () => {
               />
             </div>
           </div>
+
           <input type="submit" className="btn" value="Login" />
-        </form>
+        </Form>
       </LoginContent>
     </LoginFormContainer>
   );
@@ -108,48 +118,137 @@ const LoginForm = () => {
 const LoginFormContainer = styled.div`
   display: flex;
   width: 100%;
-  height: 100%;
+  height: 800px;
   align-items: center;
   justify-content: center;
+  border-radius: 20px; 
+  overflow: hidden; /* 둥근 모서리에 내용이 잘리지 않도록 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 `;
 
 const ImgContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-right: 50px;
+  width: 50%;
+  height : 100%;
+  background-color: #C8BEF3;
+  position: relative; 
 
   img {
-    width: 500px;
-    height: 500px;
+    width: 400px;
+    height: 400px;
+    margin : 40px;
+    z-index :2;
+  }
+  span{
+    text-align: center;
+    font-size: 25px;
+    color: black;
+    z-index: 2;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    width: 500px;  
+    height: 400px;  
+    background-color: white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);  /* Center the circle */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow effect */
+    z-index: 1;
   }
 `;
 
 const LoginContent = styled.div`
   display: flex;
+  width : 50%;
+  height: 100%;
+  flex-grow: 1;
+
   justify-content: flex-start;
   align-items: center;
   text-align: center;
-  form {
-    width: 360px;
-  }
+  background-color: white;
+`
+
+const Form = styled.form`  
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 
   h2 {
-    margin: 15px 0;
+    margin: 30px 0;
     color: #333;
     text-transform: uppercase;
     font-size: 2.9rem;
+  }
 
-    @media screen and (max-width: 1000px) {
-      font-size: 2.4rem;
-    }
+  .input-div:before, 
+  .input-div:after{
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    width: 0%;
+    height: 2px;
+    background-color: #38d39f;
+    transition: .4s;
+  }
+
+  .input-div:before{
+    right: 50%;
+  }
+
+  .input-div:after{
+    left: 50%;
+  }
+
+  .input-div.focus:before, .input-div.focus:after{
+    width: 50%;
+  }
+
+  .input-div.focus > div > h5{
+    top: -10px;
+    font-size: 15px;
+  }
+
+  .input-div.focus > .i > i{
+    color: #38d39f;
+  }
+
+  .input-div > div > input{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: none;
+    padding: 0.5rem 0.7rem;
+    font-size: 1.2rem;
+    color: #555;
+    font-family: 'poppins', sans-serif;
+  }
+
+  .input-div.pass{
+    margin-bottom: 4px;
   }
 
   .input-div {
-    display: grid;
-    grid-template-columns: 7% 93%;
+    display: flex;
+    align-items: center;
+    position: relative;
     margin: 25px 0;
     padding: 5px 0;
+    width: 300px;
     border-bottom: 2px solid #d9d9d9;
 
     .i {
@@ -159,7 +258,7 @@ const LoginContent = styled.div`
       align-items: center;
 
       i {
-        transition: 0.3s;
+        transition: 0.3s; 
       }
     }
 
@@ -178,34 +277,23 @@ const LoginContent = styled.div`
       }
 
       input {
-        width: 100%;
+        width:  300px;
         height: 100%;
+        left: 10px;
         border: none;
         outline: none;
         background: none;
-        padding: 0.5rem 0.7rem;
+        padding : 2px;
         font-size: 1.2rem;
         color: #555;
       }
-    }
-  }
-
-  a {
-    display: block;
-    text-align: right;
-    text-decoration: none;
-    color: #999;
-    font-size: 0.9rem;
-    transition: 0.3s;
-
-    &:hover {
-      color: #38d39f;
+      
     }
   }
 
   .btn {
     display: block;
-    width: 100%;
+    width: 300px;
     height: 50px;
     border-radius: 25px;
     border: none;
