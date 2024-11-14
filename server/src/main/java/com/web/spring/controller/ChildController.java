@@ -87,9 +87,9 @@ public class ChildController<WishService> {
 	}
 
 	@PostMapping("/signup/findMyParent")
-	public ParentResponeseDto findMyParent( @RequestBody FindMyParentDto findMyParentDto) {
+	public ParentResponeseDto findMyParent(@RequestBody FindMyParentDto findMyParentDto) {
 		
-		return childService.findMyParent(findMyParentDto.getChildNum(), findMyParentDto.getName(),findMyParentDto.getPhone());
+		return childService.findMyParent(findMyParentDto.getName(),findMyParentDto.getPhone());
 		
 	}
 

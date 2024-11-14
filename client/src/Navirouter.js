@@ -18,7 +18,8 @@ import LoginPage from "./pages/common/LoginPage";
 import SelectUserType from "./pages/common/SelectUserType";
 import LoginForm from "./components/pages/LoginForm";
 import { RegisterPage } from "./pages/common/RegisterPage";
-
+import Landing from "./pages/test/landing/Landing";
+import Layout from "./components/layouts/Layout";
 
 const Navirouter = () => {
   return (
@@ -26,23 +27,102 @@ const Navirouter = () => {
       <Routes>
         {/* 공통 */}
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/select-user" element={<SelectUserType />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/login"
+          element={
+            <Layout>
+              <LoginPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/select-user"
+          element={
+            <Layout>
+              <SelectUserType />
+            </Layout>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <Layout>
+              <RegisterPage />
+            </Layout>
+          }
+        />
 
-        {/* 아이 페이지 */} 
-        <Route path="/child-report" element={<ChildReportPage />} />
-        <Route path="/edu" element={<EduPage />} />
-        <Route path="/money-plan" element={<MoneyPlanPage />} />
-        <Route path="/mywish-list" element={<MyWishListPage />} />
+        {/* 아이 페이지 */}
+        <Route
+          path="/child-report"
+          element={
+            <Layout>
+              <ChildReportPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/edu"
+          element={
+            <Layout>
+              <EduPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/money-plan"
+          element={
+            <Layout>
+              <MoneyPlanPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/mywish-list"
+          element={
+            <Layout>
+              <MyWishListPage />
+            </Layout>
+          }
+        />
         {/* <Route path="/register-child" element={<ChildRegisterPage />} /> */}
 
         {/* 부모 페이지 */}
-        <Route path="/agreement" element={<AgreementPage />} />
-        <Route path="/monthly-report" element={<MonthlyReportPage />} />
-        <Route path="/wish-list" element={<WishListPage />} />
+        <Route
+          path="/agreement"
+          element={
+            <Layout>
+              <AgreementPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/monthly-report"
+          element={
+            <Layout>
+              <MonthlyReportPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/wish-list"
+          element={
+            <Layout>
+              <WishListPage />
+            </Layout>
+          }
+        />
         {/* <Route path="/register-parent" element={<RegisterPage />} /> */}
 
+        <Route
+          path="/test"
+          element={
+            <Layout scrollEnabled={false}>
+              <Landing />
+            </Layout>
+          }
+        />
+        {/* <Route path="/save-form" element={<SaveForm />} />
         {/* <Route path="/save-form" element={<SaveForm />} />
         <Route path="/update-form" element={<UpdateForm />} />
         <Route path="/plan" element={<PlanPage />} /> */}

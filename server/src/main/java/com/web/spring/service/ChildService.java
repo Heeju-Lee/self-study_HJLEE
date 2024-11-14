@@ -102,7 +102,7 @@ public class ChildService {
 	}
 	
 	@Transactional(readOnly = true)
-	public ParentResponeseDto findMyParent(Long ChildNum, String ppname ,String pphone) {
+	public ParentResponeseDto findMyParent(String ppname ,String pphone) {
 		
 		Parent rParent =parentRepository.findByNameAndPhone(ppname, pphone);
 		

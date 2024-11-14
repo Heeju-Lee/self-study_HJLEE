@@ -6,14 +6,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { LogingedContext } from "../../App";
 import { Button } from "react-bootstrap";
 
-
 const Header = () => {
-
   let logingedCon = useContext(LogingedContext);
 
   const navigate = useNavigate();
 
-  const logoutCheck = ()=>{
+  const logoutCheck = () => {
     localStorage.removeItem("memberNo");
     localStorage.removeItem("id");
     localStorage.removeItem("name");
@@ -22,7 +20,7 @@ const Header = () => {
     logingedCon.onLoggedChange(false);
 
     navigate("/");
-  }
+  };
 
   // const checkPlanAndNavigate = async () => {
   //   try {
@@ -75,27 +73,30 @@ const Header = () => {
           </Link>
         </MenuSection>
         <RightSection>
-
-          {!logingedCon.isLoggedIn && 
+          {!logingedCon.isLoggedIn && (
             <>
               <Link to="/login">
                 <span>로그인</span>
               </Link>
-              <Link to="/join-form">
+              <Link
+                to="/register"
+                onClick={(e) => {
+                  e.preventDefault(); // 기본 동작 막음
+                  window.location.href = "/register"; // 강제로 새로고침하며 이동
+                }}
+              >
                 <span>회원가입</span>
               </Link>
             </>
-          }
+          )}
 
-          {logingedCon.isLoggedIn &&
+          {logingedCon.isLoggedIn && (
             <>
-              <Button onClick ={logoutCheck}>로그아웃</Button>
-              <BellButton type = "button" className="bell-button" />
+              <Button onClick={logoutCheck}>로그아웃</Button>
+              <BellButton type="button" className="bell-button" />
               <span>{localStorage.getItem("name")}님</span>
-
             </>
-          }
-
+          )}
         </RightSection>
 
         {/* <Link to="/test-child">아이테스트</Link>
@@ -107,12 +108,11 @@ const Header = () => {
 
 const BellButton = styled.input`
   background: url("images/bell_2.png") no-repeat center center;
-  background-size : contain;
+  background-size: contain;
   width: 40px;
   height: 40px;
-  border : none;
+  border: none;
 `;
-
 
 const HeaderSection = styled.div`
   position: sticky;

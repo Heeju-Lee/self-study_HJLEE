@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ChildRegisterForm from "../../components/pages/child/register/ChildRegisterForm";
+import ParentRegisterForm from "../../components/pages/parent/register/ParentRegisterForm";
 
 /*
   회원가입
@@ -45,7 +46,12 @@ export const RegisterPage = () => {
           </Section>
         </SelectUserType>
       )}
-      {parentRegister && <FormSection>부모회원가입</FormSection>}
+      {parentRegister && (
+        <FormSection>
+          <ParentRegisterForm />
+        </FormSection>
+      )}
+
       {childRegister && (
         <FormSection>
           <ChildRegisterForm />
@@ -58,17 +64,11 @@ export const RegisterPage = () => {
   );
 };
 
-const Outer = styled.div`
-  /* height: 100vh; */
-  /* border: 1px solid red; */
-`;
 const SelectUserType = styled.div``;
 const Title = styled.div`
   font-size: 32px;
   text-align: center;
   margin-bottom: 70px;
-
-  /* border: 1px solid green; */
 `;
 
 const Section = styled.div`
@@ -104,5 +104,5 @@ const SubTitle = styled.div`
 `;
 
 const FormSection = styled.div`
-  border: 1px solid red;
+  /* border: 1px solid red; */
 `;
