@@ -2,25 +2,41 @@ import React from "react";
 import styled from "styled-components";
 
 // TODO 레이아웃 작업
-export default function Layout({ children }) {
+export default function Layout({ children, scrollEnabled = true }) {
+  console.log("children : ", children);
+
   return (
-    <Section>
+    <Section scrollEnabled={scrollEnabled}>
       <Main>{children}</Main>
     </Section>
   );
 }
 
+// Section 스타일 (scrollEnabled prop 활용)
 const Section = styled.section`
   width: 100%;
-  border: 1px solid blue;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  ${({ scrollEnabled }) =>
+    scrollEnabled
+      ? `
+      overflow-y: auto;
+    `
+      : `
+      overflow-y: hidden;
+    `}
 `;
 
 const Main = styled.main`
   width: 100%;
   max-width: 1360px;
+
   padding: 80px 40px 0 40px;
   margin: 0 auto;
-  border: 1px solid gray;
+  flex-grow: 1;
+
   /* border: 1px solid gray; */
 `;
 

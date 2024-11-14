@@ -18,6 +18,9 @@ export const GlobalStyle = createGlobalStyle`
     background-color: #F3EDFD;
     font-family: 'HakgyoansimDunggeunmisoTTF-B', sans-serif;
     
+    overflow-y: ${({ scrollEnabled }) =>
+      scrollEnabled ? "auto" : "hidden"}; /* 스크롤 활성화 여부 */
+
   }
 
   a {

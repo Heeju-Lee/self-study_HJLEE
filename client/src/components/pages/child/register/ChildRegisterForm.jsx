@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+  const navigator = useNavigate();
+
   const [step, setStep] = useState(1); // 현재 단계 상태
   const steps = [
     { number: 1, label: "회원가입 정보" },
@@ -15,11 +17,11 @@ const RegisterPage = () => {
     id: "",
     pwd: "",
     name: "",
-    birthdate: "",
+    birthdate: null,
     phone: "",
     email: "",
     role: "ROLE_CHILD",
-    parentNum: "",
+    parentNum: 1, // 부모 번호는 초기값이 없을 수도있음
   });
 
   // 중복체크 결과 값을 저장 할 idCheckResult
@@ -28,6 +30,8 @@ const RegisterPage = () => {
   // 아이디 중복여부에 따른 css 를 적용하기 위해 상태 변수
   const [isCheckResult, setIsCheckResult] = useState(false);
 
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+
   // 부모님 존재 여부 메시지
   const [parentExistMessage, setParentExistMessage] = useState("");
 
@@ -35,87 +39,90 @@ const RegisterPage = () => {
   const [isParentExist, setIsParentExist] = useState(false);
 
   // 부모님 이름 연락처 상태
-  const [pname, setPname] = useState("");
-  const [pphone, setPphone] = useState("");
+  const [parentInfo, setParentInfo] = useState({
+    name: "",
+    phone: "",
+  });
 
   //각 text 박스에 값이 변경되었을 때
   const changeValue = (e) => {
-    setChild({ ...child, [e.target.name]: e.target.value });
+    // 입력 필드 값 업데이트
+    // setChild({ ...child, [e.target.name]: e.target.value });
+    setChild((prevChild) => ({
+      ...prevChild,
+      [e.target.name]: e.target.value,
+    }));
 
     //id 입력박스에 값이 입력될때마다 axios를 이용해서 비동기통신 - 중복여부 체크
-    if (e.target.name === "id" && e.target.value !== "") {
+    if (e.target.name === "id" && e.target.value.trim() !== "") {
       axios({
         method: "GET",
-        url: "http://localhost:9999/children/signup/" + e.target.value,
+        url: `http://localhost:9999/children/signup/${e.target.value}`,
       })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           setIdCheckResult(res.data);
-          res.data === "중복입니다."
-            ? setIsCheckResult(true)
-            : setIsCheckResult(false);
+          setIsCheckResult(res.data === "아이디 사용 가능");
         })
         .catch((err) => {
-          //실패
-          let errMessage = err.response.data.type + "\n";
-          errMessage += err.response.data.title + "\n";
-          errMessage += err.response.data.detail + "\n";
-
-          errMessage += err.response.data.status + "\n";
-          errMessage += err.response.data.instance + "\n";
-          errMessage += err.response.data.timestamp;
-          alert(errMessage);
+          console.log(err);
+          setIsCheckResult(false); // 기본값으로 비활성화
         });
     }
   };
   // 부모님 찾기 버튼을 눌렀을 떄
   const findParent = (e) => {
-    setChild({ ...child, [e.target.name]: e.target.value });
-
-    if (pname !== "" && pphone !== "") {
+    if (parentInfo.name !== "" && parentInfo.phone !== "") {
       axios({
-        method: "GET",
-        // url: "http://localhost:9999/children",
-        url: "http://localhost:9999/find/MyParent",
-        params: {
-          pname, // 부모 아이디
-          pphone, // 부모 연락처
-        },
+        method: "POST",
+        url: "http://localhost:9999/children/signup/findMyParent",
+        data: parentInfo,
       })
         .then((res) => {
-          //console.log(res);
-          setIsParentExist(res.data);
-          if (res.data.exists) {
+          console.log(res.data);
+          const parentExists = !!res.data;
+          setIsParentExist(parentExists);
+          setParentExistMessage(
+            parentExists
+              ? "부모님 정보 찾기 완료! 회원가입 버튼을 눌러주세요"
+              : "부모님 정보가 존재하지 않습니다. 부모님께 확인해보세요"
+          );
+
+          if (parentExists) {
             setChild({ ...child, parentNum: res.data.parentNum });
-            setParentExistMessage(
-              "부모님 찾기 완료! 회원가입 버튼을 눌러주세요"
-            );
-            setIsParentExist(true);
-          } else {
-            setParentExistMessage(
-              "부모님이 존재하지 않습니다. 부모님께 확인해보세요"
-            );
-            setIsParentExist(false);
           }
+          // setIsParentExist(res.data);
+          // if (res.data) {
+          //   setChild({ ...child, parentNum: res.data.parentNum });
+          //   setParentExistMessage(
+          //     "부모님 찾기 완료! 회원가입 버튼을 눌러주세요"
+          //   );
+          //   setIsParentExist(true);
+          // } else {
+          //   setParentExistMessage(
+          //     "부모님이 존재하지 않습니다. 부모님께 확인해보세요"
+          //   );
+          //   setIsParentExist(false);
+          // }
         })
         .catch((err) => {
-          //실패
-          let errMessage = err.response.data.type + "\n";
-          errMessage += err.response.data.title + "\n";
-          errMessage += err.response.data.detail + "\n";
-
-          errMessage += err.response.data.status + "\n";
-          errMessage += err.response.data.instance + "\n";
-          errMessage += err.response.data.timestamp;
-          alert(errMessage);
+          if (err.response && err.response.status === 403) {
+            // 403 Forbidden
+            console.error("403 Forbidden:", err.response.data);
+            setParentExistMessage(
+              "접근 권한이 없습니다. 관리자에게 문의하세요"
+            );
+          } else {
+            // 다른 오류 처리
+            console.error("Error:", err);
+            setParentExistMessage("예기치 않은 오류가 발생했습니다.");
+          }
         });
     } else {
-      setParentExistMessage("부모님의 아이디와 연락처를 모두 입력해주세요.");
+      setParentExistMessage("부모님의 정보를 모두 입력해주세요.");
       setIsParentExist(false);
     }
   };
-
-  const navigator = useNavigate();
 
   //가입하기
   const submitJoin = (e) => {
@@ -134,15 +141,28 @@ const RegisterPage = () => {
       })
       .catch((err) => {
         console.log(err);
-        let errMessage = err.response.data.type + "\n";
-        errMessage += err.response.data.title + "\n";
-        errMessage += err.response.data.detail + "\n";
-        errMessage += err.response.data.status + "\n";
-        errMessage += err.response.data.instance + "\n";
-        errMessage += err.response.data.timestamp;
-        alert(errMessage);
       });
   };
+
+  useEffect(() => {
+    // 1단계에서 parentNum 외 모든 입력값이 존재하는지 확인
+    const fieldsToValidate = Object.entries(child).filter(
+      ([key]) => key !== "parentNum" // parentNum 제외
+    );
+    const allFieldsFilled = Object.values(child).every(
+      (value) => value && value !== ""
+    );
+    // 모든 필드가 채워져 있고, 아이디 중복 검사가 통과되었는지 확인
+    const isFormValid = allFieldsFilled && isCheckResult;
+
+    console.log("child:", child);
+    console.log("allFieldsFilled:", allFieldsFilled);
+    console.log("isCheckResult:", isCheckResult);
+    console.log("isFormValid:", isFormValid);
+
+    // 버튼 활성화 상태 업데이트
+    setIsButtonEnabled(isFormValid);
+  }, [child, isCheckResult]);
 
   return (
     <Container>
@@ -168,71 +188,119 @@ const RegisterPage = () => {
               <Label>아이디</Label>
               <Input
                 type="text"
+                id="id"
+                name="id"
                 placeholder="아이디 입력"
                 onChange={changeValue}
               />
-              <p style={isCheckResult ? { color: "red" } : { color: "blue" }}>
+              <p style={isCheckResult ? { color: "blue" } : { color: "red" }}>
                 {idCheckResult}
               </p>
             </InputRow>
             <InputRow>
               <Label>비밀번호</Label>
-              <Input type="password" placeholder="비밀번호 입력" />
+              <Input
+                type="password"
+                name="pwd"
+                placeholder="비밀번호 입력"
+                onChange={changeValue}
+              />
             </InputRow>
             <InputRow>
               <Label>이름</Label>
-              <Input type="text" placeholder="이름 입력" />
+              <Input
+                type="text"
+                name="name"
+                placeholder="이름 입력"
+                onChange={changeValue}
+              />
             </InputRow>
-            <Button onClick={() => setStep(2)}>다음</Button>
+            <InputRow>
+              <Label htmlFor="birthdate">생일</Label>
+              <Input
+                type="date"
+                id="birthdate"
+                name="birthdate"
+                onChange={changeValue}
+              />
+            </InputRow>
+            <InputRow>
+              <Label htmlFor="phone">전화번호</Label>
+              <Input
+                type="text"
+                id="phone"
+                name="phone"
+                onChange={changeValue}
+              />
+            </InputRow>
+
+            <InputRow>
+              <Label htmlFor="email">이메일 주소</Label>
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                onChange={changeValue}
+              />
+            </InputRow>
+            <Button disabled={!isButtonEnabled} onClick={() => setStep(2)}>
+              다음
+            </Button>
           </>
         )}
+
         {step === 2 && (
           <>
             <h2>부모님 연동하기</h2>
             <InputRow>
               <Label>부모님 이름</Label>
-              <Input type="text" placeholder="부모님 이름 입력" />
+              <Input
+                type="text"
+                placeholder="부모님 이름 입력"
+                onChange={(e) =>
+                  setParentInfo({ ...parentInfo, name: e.target.value })
+                }
+              />
             </InputRow>
             <InputRow>
               <Label>부모님 연락처</Label>
-              <Input type="text" placeholder="부모님 연락처 입력" />
+              <Input
+                type="text"
+                placeholder="부모님 연락처 입력"
+                onChange={(e) =>
+                  setParentInfo({ ...parentInfo, phone: e.target.value })
+                }
+              />
             </InputRow>
-            <Button>부모님 확인</Button>
-            <Button
-              onClick={() => {
-                // 부모님 확인 완료
-                submitJoin();
-                setStep(3);
-              }}
-            >
-              가입하기
-            </Button>
+
+            <p style={isParentExist ? { color: "green" } : { color: "red" }}>
+              {parentExistMessage}
+            </p>
+
+            {!isParentExist && (
+              <Button onClick={findParent}>부모님 정보 확인</Button>
+            )}
+            {/* 회원가입버튼 */}
+            {isParentExist && (
+              <Button
+                onClick={() => {
+                  submitJoin();
+                  setStep((prev) => Math.min(prev + 1, steps.length));
+                }}
+              >
+                가입하기
+              </Button>
+            )}
           </>
         )}
         {step === 3 && (
           <>
             <h2>회원가입 완료</h2>
             <p>회원가입이 성공적으로 완료되었습니다!</p>
-            <Button onClick={() => alert("홈으로 이동")}>홈으로</Button>
+            <Button onClick={() => navigator("/login")}>로그인하기</Button>
           </>
         )}
       </Content>
-
-      {/* 단계 전환 버튼 */}
-      <Navigation>
-        <Button
-          onClick={() => setStep((prev) => Math.max(prev - 1, 1))}
-          disabled={step === 1}
-        >
-          이전
-        </Button>
-        <Button
-          onClick={() => setStep((prev) => Math.min(prev + 1, steps.length))}
-          disabled={step === steps.length}
-        >
-          다음
-        </Button>
-      </Navigation>
     </Container>
   );
 };
