@@ -235,7 +235,7 @@ const Form = styled.form`
     padding: 0.5rem 0.7rem;
     font-size: 1.2rem;
     color: #555;
-    font-family: 'poppins', sans-serif;
+    /* font-family: 'poppins', sans-serif; */
   }
 
   .input-div.pass{

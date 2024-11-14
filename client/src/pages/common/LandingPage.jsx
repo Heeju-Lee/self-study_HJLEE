@@ -57,11 +57,12 @@ const LandingPage = () => {
 
 const Outer = styled.div`
   scroll-snap-type: y mandatory; /* 세로 스냅 활성화 */
-  overflow-y: scroll; /* 스크롤 활성화 */
-  height: 100vh; /* 화면 높이를 100%로 설정 */
+  overflow-y: scroll;
+  height: calc(100vh - 80px); // 수정
 `;
 const Section = styled.div`
-  height: 100vh; /* 각 섹션의 높이를 화면 크기로 설정 */
+  height: calc(100vh - 80px); // 수정
+  /* 각 섹션의 높이를 화면 크기로 설정 */
   display: flex;
   justify-content: center;
   align-items: center;
