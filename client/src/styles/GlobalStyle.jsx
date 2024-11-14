@@ -19,8 +19,8 @@ export const GlobalStyle = createGlobalStyle`
     font-family: 'HakgyoansimDunggeunmisoTTF-B', sans-serif;
     
     overflow-y: ${({ scrollEnabled }) =>
-      scrollEnabled ? "auto" : "hidden"}; /* 스크롤 활성화 여부 */
-
+    scrollEnabled ? "auto" : "hidden"}; /* 스크롤 활성화 여부 */
+    cursor: url('/icons/star.png'),auto;
   }
 
   a {

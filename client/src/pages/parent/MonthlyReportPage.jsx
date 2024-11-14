@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import PlanReport from "../../components/pages/parent/monthly-report/PlanReport";
+import SendMessage from "../../components/pages/parent/monthly-report/SendMessage";
 import SelectOptionNav from "../../components/pages/parent/SelectOptionNav";
+import { GlobalStyles } from "../../styles/GlobalStyle";
 
 const MonthlyReportPage = () => {
   const [selectOption, setSelectOption] = useState({
@@ -22,11 +24,15 @@ const MonthlyReportPage = () => {
     <div>
       <SelectOptionNav onHandleData={handleChildData} />
       {/* 선택한 옵션값 확인 (지워두 됨) */}
-      <p>ChildNum : {selectOption.childNum}</p>
+      {/* <p>ChildNum : {selectOption.childNum}</p>
       <p>year: {selectOption.year}</p>
-      <p>month : {selectOption.month}</p>
+      <p>month : {selectOption.month}</p> */}
 
       {/* <PlanReport /> */}
+      <PlanReport />
+
+      {/* SendMessage */}
+      <SendMessage />
     </div>
   );
 };
