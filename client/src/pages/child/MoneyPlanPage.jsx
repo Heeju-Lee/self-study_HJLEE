@@ -42,7 +42,11 @@ import SelectBox from "../../components/pages/child/plan/SelectBox";
 // };
 
 // const navigate = useNavigate();
-
+const TitleWapper = styled.div`
+  display: flex;
+  margin-bottom: 30px;
+  justify-content: flex-end;
+`;
 const Wapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -90,8 +94,10 @@ const BtnWapper = styled.div`
 const MoneyPlanPage = () => {
   return (
     <>
-      <PageTitle>소비계획 세우기</PageTitle>
-      <SelectBox />
+      <TitleWapper>
+        <PageTitle>소비계획 세우기</PageTitle>
+        <SelectBox />
+      </TitleWapper>
       <Wapper>
         <PlanForm />
         <SaveForm />

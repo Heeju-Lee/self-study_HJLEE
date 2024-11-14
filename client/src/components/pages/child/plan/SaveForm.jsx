@@ -11,9 +11,8 @@ const SaveForm = () => {
   const Container = styled.div`
     background-color: #886eff;
     min-height: 80vh;
-    width: 80vh;
+    width: 50vh;
     border-radius: 30px;
-    margin: -10px 0 50px 40px;
     border: 5px solid #c8bef3;
     display: flex;
     flex-wrap: wrap;
@@ -28,12 +27,30 @@ const SaveForm = () => {
     font-weight: bold;
     margin-top: -80px;
   `;
-
+  const DonnyImg = styled.img`
+    width: 10vw;
+    height: 15vh;
+    margin: 0 0 40px -150px;
+  `;
+  const Wapper = styled.div`
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    margin: -10px 70px 50px 0px;
+  `;
   return (
-    <Container>
-      <Title>내 계획 미리보기</Title>
-      <DoughnutChart />
-    </Container>
+    <>
+      <Wapper>
+        <Container>
+          <Title>내 계획 미리보기</Title>
+          <DoughnutChart />
+        </Container>
+        <DonnyImg
+          src={`${process.env.PUBLIC_URL}/images/donny-pencil.png`}
+          alt="donny"
+        />
+      </Wapper>
+    </>
   );
 };
 
