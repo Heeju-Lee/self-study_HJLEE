@@ -5,6 +5,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { LogingedContext } from "../../App";
 import { Button } from "react-bootstrap";
+import MoneyPlanPage from "../../pages/child/MoneyPlanPage";
 
 const Header = () => {
   let logingedCon = useContext(LogingedContext);
@@ -63,7 +64,9 @@ const Header = () => {
           // to="/plan-page"
           // onClick={checkPlanAndNavigate}
           >
-            <span>용돈계획서</span>
+            <Link to="/MoneyPlanPage">
+              <span>용돈계획서</span>
+            </Link>
           </Link>
           <Link to="/">
             <span>경제배우기</span>

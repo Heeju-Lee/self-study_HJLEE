@@ -18,7 +18,7 @@ import LoginPage from "./pages/common/LoginPage";
 import SelectUserType from "./pages/common/SelectUserType";
 import LoginForm from "./components/pages/LoginForm";
 import { RegisterPage } from "./pages/common/RegisterPage";
-import Landing from "./pages/test/landing/Landing";
+// import Landing from "./pages/test/landing/Landing";
 import Layout from "./components/layouts/Layout";
 
 const Navirouter = () => {
@@ -118,7 +118,7 @@ const Navirouter = () => {
           path="/test"
           element={
             <Layout scrollEnabled={false}>
-              <Landing />
+              {/* <Landing /> */}
             </Layout>
           }
         />
@@ -128,6 +128,7 @@ const Navirouter = () => {
         <Route path="/plan" element={<PlanPage />} /> */}
         {/* <Route path="/test-child" element={<SendTest />} />
         <Route path="/test-parent" element={<ParentTest />} /> */}
+         <Route path="/MoneyPlanPage" element={<MoneyPlanPage />} />
       </Routes>
     </div>
   );

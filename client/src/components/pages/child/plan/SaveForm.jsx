@@ -29,7 +29,6 @@ const SaveForm = () => {
   `;
   const DonnyImg = styled.img`
     width: 10vw;
-    height: 15vh;
     margin: 0 0 40px -150px;
   `;
   const Wapper = styled.div`
@@ -46,7 +45,7 @@ const SaveForm = () => {
           <DoughnutChart />
         </Container>
         <DonnyImg
-          src={`${process.env.PUBLIC_URL}/images/donny-pencil.png`}
+          src={`${process.env.PUBLIC_URL}/images/donny2.png`}
           alt="donny"
         />
       </Wapper>

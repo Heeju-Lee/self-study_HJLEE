@@ -3,45 +3,8 @@ import PlanForm from "../../components/pages/child/plan/PlanForm";
 import styled from "styled-components";
 import SaveForm from "../../components/pages/child/plan/SaveForm";
 import SelectBox from "../../components/pages/child/plan/SelectBox";
+import PlanProvider from "../context/MoneyPlanContext";
 
-// const submitPlan = (e) => {
-//     e.preventDefault();
-
-//     axios({
-//         url: 'http://localhost:9999/plans/1',
-//         method: 'post',
-//         data: plan,
-//     })
-//         .then((res) => {
-//             console.log(res.data);
-//             if (res.status === 200) {
-//                 alert('부모님께 소비내역 전달 완료~!!');
-//                 navigate('/planPage');
-//             }
-//         })
-//         .catch((err) => {
-//             console.log(err);
-//             alert('오류가 발생했습니다. 다시 시도해 주세요.');
-//         });
-// };
-// const [plan, setPlan] = useState({
-//     shopping: '',
-//     transport: '',
-//     cvs: '',
-//     food: '',
-//     others: '',
-//     saving: '',
-//     date: new Date().toISOString().split('T')[0],
-// });
-
-// const changeForm = (e) => {
-//     setPlan({
-//         ...plan,
-//         [e.target.name]: e.target.value,
-//     });
-// };
-
-// const navigate = useNavigate();
 const TitleWapper = styled.div`
   display: flex;
   margin-bottom: 30px;
@@ -94,19 +57,22 @@ const BtnWapper = styled.div`
 const MoneyPlanPage = () => {
   return (
     <>
-      <TitleWapper>
-        <PageTitle>소비계획 세우기</PageTitle>
-        <SelectBox />
-      </TitleWapper>
-      <Wapper>
-        <PlanForm />
-        <SaveForm />
-      </Wapper>
-      <BtnWapper>
-        <UpdateBtn>수정하기</UpdateBtn>
-        <SendBtn>부모님한테 보내기</SendBtn>
-      </BtnWapper>
+      <PlanProvider>
+        <TitleWapper>
+          <PageTitle>소비계획 세우기</PageTitle>
+          <SelectBox />
+        </TitleWapper>
+        <Wapper>
+          <PlanForm />
+          <SaveForm />
+        </Wapper>
+        <BtnWapper>
+          <UpdateBtn>수정하기</UpdateBtn>
+          <SendBtn>부모님한테 보내기</SendBtn>
+        </BtnWapper>
+      </PlanProvider>
     </>
   );
 };
+
 export default MoneyPlanPage;

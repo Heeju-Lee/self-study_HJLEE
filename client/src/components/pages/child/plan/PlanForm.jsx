@@ -1,41 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Form, Button, FormGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
-const PlanForm = (props) => {
-  const navigate = useNavigate();
-
-  const { id } = useParams();
-  const { pid } = useParams();
-
-  const [plan, setPlan] = useState({
-    shopping: "",
-    transport: "",
-    cvs: "",
-    food: "",
-    others: "",
-    saving: "",
-    date: new Date().toISOString().split("T")[0],
-    // childNum : 1
-  });
-
-  // useEffect(() => {
-  //   axios({
-  //     url: "http://localhost:9999/plans/1",
-  //     method: "get",
-  //   }).then((res) => {
-  //     console.log(res.data);
-  //     setPlan(res.data);
-  //   });
-  // }, []);
-
+import { PlanContext } from "../../../../pages/context/MoneyPlanContext";
+const PlanForm = () => {
   const updatePlan = () => {
     alert("이동....");
     navigate("/updateForm/");
   };
+
   const Container = styled.div`
     background-color: #886eff; /* 원하는 색상 */
     min-height: 80vh;
@@ -105,6 +80,47 @@ const PlanForm = (props) => {
     margin-top: 1vh;
     font-weight: bold;
   `;
+  const { plan, setPlan } = useContext(PlanContext); // useContext에서 plan과 setPlan 가져오기
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    food: plan.food,
+    cvs: plan.cvs,
+    shopping: plan.shopping,
+    transport: plan.transport,
+    saving: plan.saving,
+    others: plan.others,
+  });
+  // `plan`이 바뀔 때마다 `formData`를 업데이트
+  useEffect(() => {
+    setFormData({
+      food: plan.food,
+      cvs: plan.cvs,
+      shopping: plan.shopping,
+      transport: plan.transport,
+      saving: plan.saving,
+      others: plan.others,
+    });
+  }, [plan]);
+  // Input 변경 핸들러
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    const sumConma = value
+      .toString()
+      .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+
+    // 상태 업데이트
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: sumConma, // 입력값을 숫자만 처리
+    }));
+  };
+
+  // 미리보기 버튼 클릭 시, context 업데이트
+  const handleUpdatePlan = () => {
+    setPlan(formData); // PlanContext의 상태를 업데이트
+    alert("상태가 업데이트되었습니다.");
+  };
   return (
     <Container>
       <Title>카테고리</Title>
@@ -117,7 +133,12 @@ const PlanForm = (props) => {
             />
             <FormTitle>음식</FormTitle>
           </FormBox>
-          <FormInput type="text" name="food" readOnly value={plan.food} />
+          <FormInput
+            type="text" // 숫자만 입력 가능
+            name="food"
+            value={formData.food}
+            onChange={handleInputChange}
+          />
         </FormGroup>
 
         <FormGroup>
@@ -128,7 +149,12 @@ const PlanForm = (props) => {
             />
             <FormTitle>편의점</FormTitle>
           </FormBox>
-          <FormInput type="text" name="cvs" readOnly value={plan.cvs} />
+          <FormInput
+            type="text"
+            name="cvs"
+            value={formData.cvs}
+            onChange={handleInputChange}
+          />
         </FormGroup>
         <FormGroup>
           <FormBox>
@@ -139,10 +165,10 @@ const PlanForm = (props) => {
             <FormTitle>쇼핑</FormTitle>
           </FormBox>
           <FormInput
-            type="text"
+            type="text" // 숫자만 입력 가능
             name="shopping"
-            readOnly
-            value={plan.shopping}
+            value={formData.shopping}
+            onChange={handleInputChange}
           />
         </FormGroup>
         <FormGroup>
@@ -154,10 +180,10 @@ const PlanForm = (props) => {
             <FormTitle>교통</FormTitle>
           </FormBox>
           <FormInput
-            type="text"
+            type="text" // 숫자만 입력 가능
             name="transport"
-            readOnly
-            value={plan.transport}
+            value={formData.transport}
+            onChange={handleInputChange}
           />
         </FormGroup>
         <FormGroup>
@@ -168,7 +194,12 @@ const PlanForm = (props) => {
             />
             <FormTitle>저축</FormTitle>
           </FormBox>
-          <FormInput type="text" name="saving" readOnly value={plan.saving} />
+          <FormInput
+            type="text" // 숫자만 입력 가능
+            name="saving"
+            value={formData.saving}
+            onChange={handleInputChange}
+          />
         </FormGroup>
         <FormGroup>
           <FormBox>
@@ -178,9 +209,14 @@ const PlanForm = (props) => {
             />
             <FormTitle>기타</FormTitle>
           </FormBox>
-          <FormInput type="text" name="other" readOnly value={plan.other} />
+          <FormInput
+            type="text" // 숫자만 입력 가능
+            name="others"
+            value={formData.others}
+            onChange={handleInputChange}
+          />
         </FormGroup>
-        <UpdateBtn onClick={updatePlan}>미리보기</UpdateBtn>
+        <UpdateBtn onClick={handleUpdatePlan}>미리보기</UpdateBtn>
       </FormPlan>
     </Container>
   );
