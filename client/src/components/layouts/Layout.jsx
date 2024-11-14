@@ -3,8 +3,6 @@ import styled from "styled-components";
 
 // TODO 레이아웃 작업
 export default function Layout({ children, scrollEnabled = true }) {
-  console.log("children : ", children);
-
   return (
     <Section scrollEnabled={scrollEnabled}>
       <Main>{children}</Main>
