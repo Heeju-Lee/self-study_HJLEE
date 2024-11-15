@@ -18,7 +18,6 @@ import LoginPage from "./pages/common/LoginPage";
 // import { SelectUserType } from "./pages/common/SelectUserType";
 // import LoginForm from "./components/pages/LoginForm";
 import { RegisterPage } from "./pages/common/RegisterPage";
-
 import Layout from "./components/layouts/Layout";
 
 const Navirouter = () => {
@@ -113,7 +112,6 @@ const Navirouter = () => {
           }
         />
         {/* <Route path="/register-parent" element={<RegisterPage />} /> */}
-
         {/* <Route path="/save-form" element={<SaveForm />} />
         {/* <Route path="/save-form" element={<SaveForm />} />
         <Route path="/update-form" element={<UpdateForm />} />
