@@ -1,22 +1,20 @@
-import React, { createContext, useContext, useState,useEffect } from "react"; 
+import React, { createContext, useContext, useState, useEffect } from "react"; 
 import axios from "axios";
-// 전역관리 용 context
-export const PlanContext = createContext();
 
-// PlanProvider를 사용하여 자식 컴포넌트에 Plan 상태를 제공
+
+const PlanContext = createContext();
+
+// PlanProvider 컴포넌트
 const PlanProvider = ({ children }) => {
+  // plan 데이터의 초기값 설정
   const [plan, setPlan] = useState({
-    shopping: "50",
-    transport: "70",
-    cvs: "1000",
-    food: "10000",
-    others: "1000",
-    saving: "1100",
+    shopping: 0,
+    transport: 0,
+    cvs: 0,
+    food: 0,
+    others: 0,
+    saving: 0,
   });
-
-
-
-
   return (
     <PlanContext.Provider value={{ plan, setPlan }}>
       {children}
@@ -24,5 +22,8 @@ const PlanProvider = ({ children }) => {
   );
 };
 
-// PlanProvider를 기본 내보내기
+// Default export PlanProvider
 export default PlanProvider;
+
+// Named export PlanContext (기존대로)
+export { PlanContext };

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { Canvas } from "@react-three/fiber";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import * as THREE from "three";
 import DoughnutChart from "./DoughnutChart";
 
 const SaveForm = () => {

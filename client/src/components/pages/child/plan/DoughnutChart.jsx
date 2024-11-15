@@ -7,11 +7,20 @@ import { PlanContext } from "../../../../pages/context/MoneyPlanContext";
 ChartJS.register(ArcElement, Tooltip);
 
 const DoughnutChart = () => {
+ 
   const { plan } = useContext(PlanContext);
-  const labels = ["쇼핑", "교통수단", "편의점", "음식", "기타", "저축"];
-  // 차트를 감싸는 div에 크기 설정
+  // 데이터 값 처리: plan 값이 없을 경우 기본값 0으로 처리
+  const dataValues = [
+    { label: "쇼핑", value: plan.shopping  },
+    { label: "교통", value: plan.transport },
+    { label: "편의점", value: plan.cvs  },
+    { label: "음식", value: plan.food  },
+    { label: "기타", value: plan.others  },
+    { label: "저축", value: plan.saving },
+  ];
+ 
   const ChartContainer = styled.div`
-    width: 25vw; /* 차트의 너비 */
+    width: 50vw; /* 차트의 너비 */
     height: 25vh; /* 차트의 높이 */
     display: flex;
     align-items: center;
@@ -29,44 +38,37 @@ const DoughnutChart = () => {
     border-radius: 20%;
   `;
 
-  const dataValues = [
-    { label: "쇼핑", value: plan.shopping },
-    { label: "교통", value: plan.transport },
-    { label: "편의점", value: plan.cvs },
-    { label: "음식", value: plan.food },
-    { label: "기타", value: plan.others },
-    { label: "저축", value: plan.saving },
-  ];
-  // 내림차순으로 정렬 (value 기준)
-  dataValues.sort((a, b) => b.value - a.value);
-
-  // 정렬된 데이터와 레이블 추출
-  const sortedLabels = dataValues.map((item) => item.label);
-  const sortedDataValues = dataValues.map((item) => item.value);
   const backgroundColors = [
     "rgba(255, 99, 132, 1)",
     "rgba(54, 162, 235, 1)",
     "rgba(255, 206, 86, 1)",
     "rgba(75, 192, 192, 1)",
-    "rgba(153, 102, 255, 1)",
+    "rgba(0,74,158,1)",
     "rgba(255, 159, 64, 1)",
   ];
-  const data = {
-    labels: sortedLabels,
-    datasets: [
-      {
-        // 툴팁에 표시 될 라벨
-        label: "미리보기 차트",
-        // 각 항목에 대한 데이터
-        data: sortedDataValues,
-        // 각 항목별 컬러
-        backgroundColor: backgroundColors.slice(0, sortedLabels.length),
-        // 테두리 컬러
-        borderColor: ["gray", "darkgray"],
-        borderWidth: 0.5,
-      },
-    ],
-  };
+
+  // 내림차순으로 정렬 (value 기준)
+  dataValues.sort((a, b) => b.value - a.value);
+
+  // 정렬된 데이터와 레이블 추출
+  const sortedLabels = dataValues.map((item) => item.label);
+  // sortedDataValues 배열의 쉼표 제거 후 숫자로 변환
+  const sortedDataValues = dataValues.map((item) => parseFloat(String(item.value).replace(/,/g, "")) || 0);
+
+const data = {
+  labels: sortedLabels,
+  datasets: [
+    {
+      label: "미리보기 차트",
+      data: sortedDataValues,
+      backgroundColor: backgroundColors.slice(0, sortedLabels.length),
+      borderColor: ["gray", "darkgray"],
+      borderWidth: 0.5,
+    },
+  ],
+};
+
+console.log("Updated sortedDataValues (numeric):", sortedDataValues);
   // 옵션 수정 - 레전드와 툴팁 숨기기
   const options = {
     responsive: true,
@@ -79,6 +81,7 @@ const DoughnutChart = () => {
       },
     },
   };
+  console.log("Chart Data:", data);
   const DataTextContainer = styled.div`
     margin-top: 20px;
     font-size: 16px;
@@ -96,14 +99,26 @@ const DoughnutChart = () => {
     width: 60%;
     height: 8vh;
   `;
-  let sumdata = sortedDataValues.reduce(
-    (acc, num) => acc + parseInt(num, 10),
-    0
-  );
-  const sumConma = sumdata
-    .toString()
-    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 
+  // sumdata 계산 (배열 값 합산)
+  let sumdata = 0;
+  // sortedDataValues.forEach((value) => {
+  //   // 쉼표 제거 후 숫자로 변환하여 더하기
+  //   sumdata += parseFloat(value.replace(/,/g, "")) || 0;
+  // });
+  // sumdata 계산 (배열 값 합산)
+
+sortedDataValues.forEach((value) => {
+  // 이미 숫자로 변환된 sortedDataValues를 더하기만 함
+  sumdata += value || 0;
+});
+  // sumdata가 유효한 숫자인지 확인하고 천 단위 구분기호 추가
+  const sumConma = !isNaN(sumdata) && sumdata !== 0
+    ? sumdata.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    : "0";
+ console.log("sortedDataValues",sortedDataValues );
+console.log("sumdata:", sumdata);
+console.log("sumConma:", sumConma);
   return (
     <>
       <ChartContainer>
@@ -117,11 +132,7 @@ const DoughnutChart = () => {
           ))}
         </DataTextContainer>
       </ChartContainer>
-      <FormInput
-        type="text"
-        name="saving"
-        value={`예상 소비금액: ${sumConma}`}
-      />
+      <FormInput type="text" value={`예상 소비금액: ${sumConma || "0"}`} readOnly />
     </>
   );
 };

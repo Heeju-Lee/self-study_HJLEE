@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 
+import { PlanContext } from "../../../../pages/context/MoneyPlanContext";
 const SelectBoxContainer = styled.div`
   position: relative;
   width: 200px;
@@ -41,7 +42,7 @@ const OptionItem = styled.li`
 const SelectBox = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-
+  const { plan } = useContext(PlanContext);
   // 더미 데이터
   const options = [
     { id: 1, value: "짜장면" },
