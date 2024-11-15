@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import axios from "axios";
 
 // TODO 날짜선택 : 월간리포트, 용돈계약서에서 하기, 위시리스트 보기에서는 제외
@@ -15,6 +15,9 @@ const SelectOptionNav = ({ onHandleData }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const dropdownRef = useRef(null); // 드롭다운 영역을 참조하기 위한 useRef
+
+  // 아이 이미지 더미 데이터 (2명)
+  const childIamge = ["/images/sample-sister.png", "/images/donny1Profile.png"];
 
   // 자식 선택 처리
   const handleChildSelect = (childNum) => {
@@ -73,13 +76,13 @@ const SelectOptionNav = ({ onHandleData }) => {
     <Outer>
       <SelectChildSection>
         {/* 아이 배열만큼 이미지 보여줌 */}
-        {children.map((child) => (
+        {children.map((child, index) => (
           <ChildContainer
             key={child.childNum}
             onClick={() => handleChildSelect(child.childNum)}
           >
             <ImageDiv isSelected={child.childNum === selectedChildNum}>
-              <img src="/images/sample-sister.png" />
+              <img src={childIamge[index]} />
             </ImageDiv>
             <NameLabel>{child.name}</NameLabel>
           </ChildContainer>
@@ -118,7 +121,7 @@ const Outer = styled.div`
   display: flex;
   justify-content: space-between;
 
-  border: 1px solid black;
+  /* border: 1px solid black; */
 `;
 // 아이 선택
 const SelectChildSection = styled.div`
@@ -138,11 +141,11 @@ const ImageDiv = styled.div`
     height: 100%;
   }
 
-  ${
-    (props) =>
-      props.isSelected &&
-      `box-shadow: 0 0 10px 5px rgba(72, 41, 215, 0.7);` /* 선택된 경우 빨간색 테두리 */
-  }
+  ${(props) =>
+    props.isSelected &&
+    css`
+      box-shadow: 0 0 10px 5px rgba(72, 41, 215, 0.7);
+    `}
 `;
 const NameLabel = styled.div`
   text-align: center;

@@ -15,8 +15,8 @@ import AgreementPage from "./pages/parent/AgreementPage";
 import MonthlyReportPage from "./pages/parent/MonthlyReportPage";
 import WishListPage from "./pages/parent/WishListPage";
 import LoginPage from "./pages/common/LoginPage";
-import SelectUserType from "./pages/common/SelectUserType";
-import LoginForm from "./components/pages/LoginForm";
+// import { SelectUserType } from "./pages/common/SelectUserType";
+// import LoginForm from "./components/pages/LoginForm";
 import { RegisterPage } from "./pages/common/RegisterPage";
 
 import Layout from "./components/layouts/Layout";
@@ -35,14 +35,14 @@ const Navirouter = () => {
             </Layout>
           }
         />
-        <Route
+        {/* <Route
           path="/select-user"
           element={
             <Layout>
               <SelectUserType />
             </Layout>
           }
-        />
+        /> */}
         <Route
           path="/register"
           element={

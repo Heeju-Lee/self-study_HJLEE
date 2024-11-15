@@ -9,6 +9,8 @@ import { Button } from "react-bootstrap";
 const Header = () => {
   let logingedCon = useContext(LogingedContext);
 
+  // console.log("logingedCon : ", logingedCon);
+
   const navigate = useNavigate();
 
   const logoutCheck = () => {
