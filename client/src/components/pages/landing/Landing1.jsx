@@ -1,10 +1,17 @@
 import React from "react";
 import styled from "styled-components";
+import Coin from './../../commons/Coin';
+
 export const Landing1 = () => {
   return (
     <Outer>
       <LeftContainer>
-        <img src="images/final_Donny.png" alt="Donny"/>
+        <img src="images/coin-1.svg" class="coin1" />        
+        <img src="images/coin-2.svg" class="coin2" />
+        <img src="images/coin-3.svg" class="coin3" />
+        <img src="images/stockCoin1.png" class = "stockCoin1"/>
+        {/* <img src="images/stockCoin2.png" class = "stockCoin2"/> */}
+        <img src="images/final_Donny.png" class="Donny"/>
       </LeftContainer>
 
       <RightContainer>
@@ -28,8 +35,9 @@ export const Landing1 = () => {
   );
 };
 
+
 const Outer = styled.div`
-  border: 3px solid red;
+  /* border: 3px solid red; */
   width: 100%;
   height: 100%;
   scroll-snap-align: start; /* 섹션 시작 지점에서 스크롤 정지 */
@@ -41,18 +49,73 @@ const Outer = styled.div`
 `;
 
 const LeftContainer = styled.div`
-  width: 100%;
+  width: 60%;
+  height : 100%;
   /* border: 3px solid green; */
   flex-direction: column;
   text-align: center;
+  position: relative;
 
-  img {
+  .Donny{
     width: 300px;
+    position: absolute;
+    left: 400px;
+    top: 250px;
+    z-index: 0;
   }
+  
+  .stockCoin2{
+    position: absolute;
+    width: 500px;
+    top : 180px;
+    left: 300px;
+    z-index: 1;
+  } 
+  .stockCoin1{
+    position: absolute;
+    width: 800px;
+    bottom : 90px;
+    left: 150px;
+    z-index: 0;
+  }
+  .coin1{ // 큰 코인 
+    position: absolute;
+    left: 100px;
+    top: 20px;
+    animation: mainbounce 1.2s alternate infinite;
+    animation-delay: 0.3s;
+    z-index: 1;
+  }
+  .coin2{
+    position: absolute;
+    right: 200px;
+    top: 100px;
+    animation: mainbounce 1.2s alternate infinite;
+    animation-delay: 0.3s;
+    z-index: 1;
+  }
+  .coin3{
+    position: absolute;
+    left: 200px;
+    top: 200px;
+    animation: mainbounce 1.2s alternate infinite;
+    animation-delay: 0.3s;
+    z-index: 1;
+  }
+
+  @keyframes mainbounce{
+    0% {
+    -webkit-transform: translateY(0);
+    }
+    100% {
+    -webkit-transform: translateY(15px);
+    }
+  }
+
 `;
 
 const RightContainer = styled.div`
-  width: 100%;
+  width: 40%;
   /* border: 3px solid blue; */
   align-items: center;
   color : white;
@@ -81,7 +144,6 @@ const Word = styled.div`
 
 `;
 
-
 const Slider = styled.div`
   height:50px;
   overflow:hidden;
@@ -102,13 +164,13 @@ const Slider = styled.div`
   }
 
   div div {
-    background:#42c58a;
+    color:#42c58a;
   }
   div:first-child div {
-    background:#4ec7f3;
+    color:#4ec7f3;
   }
   div:last-child div {
-    background:#DC143C;
+    color: #ffd700;
   }
 
   @keyframes show {

@@ -8,9 +8,10 @@ export const Landing2 = () => {
       <h1>혹시 이런 고민<span>🧐</span> 없으셨나요?</h1>
 
       <ImageContainer >
-        <TextImage src="images/text1.png" alt="text1" />
+        <TextImage src = "images/worry.png"></TextImage>
+        {/* <TextImage src="images/text1.png" alt="text1" />
         <TextImage src="images/text2.png" alt="text2" />
-        <TextImage src="images/text3.png" alt="text3" />
+        <TextImage src="images/text3.png" alt="text3" /> */}
       </ImageContainer >
 
     </Outer>
@@ -33,8 +34,10 @@ const ImageContainer = styled.div`
 `;
 
 const TextImage = styled.img`
-  width: 600px; 
-  height: auto;
+
+  width: 1200px;
+  /* width: 600px; 
+  height: auto; */
 `;
 
 
