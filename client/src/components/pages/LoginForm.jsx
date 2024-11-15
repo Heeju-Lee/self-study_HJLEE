@@ -48,6 +48,7 @@ const LoginForm = () => {
         localStorage.setItem("memberNo", res.data.memberNo);
         localStorage.setItem("id", res.data.id);
         localStorage.setItem("name", res.data.name);
+        localStorage.setItem("role", res.data.role);
         localStorage.setItem("Authorization", res.headers.authorization);
 
         logingedCon.onLoggedChange(true);
