@@ -127,6 +127,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         map.put("memberNo",member.getMemberNum() );
         map.put("id", member.getId());
         map.put("name", member.getName());
+        map.put("role", member.getRole());
         Gson gson= new Gson();
         String arr = gson.toJson(map);
         response.getWriter().print(arr);
