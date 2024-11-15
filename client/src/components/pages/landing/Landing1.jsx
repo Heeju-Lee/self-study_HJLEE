@@ -26,7 +26,7 @@ export const Landing1 = () => {
           
         </SliderWrapper>
 
-        <h1>도니머니가 알려줄게!!</h1>
+        <h1><span style={{color : "#fd9827"}}>도니머니</span>가 알려줄게!!</h1>
         <h5>아이의 입장에서 경제를 바라봅니다</h5>
         <h5>경제를 알아야 세상을 읽을 수 있습니다</h5>
         <h5>아이에게 세상을 이끌 힘을 길러주세요</h5>
@@ -34,8 +34,6 @@ export const Landing1 = () => {
     </Outer>
   );
 };
-
-
 const Outer = styled.div`
   /* border: 3px solid red; */
   width: 100%;
