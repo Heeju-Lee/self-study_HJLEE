@@ -3,6 +3,7 @@ import PlanReport from "../../components/pages/parent/monthly-report/PlanReport"
 import SendMessage from "../../components/pages/parent/monthly-report/SendMessage";
 import SelectOptionNav from "../../components/pages/parent/SelectOptionNav";
 import { GlobalStyles } from "../../styles/GlobalStyle";
+import styled from "styled-components";
 
 const MonthlyReportPage = () => {
   const [selectOption, setSelectOption] = useState({
@@ -21,7 +22,8 @@ const MonthlyReportPage = () => {
   };
 
   return (
-    <div>
+    <>
+    <ContainAll>
       <SelectOptionNav onHandleData={handleChildData} />
       {/* 선택한 옵션값 확인 (지워두 됨) */}
       {/* <p>ChildNum : {selectOption.childNum}</p>
@@ -29,12 +31,25 @@ const MonthlyReportPage = () => {
       <p>month : {selectOption.month}</p> */}
 
       {/* <PlanReport /> */}
-      <PlanReport />
+      <PlanReport 
+              childNum={selectOption.childNum} 
+              year={selectOption.year} 
+              month={selectOption.month}
+      />
 
       {/* SendMessage */}
+    </ContainAll>
       <SendMessage />
-    </div>
+    </>
   );
 };
+
+const ContainAll = styled.div`
+  /* display: flex;
+  flex-direction: column;
+  margin-top: 50px; */
+
+  margin-bottom: 150px;
+`
 
 export default MonthlyReportPage;

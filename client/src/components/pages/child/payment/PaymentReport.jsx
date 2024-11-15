@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const PaymentReport = () => {
+    const token = localStorage.getItem("Authorization");
     const [point, setPoint] = useState(null);
     const [year, setYear] = useState(new Date().getFullYear()); 
     const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -13,7 +14,7 @@ const PaymentReport = () => {
     const showPoint = () => {
         axios.get('children/get/point', {
             headers: {
-                Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuwleuPhOuLiCIsImlkIjoiYWJjIiwicm9sZSI6IlJPTEVfQ0hJTEQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNTUwNzMwLCJleHAiOjE3MzE2MzcxMzB9.QtsOqvtQx7ovZIihPmgKccML_L8Z1-Qw6cFBbnXDNTU`
+                Authorization: `${token}`
             }
         })
         .then((res) => {
@@ -33,7 +34,7 @@ const PaymentReport = () => {
                 month: month,
             },
             headers: {
-                Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuwleuPhOuLiCIsImlkIjoiYWJjIiwicm9sZSI6IlJPTEVfQ0hJTEQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNTUwNzMwLCJleHAiOjE3MzE2MzcxMzB9.QtsOqvtQx7ovZIihPmgKccML_L8Z1-Qw6cFBbnXDNTU`
+                Authorization: `${token}`
             }
         })
         .then((res) => {
@@ -53,7 +54,7 @@ const PaymentReport = () => {
                 month: month,
             },
             headers: {
-                Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuwleuPhOuLiCIsImlkIjoiYWJjIiwicm9sZSI6IlJPTEVfQ0hJTEQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNTUwNzMwLCJleHAiOjE3MzE2MzcxMzB9.QtsOqvtQx7ovZIihPmgKccML_L8Z1-Qw6cFBbnXDNTU`
+                Authorization:`${token}`
             }
         })
         .then((res) => {

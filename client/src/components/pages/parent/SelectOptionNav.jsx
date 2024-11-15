@@ -29,6 +29,11 @@ const SelectOptionNav = ({ onHandleData }) => {
     setIsOpen(false); // 드롭다운 닫기
   };
 
+  const handleSelectChange = (e) => {
+    const { name, value } = e.target;
+    onHandleData({ [name]: value }); // 선택된 값만 부모로 전달
+  };
+
   // 모든 자식 가져오기
   const getChildrenList = () => {
     axios({
@@ -117,13 +122,18 @@ const SelectOptionNav = ({ onHandleData }) => {
 const Outer = styled.div`
   display: flex;
   justify-content: space-between;
-
-  border: 1px solid black;
+  margin: 0px 20px;
+  //border: 1px solid black;
 `;
 // 아이 선택
 const SelectChildSection = styled.div`
   display: flex;
   gap: 10px;
+  background-color: rgb(245, 245, 245);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 25px;
 `;
 
 const ChildContainer = styled.div``;
@@ -141,7 +151,7 @@ const ImageDiv = styled.div`
   ${
     (props) =>
       props.isSelected &&
-      `box-shadow: 0 0 10px 5px rgba(72, 41, 215, 0.7);` /* 선택된 경우 빨간색 테두리 */
+      `box-shadow: 0 0 10px 5px rgba(73, 41, 215, 0.805);` /* 선택된 경우 빨간색 테두리 */
   }
 `;
 const NameLabel = styled.div`

@@ -63,13 +63,13 @@ const Header = () => {
           // to="/plan-page"
           // onClick={checkPlanAndNavigate}
           >
-            <span>용돈계획서</span>
+            <span>월간리포트</span>
           </Link>
           <Link to="/">
-            <span>경제배우기</span>
+            <span>용돈계약서</span>
           </Link>
           <Link to="/">
-            <span>내꿈모으기</span>
+            <span>위시리스트</span>
           </Link>
         </MenuSection>
         <RightSection>
