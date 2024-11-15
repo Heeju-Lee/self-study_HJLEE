@@ -70,6 +70,7 @@ public class ParentController {
 
     /* 월간 리포트 */
     @GetMapping("/reports")
+    @CrossOrigin
     public ResponseEntity<ParentReportResponseDto> getChildReports(@RequestParam Long childNum,
     																@RequestParam int year,
     																@RequestParam int month){
