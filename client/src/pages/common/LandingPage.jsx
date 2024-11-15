@@ -9,6 +9,7 @@ const LandingPage = () => {
   const sectionsRef = useRef([]); // 섹션 DOM 요소를 참조하기 위한 배열
 
   const landingComponents = [Landing1, Landing2, Landing3, Landing4]; // 랜딩 컴포넌트를 배열로 정의
+  // const landingComponents = [Landing3, Landing4]; // 랜딩 컴포넌트를 배열로 정의
 
   // fade-in 효과를 위한 IntersectionObserver
   useEffect(() => {
@@ -57,11 +58,11 @@ const LandingPage = () => {
 
 const Outer = styled.div`
   scroll-snap-type: y mandatory; /* 세로 스냅 활성화 */
-  overflow-y: scroll; /* 스크롤 활성화 */
-  height: 100vh; /* 화면 높이를 100%로 설정 */
+  overflow-y: scroll;
+  height: calc(100vh - 80px);
 `;
 const Section = styled.div`
-  height: 100vh; /* 각 섹션의 높이를 화면 크기로 설정 */
+  height: calc(100vh - 80px);
   display: flex;
   justify-content: center;
   align-items: center;

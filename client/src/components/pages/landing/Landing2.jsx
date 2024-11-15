@@ -11,6 +11,6 @@ export const Landing2 = () => {
 
 const Outer = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   scroll-snap-align: start; /* 섹션 시작 지점에서 스크롤 정지 */
 `;
