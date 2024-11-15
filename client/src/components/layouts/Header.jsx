@@ -18,6 +18,7 @@ const Header = () => {
     localStorage.removeItem("id");
     localStorage.removeItem("name");
     localStorage.removeItem("Authorization");
+    localStorage.removeItem("role")
 
     logingedCon.onLoggedChange(false);
 
