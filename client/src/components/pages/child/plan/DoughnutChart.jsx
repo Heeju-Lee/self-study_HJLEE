@@ -54,7 +54,7 @@ const DoughnutChart = () => {
     width: 60%;
     height: 8vh;
   `;
-
+  //컬러칩 수정예정
   const backgroundColors = [
     "rgba(255, 99, 132, 1)",
     "rgba(54, 162, 235, 1)",
@@ -63,7 +63,7 @@ const DoughnutChart = () => {
     "rgba(0,74,158,1)",
     "rgba(255, 159, 64, 1)",
   ];
-  // Update formatted data values whenever the plan changes
+
   useEffect(() => {
     if (plan) {
       const updatedValues = [
@@ -77,10 +77,10 @@ const DoughnutChart = () => {
         ...item,
         formattedValue: item.value
           .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ","), // Add comma formatting
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ","), // 원단위 구분기호 추가
       }));
 
-      // Sort the values in descending order
+      // 내림차순으로 정렬
       updatedValues.sort((a, b) => b.value - a.value);
       setFormattedDataValues(updatedValues);
     }

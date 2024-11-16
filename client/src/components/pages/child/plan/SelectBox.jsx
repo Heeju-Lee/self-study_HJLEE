@@ -92,7 +92,7 @@ const SelectBox = () => {
     // API 호출
     fetchPlanData(year, month);
   };
-
+  //로컬스토리지에서 토큰 가져와야함
   const token =
     "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuwleuPhOuLiCIsImlkIjoiYWJjIiwicm9sZSI6IlJPTEVfQ0hJTEQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNzY0MzUyLCJleHAiOjE3MzE4NTA3NTJ9.UafLEsxw-_j7TC5SN4WobZGmykAG9MW-cB27NevJm_I";
 

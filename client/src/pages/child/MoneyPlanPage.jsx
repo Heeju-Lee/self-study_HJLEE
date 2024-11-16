@@ -135,6 +135,7 @@ const MoneyPlanPage = () => {
   console.log("MoneyPlanPage plan : ", plan);
   console.log("MoneyPlanPage dataValues : ", dataValues);
 
+  //나중에 로컬스토리지에서 데이터 받아오는거롤 수정해야함
   const token =
     "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuwleuPhOuLiCIsImlkIjoiYWJjIiwicm9sZSI6IlJPTEVfQ0hJTEQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNzY0MzUyLCJleHAiOjE3MzE4NTA3NTJ9.UafLEsxw-_j7TC5SN4WobZGmykAG9MW-cB27NevJm_I"; // 로�� 스토리지에서 ����� 가져오기
   const [isLoading, setIsLoading] = useState(false); // 전송 중 로딩 상태
@@ -157,7 +158,7 @@ const MoneyPlanPage = () => {
         console.log("axios res", res);
         setModalOpen(false); // 모달 닫기
         setIsLoading(false); // 로딩 상태 해제
-        setOverlayStatus(true);
+        setOverlayStatus(true); //수정 불가 창업데이트
       })
       .catch((err) => {
         console.error("Error:", err.message); // 오류 메시지 출력
@@ -165,7 +166,7 @@ const MoneyPlanPage = () => {
         console.error("Error stack:", err.stack); // 오류 스택 추적
         setIsLoading(false); // 로딩 상태 해제
         setErrorMessage("전송 중 오류가 발생했습니다. 다시 시도해주세요.");
-        setOverlayStatus(false);
+        setOverlayStatus(false); //수정 불가 창업데이트
       });
     console.log("MoneyPlanPage dataToSend : ", dataToSend); // 전��할 데이터 확인
   };
