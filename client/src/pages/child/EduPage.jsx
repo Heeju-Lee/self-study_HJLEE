@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const EduPage = () => {
-    return (
-        <div>
-            
-        </div>
-    );
+  return <div>경제 배우기 페이지</div>;
 };
 
 export default EduPage;

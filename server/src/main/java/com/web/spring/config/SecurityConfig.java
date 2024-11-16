@@ -78,7 +78,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) ->
                 auth
                 		//.requestMatchers("/*").permitAll()
-                        .requestMatchers("/parents/signup/**", "/children/signup/**").permitAll()
+                        .requestMatchers("/parents/signup/**", "/children/signup/**", "/notification/subscribe/**").permitAll()
                         .requestMatchers("/swagger-ui", "/swagger-ui/**","/api/logistics","/api/swagger-config","/v3/api-docs/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
