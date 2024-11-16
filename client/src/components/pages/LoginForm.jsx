@@ -43,7 +43,7 @@ const LoginForm = () => {
       data: JSON.stringify(member),
     })
       .then((res) => {
-        console.log("res = " , res)
+        console.log("res = " , res.data)
 
         localStorage.setItem("memberNo", res.data.memberNo);
         localStorage.setItem("id", res.data.id);
