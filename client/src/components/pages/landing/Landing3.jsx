@@ -144,6 +144,7 @@ const SubTitle = styled.div`
 const Description = styled.div`
   margin-bottom: 20px;
   font-size: 18px;
+  font-family: "HakgyoansimDunggeunmisoTTF-R";
 `;
 
 const ImageContainer = styled.div`
