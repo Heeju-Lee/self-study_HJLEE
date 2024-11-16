@@ -322,6 +322,7 @@ public class ChildService {
 	@Transactional(readOnly = true)
 	public LinkedHashMap<String, Integer> monthPlan(Long childNum, int year, int month) {
 
+		
 		LinkedHashMap<String, Integer> response = new LinkedHashMap<>();
 		Optional<Child> child = findChild(childNum);
 		Plan defalutPlan = new Plan(0L, 0, 0, 0, 0, 0, 0);
