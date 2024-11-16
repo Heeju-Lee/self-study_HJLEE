@@ -1,26 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
-// import { Container, Nav, Navbar } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { LogingedContext } from "../../App";
-import { Button } from "react-bootstrap";
+import { LogingedContext, AuthContext } from "../../App";
+import { ParentNotificationIcon } from "../pages/parent/ParentNotificationIcon";
+import { ChildNotificationIcon } from "../pages/child/ChildNotificationIcon";
 
 const Header = () => {
-  let logingedCon = useContext(LogingedContext);
-  const userInfo = {
-    role: localStorage.getItem("role"),
-    name: localStorage.getItem("name"),
-  };
-  console.log();
-
-  // console.log("logingedCon : ", logingedCon);
-
   const navigate = useNavigate();
+  let logingedCon = useContext(LogingedContext);
+  const logoutRef = useRef(null); // 로그아웃 DOM 참조
+  const [logoutOpen, setLogoutOpen] = useState(false); // 로그아웃 버튼
+
+  // 로그인 유저정보
+  const { memberNo, role, name, authorization } = useContext(AuthContext);
 
   const role = localStorage.getItem("role");
 
   const logoutCheck = () => {
+    setLogoutOpen(false);
     localStorage.removeItem("memberNo");
     localStorage.removeItem("id");
     localStorage.removeItem("name");
@@ -32,14 +29,28 @@ const Header = () => {
     navigate("/");
   };
 
-  // TODO 부모, 아이 분기
-  // TODO 로그인 전후 분기
+  // 로그아웃 버튼 바깥 클릭 감지시 처리
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // 로그아웃 메뉴 외부를 클릭하면 닫기
+      if (logoutRef.current && !logoutRef.current.contains(event.target)) {
+        setLogoutOpen(false);
+      }
+    };
+    // 전역 클릭 이벤트 등록
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // 컴포넌트 언마운트 시 이벤트 제거
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <HeaderSection>
       <Container>
         {/* 로고 */}
-        <LeftSection>
-          <Link to="/">
+        <Link to="/">
+          <LeftSection>
             <LogoOuter>
               <img
                 src="/images/donnymoney-logo.png"
@@ -48,10 +59,11 @@ const Header = () => {
                 height={"auto"}
               />
             </LogoOuter>
-          </Link>
-          <p>도니머니</p>
-        </LeftSection>
+            <p>도니머니</p>
+          </LeftSection>
+        </Link>
 
+        {/* 메뉴 */}
         {logingedCon.isLoggedIn &&
           (role === "ROLE_PARENT" ? (
             <MenuSection>
@@ -82,6 +94,7 @@ const Header = () => {
             </MenuSection>
           ))}
 
+        {/* 로그인, 로그아웃, 유저네임, 알림 영역 */}
         <RightSection>
           {!logingedCon.isLoggedIn && (
             <>
@@ -100,29 +113,41 @@ const Header = () => {
             </>
           )}
 
+          {/* 유저 로그인시 보이는 정보 */}
           {logingedCon.isLoggedIn && (
-            <>
-              <Button onClick={logoutCheck}>로그아웃</Button>
-              <BellButton type="button" className="bell-button" />
-              {/* <span>{userInfo.name} {userInfo.role }님</span> */}
-            </>
+            <UserInfo>
+              {role === "ROLE_PARENT" && <ParentNotificationIcon />}
+              {role === "ROLE_CHILD" && <ChildNotificationIcon />}
+
+              <div
+                className="user_name"
+                onClick={() =>
+                  logoutOpen ? setLogoutOpen(false) : setLogoutOpen(true)
+                }
+              >
+                {name}
+                <span className="role_keyword">
+                  {role === "ROLE_PARENT" ? "학부모님" : "학생"}
+                </span>
+              </div>
+
+              {/* 로그아웃 버튼  */}
+              {logoutOpen && (
+                <LogoutButton
+                  className="logout_keyword"
+                  ref={logoutRef}
+                  onClick={logoutCheck}
+                >
+                  로그아웃
+                </LogoutButton>
+              )}
+            </UserInfo>
           )}
         </RightSection>
-
-        {/* <Link to="/test-child">아이테스트</Link>
-        <Link to="/test-parent">부모테스트</Link> */}
       </Container>
     </HeaderSection>
   );
 };
-
-const BellButton = styled.input`
-  background: url("images/bell_2.png") no-repeat center center;
-  background-size: contain;
-  width: 40px;
-  height: 40px;
-  border: none;
-`;
 
 const HeaderSection = styled.div`
   position: sticky;
@@ -180,10 +205,40 @@ const MenuSection = styled.div`
 const RightSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   font-size: 20px;
 
+  .user_name {
+    cursor: pointer;
+    margin-left: 12px;
+  }
+  .role_keyword {
+    margin-left: 8px;
+    color: #fd9827;
+  }
   /* border: 1px solid red; */
+`;
+const UserInfo = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const LogoutButton = styled.div`
+  cursor: pointer;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  font-size: 16px;
+  border: 2px solid lightgray;
+  padding: 10px 15px;
+  border-radius: 10px;
+  background-color: white;
+  &:hover {
+    background-color: #9774fb;
+    color: #ffffff;
+    border: 2px solid #9774fb;
+  }
 `;
 
 export default Header;

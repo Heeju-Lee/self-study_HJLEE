@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const WishListPage = () => {
-    return (
-        <div>
-            
-        </div>
-    );
+  return <div>내아이 위시리스트 페이지</div>;
 };
 
 export default WishListPage;
