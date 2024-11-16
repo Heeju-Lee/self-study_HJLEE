@@ -14,7 +14,7 @@ const Header = () => {
   // 로그인 유저정보
   const { memberNo, role, name, authorization } = useContext(AuthContext);
 
-  const role = localStorage.getItem("role");
+  // const role = localStorage.getItem("role");
 
   const logoutCheck = () => {
     setLogoutOpen(false);
