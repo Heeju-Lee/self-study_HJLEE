@@ -113,27 +113,27 @@ const PaymentReport = () => {
                     <p>소비 내역을 불러오는 중...</p>
                 ) : (
                     <MonthPayment>
-                        <h3><span style={{color: "#8529fd"}}>{month}월</span> 내가 쓴 돈 </h3>
+                        <Title><span style={{color: "#8529fd"}}>{month}월</span> 내가 쓴 돈 </Title>
                         <TotalPrice>총합 : <Price>{formatCurrency(totalAmount)}</Price>원</TotalPrice>
                         <Table >
-                            <Thead>
-                                <tr>
-                                    <th>카테고리</th>
-                                    <th>날짜</th>
-                                    <th>상호명</th>
-                                    <th>금액</th>
-                                </tr>
-                            </Thead>
-                            <Tbody>
+                            <thead>
+                                <TableRow>
+                                    <TableHeader>카테고리</TableHeader>
+                                    <TableHeader>날짜</TableHeader>
+                                    <TableHeader>상호명</TableHeader>
+                                    <TableHeader>금액</TableHeader>
+                                </TableRow>
+                            </thead>
+                            <tbody>
                                 {monthList.map((item, index) => (
-                                    <tr key={index}>
-                                        <td><img src = {`icons/${item.category}.png`} alt="category icon" /></td>
-                                        <td>{formatDate(item.createdAt)}</td>
-                                        <td>{item.storeName}</td>
-                                        <td><Price>{formatCurrency(item.paymentAmt)}</Price>원</td>
-                                    </tr>
+                                    <TableRow key={index}>
+                                        <TableData><img src = {`icons/${item.category}.png`} alt="category icon" /></TableData>
+                                        <TableData>{formatDate(item.createdAt)}</TableData>
+                                        <TableData>{item.storeName}</TableData>
+                                        <TableData><Price>{formatCurrency(item.paymentAmt)}</Price>원</TableData>
+                                    </TableRow>
                                 ))}
-                            </Tbody>
+                            </tbody>
                         </Table>
                     </MonthPayment>
                 )}
@@ -149,6 +149,7 @@ const PaymentReport = () => {
 };
 
 export default PaymentReport;
+
 
 const Outer = styled.div`
   width: 100%;
@@ -167,26 +168,26 @@ const MainSection =styled.div`
 `;
 
 const Button = styled.button`
-  margin-top: 10px;
-  padding: 10px 20px;
-  background-color: #2a9d8f;
+  background-color: #8529fd;
   color: white;
+  padding: 12px 25px;
+  font-size: 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 30px;
   cursor: pointer;
+  font-weight: 600;
   &:hover {
-    background-color: #21867a;
+    background-color: #7f56e7;
   }
 `;
 
 const Payment = styled.div`
   width: 100%;
-  /* margin-top: 30px; */
   display: flex;
   flex-direction: column;
   align-items: center;
-  border : 2px solid gray;
-  border-radius: 5px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 `;
 
 const MonthPayment = styled.div`
@@ -194,6 +195,11 @@ const MonthPayment = styled.div`
   text-align: center;
   margin : 30px 0px;
 `;
+
+const Title = styled.div`
+    font-size: 40px;
+`;
+
 
 const TotalPrice = styled.div`
   font-size: 20px;
@@ -214,21 +220,31 @@ const Table = styled.table`
   border: 1px solid #ddd;
 `;
 
-const Thead = styled.thead`
-  font-size: 25px;
-  background-color: #f4f4f4;
-  font-weight: bold;
+
+const TableHeader = styled.th`
+    background-color: #8529fd;
+    color: white;
+    padding: 12px;
+    font-size: 25px;
+    text-transform: uppercase;
 `;
 
-const Tbody = styled.tbody`
 
-  img{
-    width : 100px;
-  }
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
+const TableRow = styled.tr`
+    &:nth-child(even) {
+    background-color: #f3f3f3;
+    }
 `;
+
+const TableData = styled.td`
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-family: 'HakgyoansimDunggeunmisoTTF-R';
+    font-size: 20px;
+    img{
+        width : 100px;
+    }
+`;    
 
 const Report = styled.div`
   margin-top: 30px;
