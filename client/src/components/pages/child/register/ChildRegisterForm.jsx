@@ -192,6 +192,7 @@ const RegisterPage = () => {
                 name="id"
                 placeholder="아이디 입력"
                 onChange={changeValue}
+                autoComplete="off"
               />
               <p style={isCheckResult ? { color: "blue" } : { color: "red" }}>
                 {idCheckResult}
@@ -204,6 +205,7 @@ const RegisterPage = () => {
                 name="pwd"
                 placeholder="비밀번호 입력"
                 onChange={changeValue}
+                autoComplete="off"
               />
             </InputRow>
             <InputRow>
@@ -213,6 +215,7 @@ const RegisterPage = () => {
                 name="name"
                 placeholder="이름 입력"
                 onChange={changeValue}
+                autoComplete="off"
               />
             </InputRow>
             <InputRow>
@@ -231,6 +234,8 @@ const RegisterPage = () => {
                 id="phone"
                 name="phone"
                 onChange={changeValue}
+                autoComplete="off"
+                placeholder="010-0000-0000"
               />
             </InputRow>
 
@@ -241,6 +246,7 @@ const RegisterPage = () => {
                 id="email"
                 name="email"
                 onChange={changeValue}
+                placeholder="donny@donnymoney.com"
               />
             </InputRow>
             <Button disabled={!isButtonEnabled} onClick={() => setStep(2)}>

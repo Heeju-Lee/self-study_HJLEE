@@ -8,6 +8,11 @@ import { Button } from "react-bootstrap";
 
 const Header = () => {
   let logingedCon = useContext(LogingedContext);
+  const userInfo = {
+    role: localStorage.getItem("role"),
+    name: localStorage.getItem("name"),
+  };
+  console.log();
 
   // console.log("logingedCon : ", logingedCon);
 
@@ -20,28 +25,12 @@ const Header = () => {
     localStorage.removeItem("id");
     localStorage.removeItem("name");
     localStorage.removeItem("Authorization");
-    localStorage.removeItem("role")
+    localStorage.removeItem("role");
 
     logingedCon.onLoggedChange(false);
 
     navigate("/");
   };
-
-  // const checkPlanAndNavigate = async () => {
-  //   try {
-  //     const response = await axios.get("http://localhost:9999/plans/1");
-  //     if (response.data) {
-  //       // 데이터가 있을 경우 PlanForm으로 이동
-  //       navigate("/planPage");
-  //     } else {
-  //       // 데이터가 없을 경우 SaveForm으로 이동
-  //       navigate("/planPage"); // SaveForm을 보여줄 경로
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching plan:", error);
-  //     navigate("/saveForm"); // 오류 발생 시에도 PlanForm으로 이동
-  //   }
-  // };
 
   // TODO 부모, 아이 분기
   // TODO 로그인 전후 분기
@@ -63,44 +52,36 @@ const Header = () => {
           <p>도니머니</p>
         </LeftSection>
 
-        {logingedCon.isLoggedIn && (
+        {logingedCon.isLoggedIn &&
+          (role === "ROLE_PARENT" ? (
+            <MenuSection>
+              <Link to="/monthly-report">
+                <span>월간리포트</span>
+              </Link>
+              <Link to="/agreement">
+                <span>용돈계약서</span>
+              </Link>
+              <Link to="/wish-list">
+                <span>위시리스트</span>
+              </Link>
+            </MenuSection>
+          ) : (
+            <MenuSection>
+              <Link to="/money-plan">
+                <span>소비 계획 세우기</span>
+              </Link>
+              <Link to="/edu">
+                <span>교육</span>
+              </Link>
+              <Link to="/mywish-list">
+                <span>위시 리스트</span>
+              </Link>
+              <Link to="/child-report">
+                <span>소비 리포트 보기</span>
+              </Link>
+            </MenuSection>
+          ))}
 
-          (
-            role === "ROLE_PARENT" 
-            ? (
-                <MenuSection>
-                  <Link to="/monthly-report">
-                    <span>월간리포트</span>
-                  </Link>
-                  <Link to="/agreement">
-                    <span>용돈계약서</span>
-                  </Link>
-                  <Link to="/wish-list">
-                    <span>위시리스트</span>
-                  </Link>
-                </MenuSection>
-              )        
-            : (
-                <MenuSection>
-                <Link to="/money-plan">
-                  <span>소비 계획 세우기</span>
-                </Link>
-                <Link to="/edu">
-                  <span>교육</span>
-                </Link>
-                <Link to="/mywish-list">
-                  <span>위시 리스트</span>
-                </Link>
-                <Link to="/child-report">
-                  <span>소비 리포트 보기</span>
-                </Link>
-              </MenuSection>
-              )
-            )
-
-
-        )}
-        
         <RightSection>
           {!logingedCon.isLoggedIn && (
             <>
@@ -123,7 +104,7 @@ const Header = () => {
             <>
               <Button onClick={logoutCheck}>로그아웃</Button>
               <BellButton type="button" className="bell-button" />
-              <span>{localStorage.getItem("name")}님</span>
+              {/* <span>{userInfo.name} {userInfo.role }님</span> */}
             </>
           )}
         </RightSection>
