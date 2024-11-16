@@ -15,8 +15,12 @@ const PlanProvider = ({ children }) => {
     others: 0,
     saving: 0,
   });
+  const [selectedYear, setSelectedYear] = useState(0); // 연도 상태
+  const [selectedMonth, setSelectedMonth] = useState(0); // 월 상태
+  const [overlayStatus, setOverlayStatus] = useState(null); 
+  
   return (
-    <PlanContext.Provider value={{ plan, setPlan }}>
+    <PlanContext.Provider value={{ plan, setPlan,selectedMonth, setSelectedMonth,selectedYear, setSelectedYear,overlayStatus, setOverlayStatus }}>
       {children}
     </PlanContext.Provider>
   );

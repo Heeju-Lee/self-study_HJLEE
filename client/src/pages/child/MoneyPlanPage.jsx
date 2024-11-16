@@ -80,9 +80,14 @@ const OverlayMessage = styled.h1`
 
 const MoneyPlanPage = () => {
   const [isModalOpen, setModalOpen] = useState(false); // 모달 열림/닫힘 상태
-  const { plan } = useContext(PlanContext); // Context에서 데이터를 가져옴
-  const [isOverlayVisible, setOverlayVisible] = useState(false); // 오버레이 상태 추가
+  const { plan, selectedYear, selectedMonth, overlayStatus, setOverlayStatus } =
+    useContext(PlanContext); // Context에서 overlayStatus 가져오기
+
   const [dataValues, setDataValues] = useState([]); // 데이터값 배열
+
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth() + 1;
   // 데이터값 배열 생성
   // Context 값이 변경될 때 dataValues 동기화
   useEffect(() => {
@@ -129,11 +134,9 @@ const MoneyPlanPage = () => {
   };
   console.log("MoneyPlanPage plan : ", plan);
   console.log("MoneyPlanPage dataValues : ", dataValues);
-  const today = new Date();
-  const currentYear = today.getFullYear();
-  const currentMonth = today.getMonth() + 1;
+
   const token =
-    "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuwleuPhOuLiCIsImlkIjoiYWJjIiwicm9sZSI6IlJPTEVfQ0hJTEQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNjU4Nzg3LCJleHAiOjE3MzE3NDUxODd9.R5wF7JEe9nP9OP-ivWZcdF8lOoUV0jQTcwmvGezx2Ng"; // 로�� 스토리지에서 ����� 가져오기
+    "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuwleuPhOuLiCIsImlkIjoiYWJjIiwicm9sZSI6IlJPTEVfQ0hJTEQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNzY0MzUyLCJleHAiOjE3MzE4NTA3NTJ9.UafLEsxw-_j7TC5SN4WobZGmykAG9MW-cB27NevJm_I"; // 로�� 스토리지에서 ����� 가져오기
   const [isLoading, setIsLoading] = useState(false); // 전송 중 로딩 상태
   const [errorMessage, setErrorMessage] = useState(null); // 에러 메시지 상태
   const submitJoin = (e) => {
@@ -154,7 +157,7 @@ const MoneyPlanPage = () => {
         console.log("axios res", res);
         setModalOpen(false); // 모달 닫기
         setIsLoading(false); // 로딩 상태 해제
-        setOverlayVisible(true); // 성공 시 오버레이 표시
+        setOverlayStatus(true);
       })
       .catch((err) => {
         console.error("Error:", err.message); // 오류 메시지 출력
@@ -162,6 +165,7 @@ const MoneyPlanPage = () => {
         console.error("Error stack:", err.stack); // 오류 스택 추적
         setIsLoading(false); // 로딩 상태 해제
         setErrorMessage("전송 중 오류가 발생했습니다. 다시 시도해주세요.");
+        setOverlayStatus(false);
       });
     console.log("MoneyPlanPage dataToSend : ", dataToSend); // 전��할 데이터 확인
   };
@@ -200,6 +204,9 @@ const MoneyPlanPage = () => {
         setErrorMessage("전송 중 오류가 발생했습니다. 다시 시도해주세요.");
       });
   };
+  const isMatchingDate =
+    selectedYear === currentYear && selectedMonth === currentMonth;
+  console.log("선택된 날짜", selectedYear, selectedMonth);
 
   return (
     <>
@@ -208,8 +215,8 @@ const MoneyPlanPage = () => {
         <SelectBox />
       </TitleWapper>
       <Wapper>
-        {/* 오버레이 상태에 따라 표시 */}
-        {isOverlayVisible && (
+        {/* 오버레이 상태와 날짜 조건이 모두 충족될 때만 표시 */}
+        {overlayStatus && isMatchingDate && (
           <OverlayDiv>
             <OverlayMessage>
               계획 전송이 성공적으로 완료되었습니다!
@@ -220,10 +227,17 @@ const MoneyPlanPage = () => {
         <SaveForm />
       </Wapper>
       <BtnWapper>
-        <UpdateBtn onClick={() => setOverlayVisible(false)}>수정하기</UpdateBtn>
-        <SendBtn onClick={handleSend} disabled={isOverlayVisible}>
-          부모님한테 보내기
-        </SendBtn>
+        {/* 날짜가 일치할 때만 버튼 표시 */}
+        {isMatchingDate && (
+          <>
+            <UpdateBtn onClick={() => setOverlayStatus(false)}>
+              수정하기
+            </UpdateBtn>
+            <SendBtn onClick={handleSend} disabled={overlayStatus}>
+              부모님한테 보내기
+            </SendBtn>
+          </>
+        )}
       </BtnWapper>
       {/* 모달이 열렸을 때만 표시 */}
       {isModalOpen && (
