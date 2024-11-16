@@ -32,6 +32,11 @@ const SelectOptionNav = ({ onHandleData }) => {
     setIsOpen(false); // 드롭다운 닫기
   };
 
+  const handleSelectChange = (e) => {
+    const { name, value } = e.target;
+    onHandleData({ [name]: value }); // 선택된 값만 부모로 전달
+  };
+
   // 모든 자식 가져오기
   const getChildrenList = () => {
     axios({
@@ -127,6 +132,11 @@ const Outer = styled.div`
 const SelectChildSection = styled.div`
   display: flex;
   gap: 10px;
+  background-color: rgb(245, 245, 245);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 25px;
 `;
 
 const ChildContainer = styled.div``;

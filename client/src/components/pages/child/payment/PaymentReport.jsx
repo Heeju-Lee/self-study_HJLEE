@@ -3,6 +3,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 const PaymentReport = () => {
+    const token = localStorage.getItem("Authorization");
     const [point, setPoint] = useState(null);
     const [year, setYear] = useState(new Date().getFullYear());
     const [month, setMonth] = useState(new Date().getMonth() + 1);
