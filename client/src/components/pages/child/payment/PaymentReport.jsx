@@ -10,6 +10,8 @@ const PaymentReport = () => {
     const [monthList, setMonthList] = useState([]);
     const [paymentChart, setPaymentChart] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
+    const [isChartVisible, setIsChartVisible] = useState(false);
+    const [isMonthList, setIsMonthList] = useState(true);
 
     // 내 포인트 가져오기
     const showPoint = () => {
@@ -40,6 +42,7 @@ const PaymentReport = () => {
         })
         .then((res) => {
             console.log(res.data);
+            setIsMonthList(true);
             setMonthList(res.data);  // 데이터를 상태에 저장
         })
         .catch((err) => {
@@ -60,7 +63,10 @@ const PaymentReport = () => {
         })
         .then((res) => {
             console.log(res.data);
-            setPaymentChart(res.data);  // 데이터를 상태에 저장
+            setPaymentChart(res.data);
+            setIsChartVisible(true);
+            setIsMonthList(false);
+
         })
         .catch((err) => {
             console.log("소비 차트 조회 중 에러 발생", err);
@@ -108,42 +114,47 @@ const PaymentReport = () => {
             </MainSection>
 
             {/* 내가 쓴 돈 목록을 표로 출력 */}
-            <Payment>
-                {monthList.length === 0 ? (
-                    <p>소비 내역을 불러오는 중...</p>
-                ) : (
-                    <MonthPayment>
-                        <h3><span style={{color: "#8529fd"}}>{month}월</span> 내가 쓴 돈 </h3>
-                        <TotalPrice>총합 : <Price>{formatCurrency(totalAmount)}</Price>원</TotalPrice>
-                        <Table >
-                            <Thead>
-                                <tr>
-                                    <th>카테고리</th>
-                                    <th>날짜</th>
-                                    <th>상호명</th>
-                                    <th>금액</th>
-                                </tr>
-                            </Thead>
-                            <Tbody>
-                                {monthList.map((item, index) => (
-                                    <tr key={index}>
-                                        <td><img src = {`icons/${item.category}.png`} alt="category icon" /></td>
-                                        <td>{formatDate(item.createdAt)}</td>
-                                        <td>{item.storeName}</td>
-                                        <td><Price>{formatCurrency(item.paymentAmt)}</Price>원</td>
+            {isMonthList && (
+                <Payment>
+                    {monthList.length === 0 ? (
+                        <p>소비 내역을 불러오는 중...</p>
+                    ) : (
+                        <MonthPayment>
+                            <h3><span style={{color: "#8529fd"}}>{month}월</span> 내가 쓴 돈 </h3>
+                            <TotalPrice>총합 : <Price>{formatCurrency(totalAmount)}</Price>원</TotalPrice>
+                            <Table>
+                                <Thead>
+                                    <tr>
+                                        <th>카테고리</th>
+                                        <th>날짜</th>
+                                        <th>상호명</th>
+                                        <th>금액</th>
                                     </tr>
-                                ))}
-                            </Tbody>
-                        </Table>
-                    </MonthPayment>
-                )}
-            </Payment>
+                                </Thead>
+                                <Tbody>
+                                    {monthList.map((item, index) => (
+                                        <tr key={index}>
+                                            <td><img src={`icons/${item.category}.png`} alt="category icon" /></td>
+                                            <td>{formatDate(item.createdAt)}</td>
+                                            <td>{item.storeName}</td>
+                                            <td><Price>{formatCurrency(item.paymentAmt)}</Price>원</td>
+                                        </tr>
+                                    ))}
+                                </Tbody>
+                            </Table>
+                        </MonthPayment>
+                    )}
+                </Payment>
+            )}
 
              {/* 내가 쓴 돈 목록을 표로 출력 */}
-             <Report>
-                {/* <h3>소비내역 리포트</h3> */}
-             </Report>
-
+             {isChartVisible && (
+                <>
+                    <Report>
+                        {/* <h3>소비내역 리포트</h3> */}
+                    </Report>
+                </>
+             )}
         </Outer>
     );
 };
