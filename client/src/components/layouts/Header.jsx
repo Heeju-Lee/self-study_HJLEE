@@ -13,6 +13,8 @@ const Header = () => {
 
   const navigate = useNavigate();
 
+  const role = localStorage.getItem("role");
+
   const logoutCheck = () => {
     localStorage.removeItem("memberNo");
     localStorage.removeItem("id");
@@ -61,20 +63,44 @@ const Header = () => {
           <p>도니머니</p>
         </LeftSection>
 
-        <MenuSection>
-          <Link
-          // to="/plan-page"
-          // onClick={checkPlanAndNavigate}
-          >
-            <span>월간리포트</span>
-          </Link>
-          <Link to="/">
-            <span>용돈계약서</span>
-          </Link>
-          <Link to="/">
-            <span>위시리스트</span>
-          </Link>
-        </MenuSection>
+        {logingedCon.isLoggedIn && (
+
+          (
+            role === "ROLE_PARENT" 
+            ? (
+                <MenuSection>
+                  <Link to="/monthly-report">
+                    <span>월간리포트</span>
+                  </Link>
+                  <Link to="/agreement">
+                    <span>용돈계약서</span>
+                  </Link>
+                  <Link to="/wish-list">
+                    <span>위시리스트</span>
+                  </Link>
+                </MenuSection>
+              )        
+            : (
+                <MenuSection>
+                <Link to="/money-plan">
+                  <span>소비 계획 세우기</span>
+                </Link>
+                <Link to="/edu">
+                  <span>교육</span>
+                </Link>
+                <Link to="/mywish-list">
+                  <span>위시 리스트</span>
+                </Link>
+                <Link to="/child-report">
+                  <span>소비 리포트 보기</span>
+                </Link>
+              </MenuSection>
+              )
+            )
+
+
+        )}
+        
         <RightSection>
           {!logingedCon.isLoggedIn && (
             <>
