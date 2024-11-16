@@ -153,12 +153,13 @@ export default PaymentReport;
 
 const Outer = styled.div`
   width: 100%;
+  margin: 0 auto;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 20px;
+  /* padding: 20px; */
 `;
 
 const MainSection =styled.div`
@@ -191,7 +192,7 @@ const Payment = styled.div`
 `;
 
 const MonthPayment = styled.div`
-  width: 80%;
+  width: 70%;
   text-align: center;
   margin : 30px 0px;
 `;

@@ -51,7 +51,7 @@ const Outer = styled.div`
 `;
 const Title = styled.h1`
     text-align: left;
-    color: #5b2b7d;
+    color: #8529fd;
     font-size: 40px;
 `;
 
@@ -59,7 +59,7 @@ const Container = styled.div`
     max-width: 100%;
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 `;
 
 const Table = styled.table`
@@ -78,11 +78,11 @@ const TableRow = styled.tr`
  `;
 
 const TableHeader = styled.th`
-    background-color: #7f56e7;
+    /* background-color: #7f56e7; */
+    background-color: #8529fd;
     color: white;
     padding: 12px;
     font-size: 20px;
-    text-transform: uppercase;
  `;
 
 const TableData = styled.td`

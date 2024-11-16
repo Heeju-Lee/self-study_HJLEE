@@ -80,9 +80,10 @@ const Agreement = () => {
 export default Agreement;
 
 const Outer = styled.div`
-  border : solid 2px;
-  border-radius: 15px;
-  background-color: lightgray;
+    max-width: 100%;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 
 `;
 
@@ -91,9 +92,12 @@ const Container = styled.div`
   max-width: 600px;
   margin: 50px auto;
   background-color: #f6f2fd;
+  /* background-image: url("images/contract.jpg"); */
+
   padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-size: contain; 
+  background-repeat: no-repeat; 
+  background-position: center; 
   text-align: center;
 `;
 
