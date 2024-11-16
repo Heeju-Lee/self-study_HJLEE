@@ -324,10 +324,10 @@ public class ChildService {
 
 		LinkedHashMap<String, Integer> response = new LinkedHashMap<>();
 		Optional<Child> child = findChild(childNum);
-
+		Plan defalutPlan = new Plan(0L, 0, 0, 0, 0, 0, 0);
 		Plan monthPlan = child.get().getPlans().stream()
 				.filter(plan -> plan.getModifiedAt().getMonthValue() == month && plan.getModifiedAt().getYear() == year)
-				.findFirst().orElseThrow();
+				.findFirst().orElse(defalutPlan);
 
 		response.put("shopping", monthPlan.getShopping());
 		response.put("food", monthPlan.getFood());

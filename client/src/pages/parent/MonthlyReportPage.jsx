@@ -39,7 +39,7 @@ const MonthlyReportPage = () => {
 
       {/* SendMessage */}
     </ContainAll>
-      <SendMessage />
+      <SendMessage childNum={selectOption.childNum} />
     </>
   );
 };

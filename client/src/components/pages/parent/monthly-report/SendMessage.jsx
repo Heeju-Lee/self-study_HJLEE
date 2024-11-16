@@ -4,11 +4,13 @@ import { Form, FormControl } from 'react-bootstrap';
 import { Button } from "../../../commons/Button";
 import styled from 'styled-components';
 
-const SendMessage = () => {
+const SendMessage = ({childNum}) => {
 
+    const token = localStorage.getItem("Authorization");
+    
     const [notificationData,setNotificationData] = useState({
-        parentNum: 1, // 부모 ID : localStorage.getItem("parentNum")
-        childNum: 1, // props로 받아와야 함.
+        parentNum: localStorage.getItem("memberNo"),
+        childNum: childNum,
         message: "",
         category: "feedback",
         senderType: "parent",
@@ -31,7 +33,7 @@ const SendMessage = () => {
                 url: "http://localhost:9999/sendToChild",
                 data: notificationData,
                 headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuPhOuLiOunmCIsImlkIjoia29zdGEiLCJyb2xlIjoiUk9MRV9QQVJFTlQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNTUwNTI2LCJleHAiOjE3MzE2MzY5MjZ9.eitJCVsHSV6afm7R-JpxKafiIc8aIk6cESXcLjxRXng`
+                    Authorization: `${token}`
                 },
             })
             .then((res) => {

@@ -25,7 +25,7 @@ export const RegisterPage = () => {
   }, []);
 
   return (
-    <>
+    <Outer>
       {userTypeOption && (
         <SelectUserType>
           <Title>가입회원의 대상을 선택해주세요</Title>
@@ -60,11 +60,20 @@ export const RegisterPage = () => {
       {/* <FormSection>
         <ChildRegisterForm />
       </FormSection> */}
-    </>
+    </Outer>
   );
 };
 
-const SelectUserType = styled.div``;
+const Outer = styled.div`
+  display: flex;
+  align-items: center;
+  height: calc(100vh - 300px);
+
+  /* border: 1px solid red; */
+`;
+const SelectUserType = styled.div`
+  margin: 0 auto;
+`;
 const Title = styled.div`
   font-size: 32px;
   text-align: center;
@@ -104,5 +113,6 @@ const SubTitle = styled.div`
 `;
 
 const FormSection = styled.div`
+  margin: 0 auto;
   /* border: 1px solid red; */
 `;

@@ -48,6 +48,7 @@ const LoginForm = () => {
         localStorage.setItem("memberNo", res.data.memberNo);
         localStorage.setItem("id", res.data.id);
         localStorage.setItem("name", res.data.name);
+        localStorage.setItem("role", res.data.role);
         localStorage.setItem("Authorization", res.headers.authorization);
 
         logingedCon.onLoggedChange(true);
@@ -235,7 +236,7 @@ const Form = styled.form`
     padding: 0.5rem 0.7rem;
     font-size: 1.2rem;
     color: #555;
-    font-family: 'poppins', sans-serif;
+    /* font-family: 'poppins', sans-serif; */
   }
 
   .input-div.pass{
