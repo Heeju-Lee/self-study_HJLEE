@@ -4,6 +4,11 @@ import Header from "./components/layouts/Header";
 import Navirouter from "./Navirouter";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import Layout from "./components/layouts/Layout";
+import PlanProvider from "./pages/context/MoneyPlanContext";
+// import PlanReport from "./components/pages/parent/PlanReport";
+// import MonthlyReportPage from "./pages/parent/MonthlyReportPage";
+
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 
@@ -75,16 +80,18 @@ createContex 를 이용하여 서로 공유할수 있도록 한다.
     <LogingedContext.Provider
       value={{ isLoggedIn: isLoggedIn, onLoggedChange: handleLoggedChange }}
     >
-      <AuthContext.Provider value={userInfo}>
-        <div>
-          {/* 전역 스타일 */}
-          <GlobalStyle scrollEnabled={scrollEnabled} />
-          {/* 헤더 (공통) */}
-          <Header />
-          {/* 각 페이지 */}
-          <Navirouter />
-        </div>
-      </AuthContext.Provider>
+      <PlanProvider>
+        <AuthContext.Provider value={userInfo}>
+          <div>
+            {/* 전역 스타일 */}
+            <GlobalStyle scrollEnabled={scrollEnabled} />
+            {/* 헤더 (공통) */}
+            <Header />
+            {/* 각 페이지 */}
+            <Navirouter />
+          </div>
+        </AuthContext.Provider>
+      </PlanProvider>
     </LogingedContext.Provider>
   );
 }

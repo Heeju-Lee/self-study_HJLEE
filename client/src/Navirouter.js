@@ -4,13 +4,15 @@ import { Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/common/LandingPage";
 import ChildReportPage from "./pages/child/ChildReportPage";
 import EduPage from "./pages/child/EduPage";
-// import MoneyPlanPage from "./pages/child/MoneyPlanPage";
+ import MoneyPlanPage from "./pages/child/MoneyPlanPage";
 import MyWishListPage from "./pages/child/MyWishListPage";
 import AgreementPage from "./pages/parent/AgreementPage";
 import MonthlyReportPage from "./pages/parent/MonthlyReportPage";
 import WishListPage from "./pages/parent/WishListPage";
 import LoginPage from "./pages/common/LoginPage";
 import { RegisterPage } from "./pages/common/RegisterPage";
+// import Landing from "./pages/test/landing/Landing";
+
 import Layout from "./components/layouts/Layout";
 // import ParentTest from "./pages/test/parent/ParentTest";
 
@@ -56,7 +58,7 @@ const Navirouter = () => {
         />
         <Route
           path="/money-plan"
-          element={<Layout>{/* <MoneyPlanPage /> */}</Layout>}
+          element={<Layout>{<MoneyPlanPage /> }</Layout>}
         />
         <Route
           path="/mywish-list"
@@ -93,6 +95,17 @@ const Navirouter = () => {
           }
         />
         {/* <Route path="/register-parent" element={<RegisterPage />} /> */}
+
+
+        <Route
+          path="/test"
+          element={
+            <Layout scrollEnabled={false}>
+              {/* <Landing /> */}
+            </Layout>
+          }
+        />
+
         {/* <Route path="/save-form" element={<SaveForm />} />
         {/* <Route path="/save-form" element={<SaveForm />} />
         <Route path="/update-form" element={<UpdateForm />} />
@@ -100,6 +113,7 @@ const Navirouter = () => {
         {/* <Route path="/test-child" element={<SendTest />} />
         <Route path="/test-parent" element={<ParentTest />} /> */}
 
+         <Route path="/MoneyPlanPage" element={<MoneyPlanPage />} />
         {/* test */}
         {/* <Route path="/test-parent" element={<ParentTest />} /> */}
       </Routes>

@@ -96,7 +96,8 @@ public class ChildController<WishService> {
 
 /* Plan : 소비 계획 세우기 --------------------------------------------------------------*/
 	@PostMapping("/plans")
-	public ResponseEntity<PlanResponseDto> createPlan( @RequestBody PlanRequestDto planRequestDto){
+	public ResponseEntity<PlanResponseDto> createPlan( @RequestBody PlanRequestDto planRequestDto,@RequestParam  String year,
+			@RequestParam  String month) throws NumberFormatException, Exception{
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
@@ -109,13 +110,16 @@ public class ChildController<WishService> {
 //		
 		
 //		log.info("customMemberDetails =  {} ,{} ,{}, {} ", m.getId(), m.getName(), m.getRole(), m.getMemberNo());
-		
+		PlanResponseDto response = null;
 		
 		//System.out.println(planRequestDto);
-		
-		PlanResponseDto response = childService.createPlan( m.getMemberNum(), planRequestDto);
-
-		
+		PlanResponseDto curPlan = childService.showPlan(m.getMemberNum(), 	Integer.parseInt(year), Integer.parseInt(month));
+		System.out.println(curPlan);
+		if (curPlan == null) {
+			response = childService.createPlan( m.getMemberNum(), planRequestDto);
+		}else {
+		 response = childService.updatePlan(m.getMemberNum(), 	Integer.parseInt(year), Integer.parseInt(month), planRequestDto);
+		}
 		return ResponseEntity.status(HttpStatus.CREATED)
 							 .body(response);
 	}
@@ -138,14 +142,14 @@ public class ChildController<WishService> {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
-	@PutMapping("/plans/{planNum}")
-	public ResponseEntity<PlanResponseDto>updatePlan (@PathVariable String planNum,
-										@RequestBody PlanRequestDto planRequestDto) throws Exception{
-
-		PlanResponseDto plan = childService.updatePlan(Long.parseLong(planNum), planRequestDto);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(plan);	
-	}
+//	@PutMapping("/plans/{planNum}")
+//	public ResponseEntity<PlanResponseDto>updatePlan (@PathVariable String planNum,
+//										@RequestBody PlanRequestDto planRequestDto) throws Exception{
+//
+//		PlanResponseDto plan = childService.updatePlan(Long.parseLong(planNum), planRequestDto);
+//		
+//		return ResponseEntity.status(HttpStatus.OK).body(plan);	
+//	}
 
 	
 /* MGMT  --------------------------------------------------------------*/
