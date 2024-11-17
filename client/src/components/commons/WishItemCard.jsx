@@ -15,6 +15,7 @@ export const WishItemCard = ({
   cardPadding, // Card padding (필수 x)
   progressBarHeight, // ProgressBar height (필수 x)
   childNum, // childNum (필수 x, 현재 부모 위시리스트 목록용)
+  onClick, //Mywhish의 detail을 보기
 }) => {
   // 더미데이터 (test) 사용시 props 주석 후 사용
   // const imgSrc =
@@ -25,7 +26,7 @@ export const WishItemCard = ({
   const userImage = "/images/donny1Profile.png";
 
   return (
-    <Card>
+    <Card onClick={onClick}>
       <ItemImg>
         <img src={imgSrc} alt={itemName} />
       </ItemImg>
