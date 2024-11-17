@@ -6,9 +6,12 @@ import {
   updateRead,
 } from "../../../services/NotificationService";
 import { useSSE } from "../../../services/sseEmitter";
+import { useNavigate } from "react-router-dom";
 
 // 아이용 알림아이콘, 알림목록
 export const ChildNotificationIcon = () => {
+  const navigate = useNavigate();
+
   const { memberNo, role, name, authorization } = useContext(AuthContext);
 
   const listRef = useRef(null);
@@ -23,9 +26,15 @@ export const ChildNotificationIcon = () => {
     setHasUnread(data.some((noti) => !noti.isRead)); // 미읽은 알림이 있는지 확인
   };
   // 알림 읽음 처리
-  const handleRead = async (notiNum) => {
+  const handleRead = async (notiNum, category) => {
     await updateRead(notiNum, authorization);
     getNotifications(); //읽음 처리후 알림목록 갱신
+    setListOpen(false);
+
+    // 해당 페이지 이동
+    if (category === "money" || category === "parentMsg") {
+      navigate("/child-report");
+    }
   };
   // 알림 아이콘 클릭시 처리
   const handleClickIcon = () => {
@@ -34,7 +43,7 @@ export const ChildNotificationIcon = () => {
   };
   // SSE 연결
   const { eventSource, connectionError } = useSSE(
-    `http://localhost:9999/notification/subscribe/${memberNo}`,
+    `${process.env.REACT_APP_BASE_URL}/notification/subscribe/${memberNo}`,
     (notification) => {
       try {
         if (notification.notiNum !== -1) {
@@ -91,10 +100,12 @@ export const ChildNotificationIcon = () => {
               <NotificationItem
                 key={noti.notiNum}
                 className={noti.isRead ? "read" : "unread"}
-                onClick={() => handleRead(noti.notiNum)}
+                onClick={() => handleRead(noti.notiNum, noti.category)} //읽음처리
               >
-                {noti.message}
-                {/* {noti.isRead ? "(읽음)" : "(미읽음)"} */}
+                {/* {noti.message} */}
+                {noti.category === "money" && "용돈을 받았습니다."}
+                {noti.category === "parentMsg" &&
+                  "부모님의 피드백이 도착했습니다."}
               </NotificationItem>
             ))
           ) : (

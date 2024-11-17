@@ -49,7 +49,7 @@ const Header = () => {
     <HeaderSection>
       <Container>
         {/* 로고 */}
-        <Link to="/">
+        <a href="/">
           <LeftSection>
             <LogoOuter>
               <img
@@ -61,7 +61,7 @@ const Header = () => {
             </LogoOuter>
             <p>도니머니</p>
           </LeftSection>
-        </Link>
+        </a>
 
         {/* 메뉴 */}
         {logingedCon.isLoggedIn &&
