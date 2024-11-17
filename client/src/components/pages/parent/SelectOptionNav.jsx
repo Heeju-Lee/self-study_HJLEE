@@ -2,8 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import axios from "axios";
 
-// TODO 날짜선택 : 월간리포트, 용돈계약서에서 하기, 위시리스트 보기에서는 제외
-const SelectOptionNav = ({ onHandleData }) => {
+/**
+ * SelectOptionNav 컴포넌트
+ * - 데이터 처리와 날짜 선택옵션 사용여부 제어
+ * - 날짜 선택옵션은 필요한 페이지에서만 사용 (현재 부모용 월간리포트와 용돈계약서에 적용, 위시리스트는 제외)
+ *
+ * @param {Function} onHandleData - 데이터 처리할 콜백 함수
+ * @returns {boolean} hasDateSelectOption - 날짜선택옵션 사용여부 (기본값: true)
+ */
+const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
   const token = localStorage.getItem("Authorization");
 
   const today = new Date();
@@ -94,30 +101,32 @@ const SelectOptionNav = ({ onHandleData }) => {
         ))}
       </SelectChildSection>
       {/* 날짜 선택 */}
-      <SelectDateSection>
-        <SelectWrapper ref={dropdownRef}>
-          <SelectBox onClick={() => setIsOpen(!isOpen)}>
-            <>{`${selectedYear}년 ${selectedMonth}월`}</>
-            <img
-              src="/icons/down.png"
-              width={"15px"}
-              height={"15px"}
-              // style={{ marginLeft: "10px" }}
-            />
-          </SelectBox>
-          {isOpen && (
-            <Options>
-              {Array.from({ length: 12 }, (_, index) => index + 1).map(
-                (month) => (
-                  <Option key={month} onClick={() => handleDateSelect(month)}>
-                    {`${selectedYear}년 ${month}월`}
-                  </Option>
-                )
-              )}
-            </Options>
-          )}
-        </SelectWrapper>
-      </SelectDateSection>
+      {hasDateSelectOption && (
+        <SelectDateSection>
+          <SelectWrapper ref={dropdownRef}>
+            <SelectBox onClick={() => setIsOpen(!isOpen)}>
+              <>{`${selectedYear}년 ${selectedMonth}월`}</>
+              <img
+                src="/icons/down.png"
+                width={"15px"}
+                height={"15px"}
+                // style={{ marginLeft: "10px" }}
+              />
+            </SelectBox>
+            {isOpen && (
+              <Options>
+                {Array.from({ length: 12 }, (_, index) => index + 1).map(
+                  (month) => (
+                    <Option key={month} onClick={() => handleDateSelect(month)}>
+                      {`${selectedYear}년 ${month}월`}
+                    </Option>
+                  )
+                )}
+              </Options>
+            )}
+          </SelectWrapper>
+        </SelectDateSection>
+      )}
     </Outer>
   );
 };
