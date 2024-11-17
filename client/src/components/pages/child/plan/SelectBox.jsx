@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext, useMemo } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { PlanContext } from "../../../../pages/context/MoneyPlanContext";
+import { AuthContext } from "../../../../App";
+
 const SelectBoxContainer = styled.div`
   position: relative;
   width: 200px;
@@ -45,6 +47,7 @@ const SelectBox = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // 전송 중 로딩 상태
   const [errorMessage, setErrorMessage] = useState(null); // 에러 메시지 상태
+  const { memberNo, role, name, authorization } = useContext(AuthContext);
   const { setPlan, setSelectedYear, setSelectedMonth } =
     useContext(PlanContext); // PlanContext 업데이트 함수
 
@@ -93,9 +96,7 @@ const SelectBox = () => {
     fetchPlanData(year, month);
   };
   //로컬스토리지에서 토큰 가져와야함
-  const token =
-    "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuwleuPhOuLiCIsImlkIjoiYWJjIiwicm9sZSI6IlJPTEVfQ0hJTEQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNzY0MzUyLCJleHAiOjE3MzE4NTA3NTJ9.UafLEsxw-_j7TC5SN4WobZGmykAG9MW-cB27NevJm_I";
-
+  const token = authorization;
   const fetchPlanData = (year, month) => {
     setIsLoading(true);
     setErrorMessage(null);
@@ -104,7 +105,7 @@ const SelectBox = () => {
       method: "GET",
       url: `http://localhost:9999/children/show/plans?year=${year}&month=${month}`,
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
         "Content-Type": "application/json",
       },
     })

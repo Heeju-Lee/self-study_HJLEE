@@ -1,12 +1,13 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import PlanForm from "../../components/pages/child/plan/PlanForm";
 import styled from "styled-components";
 import SaveForm from "../../components/pages/child/plan/SaveForm";
 import SelectBox from "../../components/pages/child/plan/SelectBox";
-import PlanProvider from "../context/MoneyPlanContext";
 import { Modal } from "../../components/commons/Modal";
 import { PlanContext } from "../context/MoneyPlanContext";
 import axios from "axios";
+import { AuthContext } from "../../App";
+
 const TitleWapper = styled.div`
   display: flex;
   margin-top: 30px;
@@ -82,9 +83,9 @@ const MoneyPlanPage = () => {
   const [isModalOpen, setModalOpen] = useState(false); // 모달 열림/닫힘 상태
   const { plan, selectedYear, selectedMonth, overlayStatus, setOverlayStatus } =
     useContext(PlanContext); // Context에서 overlayStatus 가져오기
-
+  const { memberNo, role, name, authorization } = useContext(AuthContext);
   const [dataValues, setDataValues] = useState([]); // 데이터값 배열
-
+  console.log("auth 확인하기", authorization);
   const today = new Date();
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth() + 1;
@@ -136,8 +137,8 @@ const MoneyPlanPage = () => {
   console.log("MoneyPlanPage dataValues : ", dataValues);
 
   //나중에 로컬스토리지에서 데이터 받아오는거롤 수정해야함
-  const token =
-    "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuwleuPhOuLiCIsImlkIjoiYWJjIiwicm9sZSI6IlJPTEVfQ0hJTEQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNzY0MzUyLCJleHAiOjE3MzE4NTA3NTJ9.UafLEsxw-_j7TC5SN4WobZGmykAG9MW-cB27NevJm_I"; // 로�� 스토리지에서 ����� 가져오기
+  const token = authorization;
+
   const [isLoading, setIsLoading] = useState(false); // 전송 중 로딩 상태
   const [errorMessage, setErrorMessage] = useState(null); // 에러 메시지 상태
   const submitJoin = (e) => {
@@ -150,7 +151,7 @@ const MoneyPlanPage = () => {
       url: `http://localhost:9999/children/plans?year=${currentYear}&month=${currentMonth}`,
       data: dataToSend,
       headers: {
-        Authorization: `Bearer ${token}`, // Authorization 헤더에 토큰 추가
+        Authorization: token, // Authorization 헤더에 토큰 추가
         "Content-Type": "application/json", // 데이터가 JSON 형식임을 명시
       },
     })
@@ -168,7 +169,7 @@ const MoneyPlanPage = () => {
         setErrorMessage("전송 중 오류가 발생했습니다. 다시 시도해주세요.");
         setOverlayStatus(false); //수정 불가 창업데이트
       });
-    console.log("MoneyPlanPage dataToSend : ", dataToSend); // 전��할 데이터 확인
+    console.log("MoneyPlanPage dataToSend : ", dataToSend); // 전송할 데이터 확인
   };
 
   const getplan = (e) => {
@@ -180,7 +181,7 @@ const MoneyPlanPage = () => {
       url: `http://localhost:9999/children/show/plans?year=${currentYear}&month=${currentMonth}`,
       data: dataToSend,
       headers: {
-        Authorization: `Bearer ${token}`, // Authorization 헤더에 토큰 추가
+        Authorization: token, // Authorization 헤더에 토큰 추가
         "Content-Type": "application/json", // 데이터가 JSON 형식임을 명시
       },
     })

@@ -58,7 +58,7 @@ const Navirouter = () => {
         />
         <Route
           path="/money-plan"
-          element={<Layout>{/* <MoneyPlanPage /> */}</Layout>}
+          element={<Layout>{<MoneyPlanPage /> }</Layout>}
         />
         <Route
           path="/mywish-list"
