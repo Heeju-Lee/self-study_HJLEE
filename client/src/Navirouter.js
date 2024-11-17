@@ -14,7 +14,7 @@ import { RegisterPage } from "./pages/common/RegisterPage";
 // import Landing from "./pages/test/landing/Landing";
 
 import Layout from "./components/layouts/Layout";
-import ParentTest from "./pages/test/parent/ParentTest";
+// import ParentTest from "./pages/test/parent/ParentTest";
 
 const Navirouter = () => {
   return (
@@ -115,7 +115,7 @@ const Navirouter = () => {
 
          <Route path="/MoneyPlanPage" element={<MoneyPlanPage />} />
         {/* test */}
-        <Route path="/test-parent" element={<ParentTest />} />
+        {/* <Route path="/test-parent" element={<ParentTest />} /> */}
       </Routes>
     </div>
   );
