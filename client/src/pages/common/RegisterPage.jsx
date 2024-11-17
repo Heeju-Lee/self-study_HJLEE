@@ -75,15 +75,17 @@ const SelectUserType = styled.div`
   margin: 0 auto;
 `;
 const Title = styled.div`
-  font-size: 32px;
+  /* font-size: 32px; */
+  font-size: 48px;
   text-align: center;
-  margin-bottom: 70px;
+  /* margin-bottom: 70px; */
+  margin-bottom: 80px;
 `;
 
 const Section = styled.div`
   display: flex;
   justify-content: center;
-  gap: 120px;
+  gap: 140px;
 `;
 const Container = styled.div``;
 

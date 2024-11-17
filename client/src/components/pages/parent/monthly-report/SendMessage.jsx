@@ -30,7 +30,7 @@ const SendMessage = ({childNum}) => {
         if (notificationData.message !== "") {
             axios({
                 method: "POST",
-                url: "http://localhost:9999/sendToChild",
+                url: "http://localhost:9999/notification/sendToChild",
                 data: notificationData,
                 headers: {
                     Authorization: `${token}`

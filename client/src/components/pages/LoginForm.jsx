@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LogingedContext } from "../../App";
 import styled from "styled-components";
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const LoginForm = () => {
   let logingedCon = useContext(LogingedContext);
@@ -43,7 +43,7 @@ const LoginForm = () => {
       data: JSON.stringify(member),
     })
       .then((res) => {
-        console.log("res = " , res.data)
+        console.log("res = ", res.data);
 
         localStorage.setItem("memberNo", res.data.memberNo);
         localStorage.setItem("id", res.data.id);
@@ -64,7 +64,6 @@ const LoginForm = () => {
   return (
     <LoginFormContainer>
       <ImgContainer>
-      
         <span>도니머니와 함께 올바른 경제 습관을 길러봐요!</span>
         <img src="images/donnyFamily.png" alt="Donny Family" />
       </ImgContainer>
@@ -122,9 +121,9 @@ const LoginFormContainer = styled.div`
   height: 800px;
   align-items: center;
   justify-content: center;
-  border-radius: 20px; 
+  border-radius: 20px;
   overflow: hidden; /* 둥근 모서리에 내용이 잘리지 않도록 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const ImgContainer = styled.div`
@@ -133,17 +132,17 @@ const ImgContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 50%;
-  height : 100%;
-  background-color: #C8BEF3;
-  position: relative; 
+  height: 100%;
+  background-color: #c8bef3;
+  position: relative;
 
   img {
     width: 400px;
     height: 400px;
-    margin : 40px;
-    z-index :2;
+    margin: 40px;
+    z-index: 2;
   }
-  span{
+  span {
     text-align: center;
     font-size: 25px;
     color: black;
@@ -151,15 +150,15 @@ const ImgContainer = styled.div`
   }
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 60%;
     left: 50%;
-    width: 500px;  
-    height: 400px;  
+    width: 500px;
+    height: 400px;
     background-color: white;
     border-radius: 50%;
-    transform: translate(-50%, -50%);  /* Center the circle */
+    transform: translate(-50%, -50%); /* Center the circle */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow effect */
     z-index: 1;
   }
@@ -167,7 +166,7 @@ const ImgContainer = styled.div`
 
 const LoginContent = styled.div`
   display: flex;
-  width : 50%;
+  width: 50%;
   height: 100%;
   flex-grow: 1;
 
@@ -175,9 +174,9 @@ const LoginContent = styled.div`
   align-items: center;
   text-align: center;
   background-color: white;
-`
+`;
 
-const Form = styled.form`  
+const Form = styled.form`
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -192,39 +191,40 @@ const Form = styled.form`
     font-size: 2.9rem;
   }
 
-  .input-div:before, 
-  .input-div:after{
-    content: '';
+  .input-div:before,
+  .input-div:after {
+    content: "";
     position: absolute;
     bottom: -2px;
     width: 0%;
     height: 2px;
     background-color: #38d39f;
-    transition: .4s;
+    transition: 0.4s;
   }
 
-  .input-div:before{
+  .input-div:before {
     right: 50%;
   }
 
-  .input-div:after{
+  .input-div:after {
     left: 50%;
   }
 
-  .input-div.focus:before, .input-div.focus:after{
+  .input-div.focus:before,
+  .input-div.focus:after {
     width: 50%;
   }
 
-  .input-div.focus > div > h5{
+  .input-div.focus > div > h5 {
     top: -10px;
     font-size: 15px;
   }
 
-  .input-div.focus > .i > i{
+  .input-div.focus > .i > i {
     color: #38d39f;
   }
 
-  .input-div > div > input{
+  .input-div > div > input {
     position: absolute;
     left: 0;
     top: 0;
@@ -239,7 +239,7 @@ const Form = styled.form`
     /* font-family: 'poppins', sans-serif; */
   }
 
-  .input-div.pass{
+  .input-div.pass {
     margin-bottom: 4px;
   }
 
@@ -259,7 +259,7 @@ const Form = styled.form`
       align-items: center;
 
       i {
-        transition: 0.3s; 
+        transition: 0.3s;
       }
     }
 
@@ -278,17 +278,16 @@ const Form = styled.form`
       }
 
       input {
-        width:  300px;
+        width: 300px;
         height: 100%;
         left: 10px;
         border: none;
         outline: none;
         background: none;
-        padding : 2px;
+        padding: 2px;
         font-size: 1.2rem;
         color: #555;
       }
-      
     }
   }
 

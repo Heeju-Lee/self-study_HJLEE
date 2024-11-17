@@ -265,7 +265,7 @@ const PlanReport = ({childNum, year,month,childName}) => {
                         </ChartGrid> 
                 </>  
                 }
-                {isPaymentEmpty && isPlanEmpty && <div>📢 계획과 소비내역이 없습니다. </div>}        
+                        {isPaymentEmpty && isPlanEmpty && <div>📢 계획과 소비내역이 없습니다. </div>}        
                 </ContainChart>
             </ContainContent>
             <ContainContent>
@@ -295,6 +295,22 @@ const PlanReport = ({childNum, year,month,childName}) => {
     );
 };
 
+// 텍스트 CSS
+const Title = styled.div`
+    font-size: 30px;
+    margin: 0 auto;
+`
+const PlanColor = styled.span`
+    color: rgb(0, 122, 255);
+`
+
+const PayedColor = styled.span`
+    color: rgb(255, 99, 132);
+`
+
+const AchivementColor = styled.span`
+    color: hsl(180, 72.18543046357615%, 29.607843137254903%);
+`
 // 전체 flex 하기위한 div
 const ContainAll = styled.div`
     display: flex;
@@ -325,22 +341,6 @@ const ContainChart = styled.div`
    // box-shadow: 0 0 10px rgb(239, 0, 0);
     margin: 0px 20px;
     box-sizing: border-box;
-`
-
-const Title = styled.div`
-    font-size: 30px;
-    margin: 0 auto;
-`
-const PlanColor = styled.span`
-    color: rgb(0, 122, 255);
-`
-
-const PayedColor = styled.span`
-    color: rgb(255, 99, 132);
-`
-
-const AchivementColor = styled.span`
-    color: hsl(180, 72.18543046357615%, 29.607843137254903%);
 `
 
 // 2x3 배열을 위한 Grid 스타일

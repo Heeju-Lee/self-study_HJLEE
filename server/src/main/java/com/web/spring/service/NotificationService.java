@@ -46,21 +46,33 @@ public class NotificationService {
 	
 	// Service에 SSE Emitter를 생성하고 타임아웃을 설정 해 준다.
 	private SseEmitter createEmitter(Long id) {
+		System.out.println("createEmitter id: " + id);
 		// 기존 Emiiter가 존재하면 삭제(중복방지)
-//		System.out.println("createEmitter id: " + id);
-		
 		if(emitters.containsKey(id)) {
-			emitters.remove(id);
+			emitters.remove(id); 
 		}
 		
 		// 새 Emitter 생성
 		SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
 		emitters.put(id, emitter);
 		
-		// 타임아웃 또는 오류발생시 제거
-		emitter.onCompletion(() -> emitters.remove(id));
-		emitter.onTimeout(() -> emitters.remove(id));
-		emitter.onError((e) -> emitters.remove(id));
+	    // Emitter 완료 시
+	    emitter.onCompletion(() -> {
+	        System.out.println("SSE Emitter 완료: " + id);
+	        emitters.remove(id);
+	    });
+
+	    // 타임아웃 처리
+	    emitter.onTimeout(() -> {
+	        System.out.println("SSE Emitter 타임아웃: " + id);
+	        emitters.remove(id);
+	    });
+
+	    // 에러 처리
+	    emitter.onError((e) -> {
+	        System.out.println("SSE Emitter 에러 발생: " + id + ", 에러: " + e.getMessage());
+	        emitters.remove(id);
+	    });
 		
 		return emitter;
 	}
@@ -95,16 +107,14 @@ public class NotificationService {
 	    return notificationResponseDto;
 		
 	}
+	
 	// SSE를 통해 실제 실시간 알림을 전송하는 메서드 (https://velog.io/@black_han26/SSE-Server-Sent-Events)
 	private void sendSseNotification(Long id, NotificationResponseDto notificationResponseDto) {   
-//	    System.out.println("sendSseNotification ID: " + id);
-	    
 	    // Emitter 가져오기
 	    SseEmitter emitter = emitters.get(id);
-//	    System.out.println("emitter 있는지 확인 ======> " + emitter);
+	    System.out.println("emitter 있는지 확인 ======> " + emitter);
 	    
 	    if (emitter == null) {
-//	        System.out.println("Emitter not found for ID : " + id);
 	        return; // Emitter가 없으면 종료
 	    }
 	    
@@ -114,14 +124,12 @@ public class NotificationService {
 	        emitter.send(SseEmitter.event()
 	                .id(String.valueOf(notificationResponseDto.getNotiNum()))
 	                .data(new ObjectMapper().writeValueAsString(notificationResponseDto))
-	                .reconnectTime(500)
+	                .reconnectTime(3000)
 	                );	        
-//	        System.out.println("Notification sent successfully to ID: " + id);
-	        
-	    } catch (IOException e) {
+	    } catch (IOException | IllegalStateException e) {
 //	        System.err.println("Error sending notification: " + e.getMessage());
+	    	emitter.completeWithError(e);
 	        emitters.remove(id); // 오류 발생 시 Emitter 제거
-	        emitter.completeWithError(e);
 	    }
 	}
 
@@ -138,9 +146,12 @@ public class NotificationService {
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+
         // SSE 관련 헤더 설정
-    	response.setContentType("text/event-stream");
+//    	response.setContentType("text/event-stream");
+        response.setContentType("text/event-stream; charset=UTF-8");
     	response.setCharacterEncoding("UTF-8");
+    	
         
 //        System.out.println("Emitter 생성, id : " + id);
         
@@ -153,7 +164,7 @@ public class NotificationService {
         // 클라이언트에게 주기적으로 빈 데이터를 보내 연결을 유지시킨다
         Runnable keepAlive = () -> {
             try {
-                emitter.send(SseEmitter.event().name("keep-alive").data("ping"));
+                emitter.send(SseEmitter.event().name("keep-alive").data("ping").reconnectTime(3000));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -190,7 +201,8 @@ public class NotificationService {
 	        notiRequestDto.getChildNum(),
 	        notiRequestDto.getMessage(),
 	        notiRequestDto.getCategory(),
-	        notiRequestDto.getSenderType()
+	        notiRequestDto.getSenderType(),
+	        notiRequestDto.getIsRead()
 	    );
 
 		sendSseNotification(id, notificationResponseDto);
@@ -207,6 +219,15 @@ public class NotificationService {
     public List<Notification> getNotificationsForParent(Long parentNum) {
         return notificationRepository.getNotificationsForParent(parentNum, "child");
     }
+    
+    // parent_num 반환
+    public Long findParentNoByChildId (Long childNum) {
+    	return notificationRepository.getParentNum(childNum);
+    }
 
+    // 알림 읽음 업데이트
+    public void updateReadStatus(Long notiNum) {
+    	notificationRepository.updateRead(notiNum);
+    }
 	
 }

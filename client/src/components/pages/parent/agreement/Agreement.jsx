@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 
@@ -15,6 +15,7 @@ const Agreement = ({childNum, year, month}) => {
         alert(`계약서가 작성되었습니다!\n아이: ${childName}\n금액: ${amount}원\n약속: ${terms}\n계약일: ${contractDate}`);
     };
 
+    //Test Data
     const [contractData, setContractData] = useState({
         childName: '도니', 
         categories: [
@@ -32,6 +33,18 @@ const Agreement = ({childNum, year, month}) => {
     const handlePayment = () => {
         alert('결제가 완료되었습니다!');
     };
+
+
+    const token = localStorage.getItem("Authenticatoin");
+
+    //소비 리포트 가져오기
+    useEffect ( () =>{
+
+      //axios.get("")
+
+
+    });
+
 
     return (
       <Outer>
