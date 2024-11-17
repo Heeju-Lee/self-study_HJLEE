@@ -32,9 +32,10 @@ const Agreement = () => {
     };
 
     return (
+      <Outer>
         <Container>
-            <ContractTitle>{contractData.childName}의 용돈 계획표</ContractTitle>
-            <ContractSubTitle>아이의 용돈 계획을 확인하세요!</ContractSubTitle>
+            <ContractTitle>용돈 계약서</ContractTitle>
+            <ContractSubTitle>{contractData.childName}의 용돈 계획을 확인하세요!</ContractSubTitle>
             
             <ContractDetails>
                 <DetailRow>
@@ -61,10 +62,10 @@ const Agreement = () => {
                 </TotalAmount>
                 <Sign>
                     <Label>부모 서명: </Label>
-                    <Value>{localStorage.getItem("name")}</Value>
+                    <Stamp>{localStorage.getItem("name")}</Stamp>
                     <br></br>
                     <Label>아이 서명: </Label>
-                    <Value>{contractData.childName}</Value>
+                    <Stamp>{contractData.childName}</Stamp>
                 </Sign>
             </ContractDetails>
 
@@ -72,32 +73,44 @@ const Agreement = () => {
                 <Button onClick={handlePayment}>결제하기</Button>
             </ButtonWrapper>
         </Container>
+      </Outer> 
     );
 };
 
 export default Agreement;
 
+const Outer = styled.div`
+    max-width: 100%;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+
+`;
+
 const Container = styled.div`
   width: 100%;
   max-width: 600px;
-  margin: 0 auto;
+  margin: 50px auto;
   background-color: #f6f2fd;
+  /* background-image: url("images/contract.jpg"); */
+
   padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-size: contain; 
+  background-repeat: no-repeat; 
+  background-position: center; 
   text-align: center;
 `;
 
 const ContractTitle = styled.h1`
   color: #8529fd;
-  font-size: 2.5rem;
+  font-size: 40px;
   margin-bottom: 10px;
 `;
 
 const ContractSubTitle = styled.h3`
   font-family: 'HakgyoansimDunggeunmisoTTF-R';
   color: #7f56e7;
-  font-size: 1.2rem;
+  font-size: 20px;
   margin-bottom: 20px;
 `;
 
@@ -110,7 +123,7 @@ const DetailRow = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
-  font-size: 1.1rem;
+  font-size: 20px;
 `;
 
 const Label = styled.span`
@@ -120,6 +133,17 @@ const Label = styled.span`
 
 const Value = styled.span`
   color: #9b59b6;
+`;
+
+const Stamp = styled.div`
+  text-align: right;
+  color: black;
+  background-image: url('images/stamp.png');
+  background-size: contain; 
+  background-repeat: no-repeat; 
+  background-position: center; 
+  padding: 10px; 
+  display: inline-block;
 `;
 
 const CategoryList = styled.div`
@@ -144,7 +168,7 @@ const Amount = styled.span`
 
 const TotalAmount = styled.div`
   margin-top: 20px;
-  font-size: 1.2rem;
+  font-size: 20px;
   font-weight: 600;
   text-align: right;
   color: #8529fd;
@@ -157,7 +181,7 @@ const TotalText = styled.span`
 
 const TotalPrice = styled.span`
   color: #7f56e7;
-  font-size: 1.3rem;
+  font-size: 20px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -167,13 +191,15 @@ const ButtonWrapper = styled.div`
 const Sign = styled.div`
   margin-top: 20px;
   text-align: right;
+
+  
 `;
 
 const Button = styled.button`
   background-color: #8529fd;
   color: white;
   padding: 12px 25px;
-  font-size: 1.2rem;
+  font-size: 20px;
   border: none;
   border-radius: 30px;
   cursor: pointer;
