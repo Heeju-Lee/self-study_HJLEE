@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const Agreement = () => {
+
+// props를 하나의 객체로 받는다.
+const Agreement = ({childNum, year, month}) => {
 
     const [childName, setChildName] = useState('');
     const [amount, setAmount] = useState('');
