@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import axios from "axios";
-
+import axios from 'axios';
+import { Modal } from '../../../commons/Modal';
 
 // props를 하나의 객체로 받는다.
-const Agreement = ({childNum, year, month, childName, onPaymentSuccess }) => {
+const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
   
   console.log("Agreement 내 childName 출력>> " + childName);
 
@@ -18,10 +18,9 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess }) => {
   const [hasPlan, sethasPlan] = useState(false);   //리포트 존재 여부 확인
 
   //결제 버튼 누른 후 결제 기능
-  const Payment = () => {
-
+  const Payment = () => {  
+    
     setIsModalOpen(true); //모달 창 띄우기 
-
     axios.post("http://localhost:9999/parents/orders",
         {
           childNum: childNum,
@@ -49,8 +48,8 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess }) => {
       .catch( (err) => {
         console.log("결제 중 에러 발생", err);
     });
-
   };
+
 
   const closeModal = () =>{
     setIsModalOpen(false);
@@ -75,7 +74,7 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess }) => {
     ];
 
     return {
-      contractDate: ${data.createdAt[0]}년 ${data.createdAt[1]}월 ${data.createdAt[2]}일,
+      contractDate: `${data.createdAt[0]}년 ${data.createdAt[1]}월 ${data.createdAt[2]}일`,
       categories : category,
       totalAmount : category.reduce( (sum, item) => sum + item.amount, 0),
     };
@@ -194,7 +193,7 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess }) => {
     );
 };
 
-export default Agreement;
+export default Agreement; 
 
 const Outer = styled.div`
     max-width: 100%;

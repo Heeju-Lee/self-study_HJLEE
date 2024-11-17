@@ -40,7 +40,7 @@ const AgreementPage = () => {
                 childName={selectOption.childName}
 
                 //현재 상태값(prev)을 반대로 변경
-                paymentSuccess={() => setPaymentSatusUpdate((prev) => !prev)} // 결제 성공 시 상태 갱신
+                onPaymentSuccess={() => setPaymentSatusUpdate((prev) => !prev)} // 결제 성공 시 상태 갱신
             />
             <Order 
                 childNum = {selectOption.childNum}
