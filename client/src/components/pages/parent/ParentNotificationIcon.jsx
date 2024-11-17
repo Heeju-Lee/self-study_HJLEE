@@ -6,9 +6,12 @@ import {
   updateRead,
 } from "../../../services/NotificationService";
 import { useSSE } from "../../../services/sseEmitter";
+import { useNavigate } from "react-router-dom";
 
 // 부모님용 알림아이콘, 알림목록
 export const ParentNotificationIcon = () => {
+  const navigate = useNavigate();
+
   const { memberNo, role, name, authorization } = useContext(AuthContext);
 
   const listRef = useRef(null);
@@ -22,10 +25,15 @@ export const ParentNotificationIcon = () => {
     setNotifications(data);
     setHasUnread(data.some((noti) => !noti.isRead)); // 미읽은 알림이 있는지 확인
   };
-  // 알림 읽음 처리
-  const handleRead = async (notiNum) => {
+  // 알림 읽음 처리, 알림의 해당 페이지 이동
+  const handleRead = async (notiNum, category) => {
     await updateRead(notiNum, authorization);
     getNotifications(); //읽음 처리후 알림목록 갱신
+    setListOpen(false);
+
+    // 해당 페이지 이동
+    category === "info" && navigate("/agreement"); // test용
+    category === "contract" && navigate("/agreement");
   };
   // 알림 아이콘 클릭시 처리
   const handleClickIcon = () => {
@@ -35,7 +43,7 @@ export const ParentNotificationIcon = () => {
 
   // SSE 연결
   const { eventSource, connectionError } = useSSE(
-    `http://localhost:9999/notification/subscribe/${memberNo}`,
+    `${process.env.REACT_APP_BASE_URL}/notification/subscribe/${memberNo}`,
     (notification) => {
       try {
         if (notification.notiNum !== -1) {
@@ -95,11 +103,15 @@ export const ParentNotificationIcon = () => {
             notifications.map((noti, index) => (
               <NotificationItem
                 key={noti.notiNum}
-                isRead={noti.isRead}
-                onClick={() => handleRead(noti.notiNum)}
+                className={noti.isRead ? "read" : "unread"}
+                onClick={() => handleRead(noti.notiNum, noti.category)}
               >
-                {noti.message}
-                {/* {noti.isRead ? "(읽음)" : "(미읽음)"} */}
+                {/* 카테고리에 따른 알림메시지 설정 */}
+                {/* info는 현재 test용 */}
+                {noti.category === "info" && noti.message}
+                {/* 용돈계약서 */}
+                {noti.category === "contract" &&
+                  "아이의 소비계획서가 도착했습니다."}
               </NotificationItem>
             ))
           ) : (
@@ -152,7 +164,18 @@ const NotificationItem = styled.div`
   cursor: pointer;
   padding: 5px;
 
-  background-color: ${(props) => (props.isRead ? "#ffffff" : "#fff9b1")};
+  /* background-color: ${(props) => (props.$isRead ? "#ffffff" : "#fff9b1")}; */
+  &.unread {
+    background-color: #fff9b1;
+  }
+
+  &.read {
+    background-color: #ffffff;
+  }
+
+  .message {
+    background-color: red;
+  }
 `;
 
 const ErrorMessage = styled.div`

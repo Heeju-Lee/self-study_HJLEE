@@ -4,3 +4,7 @@
 .idea/
 
 application.yml
+
+client/.env.development
+client/.env.production
+client/src/pages/test/*
