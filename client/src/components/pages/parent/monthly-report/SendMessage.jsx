@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import axios from "axios";
-import { Form, FormControl, Button } from 'react-bootstrap';
-import { button } from "../../../commons/Button";
+import { Form, FormControl } from 'react-bootstrap';
+import { Button } from "../../../commons/Button";
+import styled from 'styled-components';
 
-const SendMessage = () => {
+const SendMessage = ({childNum}) => {
 
+    const token = localStorage.getItem("Authorization");
+    
     const [notificationData,setNotificationData] = useState({
-        parentNum: 1, // 부모 ID : localStorage.getItem("parentNum")
-        childNum: 1, // props로 받아와야 함.
+        parentNum: localStorage.getItem("memberNo"),
+        childNum: childNum,
         message: "",
         category: "feedback",
         senderType: "parent",
@@ -27,10 +30,10 @@ const SendMessage = () => {
         if (notificationData.message !== "") {
             axios({
                 method: "POST",
-                url: "http://localhost:9999/sendToChild",
+                url: "http://localhost:9999/notification/sendToChild",
                 data: notificationData,
                 headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IuuPhOuLiOunmCIsImlkIjoia29zdGEiLCJyb2xlIjoiUk9MRV9QQVJFTlQiLCJtZW1iZXJObyI6MSwiaWF0IjoxNzMxNTUwNTI2LCJleHAiOjE3MzE2MzY5MjZ9.eitJCVsHSV6afm7R-JpxKafiIc8aIk6cESXcLjxRXng`
+                    Authorization: `${token}`
                 },
             })
             .then((res) => {
@@ -47,24 +50,52 @@ const SendMessage = () => {
     };
     return (
         <>        
-        <div className='sendMessage'>
-        {/* 부모 메세지 전달 */}
-        <h1>아이에게 한마디</h1>
-        <Form onSubmit={sendMessage}>
-            <FormControl 
-                as="textarea" 
-                rows={3} 
-                id="message" 
-                name="message" 
-                value={notificationData.message} 
-                onChange={changeMessage} 
-                placeholder="이번달에 아이에게 하고싶은 말을 담아주세요" 
-            />
-            <Button type="submit" variant="primary" className="mt-3">아이에게 메세지 전송</Button>
-        </Form>
-        </div>     
+            <ContainAll>
+                <ContainContent>
+                {/* 부모 메세지 전달 */}
+                <Title>✉️아이에게 한마디</Title>
+                <Form onSubmit={sendMessage}>
+                    <FormControl 
+                        as="textarea" 
+                        rows={3} 
+                        id="message" 
+                        name="message" 
+                        value={notificationData.message} 
+                        onChange={changeMessage} 
+                        placeholder="이번달에 아이에게 하고싶은 말을 담아주세요" 
+                    />
+                    <ButtonLocation onClick={sendMessage}>
+                        <Button type="submit" text="아이에게 메세지 전송" width="200px" />
+                    </ButtonLocation>
+                </Form> 
+                </ContainContent>
+            </ContainAll>  
         </>
     );
 };
+
+const ContainAll = styled.div`
+    margin: 0 auto;
+    width:100%;
+`
+const ContainContent = styled.div`
+    background-color: rgb(245, 245, 245);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0px 20px;
+`
+
+const Title = styled.div`
+    font-size: 30px;
+    margin: 0 auto;
+    margin: 20px 0px;
+`
+const ButtonLocation = styled.div`
+    margin: 0 auto;
+    width: fit-content;
+    height: fit-content;
+`
+
 
 export default SendMessage;

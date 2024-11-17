@@ -125,4 +125,5 @@ const CardTitle = styled.div`
 `;
 const CardDesc = styled.div`
   font-size: 18px;
+  font-family: 'HakgyoansimDunggeunmisoTTF-R';
 `;

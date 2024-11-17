@@ -3,6 +3,8 @@ import PlanReport from "../../components/pages/parent/monthly-report/PlanReport"
 import SendMessage from "../../components/pages/parent/monthly-report/SendMessage";
 import SelectOptionNav from "../../components/pages/parent/SelectOptionNav";
 import { GlobalStyles } from "../../styles/GlobalStyle";
+import styled from "styled-components";
+import AccessDeniedPage from "../common/AccessDeniedPage";
 
 const MonthlyReportPage = () => {
   const [selectOption, setSelectOption] = useState({
@@ -20,21 +22,34 @@ const MonthlyReportPage = () => {
     }));
   };
 
+  const role = localStorage.getItem("role");
+
   return (
-    <div>
-      <SelectOptionNav onHandleData={handleChildData} />
-      {/* 선택한 옵션값 확인 (지워두 됨) */}
-      {/* <p>ChildNum : {selectOption.childNum}</p>
-      <p>year: {selectOption.year}</p>
-      <p>month : {selectOption.month}</p> */}
-
-      {/* <PlanReport /> */}
-      <PlanReport />
-
-      {/* SendMessage */}
-      <SendMessage />
-    </div>
+    <>
+    {role === "ROLE_CHILD" && (<AccessDeniedPage />)}
+    {role === "ROLE_PARENT" && (
+      <>
+        <ContainAll>
+          <SelectOptionNav onHandleData={handleChildData} />
+          <PlanReport 
+            childNum={selectOption.childNum} 
+            year={selectOption.year} 
+            month={selectOption.month}
+          />
+        </ContainAll>
+        <SendMessage childNum={selectOption.childNum} />
+      </>
+    )}
+    </>
   );
 };
+
+const ContainAll = styled.div`
+  /* display: flex;
+  flex-direction: column;
+  margin-top: 50px; */
+
+  margin-bottom: 150px;
+`
 
 export default MonthlyReportPage;

@@ -66,7 +66,7 @@ const RegisterPage = () => {
     })
       .then((res) => {
         console.log(res);
-        navigator("/");
+        // navigator("/");
       })
       .catch((err) => {
         console.log(err);
@@ -157,6 +157,7 @@ const RegisterPage = () => {
                 id="phone"
                 name="phone"
                 onChange={changeValue}
+                placeholder="010-0000-0000"
               />
             </InputRow>
 
@@ -167,6 +168,7 @@ const RegisterPage = () => {
                 id="email"
                 name="email"
                 onChange={changeValue}
+                placeholder="donny@donnymoney.com"
               />
             </InputRow>
             <Button

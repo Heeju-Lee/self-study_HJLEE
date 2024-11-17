@@ -1,26 +1,20 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-// import SaveForm from "./components/pages/child/plan/SaveForm";
-// import UpdateForm from "./components/pages/child/plan/UpdateForm";
-// import PlanPage from "./pages/child/PlanPage";
-// import SendTest from "./pages/test/child/SendTest";
-// import ParentTest from "./pages/test/parent/ParentTest";
 
 import LandingPage from "./pages/common/LandingPage";
 import ChildReportPage from "./pages/child/ChildReportPage";
 import EduPage from "./pages/child/EduPage";
-import MoneyPlanPage from "./pages/child/MoneyPlanPage";
+ import MoneyPlanPage from "./pages/child/MoneyPlanPage";
 import MyWishListPage from "./pages/child/MyWishListPage";
 import AgreementPage from "./pages/parent/AgreementPage";
 import MonthlyReportPage from "./pages/parent/MonthlyReportPage";
 import WishListPage from "./pages/parent/WishListPage";
 import LoginPage from "./pages/common/LoginPage";
-// import { SelectUserType } from "./pages/common/SelectUserType";
-// import LoginForm from "./components/pages/LoginForm";
 import { RegisterPage } from "./pages/common/RegisterPage";
 // import Landing from "./pages/test/landing/Landing";
 
 import Layout from "./components/layouts/Layout";
+import ParentTest from "./pages/test/parent/ParentTest";
 
 const Navirouter = () => {
   return (
@@ -36,14 +30,6 @@ const Navirouter = () => {
             </Layout>
           }
         />
-        {/* <Route
-          path="/select-user"
-          element={
-            <Layout>
-              <SelectUserType />
-            </Layout>
-          }
-        /> */}
         <Route
           path="/register"
           element={
@@ -72,11 +58,7 @@ const Navirouter = () => {
         />
         <Route
           path="/money-plan"
-          element={
-            <Layout>
-              <MoneyPlanPage />
-            </Layout>
-          }
+          element={<Layout>{/* <MoneyPlanPage /> */}</Layout>}
         />
         <Route
           path="/mywish-list"
@@ -86,7 +68,6 @@ const Navirouter = () => {
             </Layout>
           }
         />
-        {/* <Route path="/register-child" element={<ChildRegisterPage />} /> */}
 
         {/* 부모 페이지 */}
         <Route
@@ -131,7 +112,10 @@ const Navirouter = () => {
         <Route path="/plan" element={<PlanPage />} /> */}
         {/* <Route path="/test-child" element={<SendTest />} />
         <Route path="/test-parent" element={<ParentTest />} /> */}
+
          <Route path="/MoneyPlanPage" element={<MoneyPlanPage />} />
+        {/* test */}
+        <Route path="/test-parent" element={<ParentTest />} />
       </Routes>
     </div>
   );
