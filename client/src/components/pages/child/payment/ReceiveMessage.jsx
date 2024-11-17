@@ -13,7 +13,7 @@ const ReceiveMessage = () => {
 
         axios({
             method: "GET",
-            url: `http://localhost:9999/child-notification/${childNum}`,
+            url: `http://localhost:9999/notification/child/${childNum}`,
             headers: {
                 Authorization: `${token}`
             },

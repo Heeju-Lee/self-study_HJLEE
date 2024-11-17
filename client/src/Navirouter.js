@@ -12,7 +12,6 @@ import WishListPage from "./pages/parent/WishListPage";
 import LoginPage from "./pages/common/LoginPage";
 import { RegisterPage } from "./pages/common/RegisterPage";
 import Layout from "./components/layouts/Layout";
-import SendTest from "./pages/test/child/ChildTest";
 import ParentTest from "./pages/test/parent/ParentTest";
 
 const Navirouter = () => {
@@ -102,7 +101,6 @@ const Navirouter = () => {
         <Route path="/test-parent" element={<ParentTest />} /> */}
 
         {/* test */}
-        <Route path="/test-child" element={<SendTest />} />
         <Route path="/test-parent" element={<ParentTest />} />
       </Routes>
     </div>
