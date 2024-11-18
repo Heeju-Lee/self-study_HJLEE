@@ -12,7 +12,6 @@ import PlanProvider from "./pages/context/MoneyPlanContext";
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 
-
 /*useContext 를 이용해서 하위 컴포넌트들이 데이터 공유하기*/
 export const LogingedContext = createContext();
 export const AuthContext = createContext(); // 유저정보

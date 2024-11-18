@@ -140,6 +140,7 @@ const MoneyPlanPage = () => {
           { label: "저축", value: planData.saving ?? 0 },
         ]);
         setIsLoading(false);
+        console.log("머니플랜페이지의 ", plan);
       })
       .catch((err) => {
         console.error("Error:", err.message); // 오류 메시지 출력
@@ -151,8 +152,9 @@ const MoneyPlanPage = () => {
   };
   useEffect(() => {
     findParentNum();
-
+    getplan();
     if (plan) {
+      console.log("Moneyplanpage의 plan", plan);
       setPlan([
         { label: "쇼핑", value: plan.shopping ?? 0 },
         { label: "교통", value: plan.transport ?? 0 },
@@ -162,7 +164,7 @@ const MoneyPlanPage = () => {
         { label: "저축", value: plan.saving ?? 0 },
       ]);
     }
-  }, [plan]); // plan 변경 시 실행
+  }, []); // plan 변경 시 실행
 
   const handleSend = () => {
     // 모달을 열기 전에 Context 값을 기반으로 동기화
@@ -220,7 +222,13 @@ const MoneyPlanPage = () => {
         setModalOpen(false); // 모달 닫기
         setIsLoading(false); // 로딩 상태 해제
         setOverlayStatus(true); //수정 불가 창업데이트
-        // sendNotificationToParent(memberNo,parentNum,authorization,"","contract")
+        sendNotificationToParent(
+          memberNo,
+          parentNum,
+          authorization,
+          "",
+          "contract"
+        );
       })
       .catch((err) => {
         console.error("Error:", err.message); // 오류 메시지 출력

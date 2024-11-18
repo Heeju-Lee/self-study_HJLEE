@@ -34,7 +34,7 @@ const WishDetailBox = ({ selectedCard }) => {
       {/* 돈모으기 모달이 열렸을 때만 표시 */}
       {isModalOpen && (
         <Modal width="400px" height="600px">
-          <Title>위시 돈 모으기</Title>
+          <ModalTitle>위시 돈 모으기</ModalTitle>
           <ModalPreview src={selectedCard.imgSrc} />
           <DetailText>{selectedCard.itemName}</DetailText>
           <DetailText>
@@ -52,6 +52,7 @@ const WishDetailBox = ({ selectedCard }) => {
 };
 const WishDetailBack = styled.div`
   background-color: #ececec;
+  margin-top: 100px;
 `;
 const Title = styled.h3`
   color: black;
@@ -59,13 +60,18 @@ const Title = styled.h3`
   padding-top: 50px;
   font-weight: bold;
 `;
+const ModalTitle = styled.h3`
+  color: black;
+  text-align: center;
+  font-weight: bold;
+`;
 const DetailBox = styled.div`
   display: flex;
 `;
 
 const InsertPreview = styled.img`
-  max-width: 30vw;
-  max-height: 30vh;
+  width: 20vw;
+  height: 20vh;
   border: 1px solid #ccc;
   border-radius: 10px;
 `;
@@ -118,7 +124,7 @@ const FormInput = styled.input`
   border: 5px solid #c8bef3;
   border-radius: 10px;
   outline: none;
-  width: 100%;
+  width: 70%;
 `;
 
 const ProgressBar = styled.div`

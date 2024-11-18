@@ -1,4 +1,4 @@
-import React, { useRef,  useContext, useState, useEffect } from "react";
+import React, { useRef, useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import Slider from "react-slick"; // react-slick 라이브러리 임포트
 import "slick-carousel/slick/slick.css"; // slick 스타일시트 임포트
@@ -9,10 +9,8 @@ import { AuthContext } from "../../../../App";
 import { Modal } from "../../../commons/Modal";
 import WishDetailBox from "./WishDetailBox";
 
-
-
 const Activewish = (imgSrc) => {
-  const { memberNo,  name, authorization } = useContext(AuthContext);
+  const { memberNo, name, authorization } = useContext(AuthContext);
   const token = authorization;
   const [isModalOpen, setModalOpen] = useState(false); // 모달 열리고 닫고 상태 보관
   const [file, setFile] = useState(null); // 위시등록 파일 상태
@@ -56,38 +54,54 @@ const Activewish = (imgSrc) => {
     itemPrice: 1550000, // 아이템 가격
     progressRate: 50, //진행률
   }); //선택된 카드의 상태
-  const handleSubmitWish=() => {
+  // 새로운 카드 생성
+  const newCard = {
+    id: cards.length + 1,
+    imgSrc: previewUrl, // 미리보기 이미지 URL 사용
+    itemName: wishName,
+    itemPrice: parseInt(wishPrice, 10), // 숫자로 변환
+    progressRate: 0, // 진행률 초기값
+  };
+  const handleSubmitWish = () => {
     if (!file || !wishName || !wishPrice) {
       alert("모든 필드를 입력해 주세요."); // 파일과 텍스트 필드가 모두 채워졌는지 확인
       return;
     }
-     // FormData 객체 생성
-  const formData = new FormData();
-  formData.append("wishRequestDtoJson", JSON.stringify({
-    name: wishName,
-    price: wishPrice,
-  }));
-  formData.append("wishFile", file); // 파일 첨부
-  axios({
-    method: "POST",
-    url:`http://localhost:9999/children/wishes`,
-    date:file,
-    headers: {
-      Authorization: token, // Authorization 헤더에 토큰 추가
-      "Content-Type": "multipart/form-data", // 데이터가 multipart/form-data 형식임을 명시
-    },
-  }).then((res)=>{
-    console.log("위시 등록 성공:", res.data);
-    // 요청 성공 후 로직 (예: 모달 닫기, 상태 초기화 등)
-    setModalOpen(false); // 모달 닫기
-    setWishName(""); // 상태 초기화
-    setWishPrice("");
-    setFile(null); // 파일 초기화
-    addCard()
-  }).catch((err)=>{
-    console.error("위시 등록 실패:", err);
-  });
-}
+    // FormData 객체 생성
+    const formData = new FormData();
+    formData.append(
+      "wishRequestDtoJson",
+      JSON.stringify({
+        name: wishName,
+        price: wishPrice,
+      })
+    );
+    formData.append("wishFile", file); // 파일 첨부
+    axios({
+      method: "POST",
+      url: `http://localhost:9999/children/wishes`,
+      date: file,
+      headers: {
+        Authorization: token, // Authorization 헤더에 토큰 추가
+        "Content-Type": "multipart/form-data", // 데이터가 multipart/form-data 형식임을 명시
+      },
+    })
+      .then((res) => {
+        console.log("위시 등록 성공:", res.data);
+        // 요청 성공 후 로직 (예: 모달 닫기, 상태 초기화 등)
+        // 상태 초기화
+        setWishName("");
+        setWishPrice("");
+        setFile(null);
+        setPreviewUrl(null);
+        // 카드 추가
+        setCards((prevCards) => [...prevCards, newCard]);
+        setModalOpen(false); // 모달 닫기
+      })
+      .catch((err) => {
+        console.error("위시 등록 실패:", err);
+      });
+  };
   //모달 오픈
   const inserModalOpen = () => {
     setModalOpen(true);
@@ -171,15 +185,19 @@ const Activewish = (imgSrc) => {
           />
           <FormBox>
             <FormTitle>이름</FormTitle>
-            <FormInput type="text"
-    value={wishName}
-    onChange={(e) => setWishName(e.target.value)} />
+            <FormInput
+              type="text"
+              value={wishName}
+              onChange={(e) => setWishName(e.target.value)}
+            />
           </FormBox>
           <FormBox>
-            <FormTitle>물품 가격</FormTitle>
-            <FormInput type="text"
-    value={wishPrice}
-    onChange={(e) => setWishPrice(e.target.value)}/>
+            <FormPrice>물품 가격</FormPrice>
+            <FormInput
+              type="text"
+              value={wishPrice}
+              onChange={(e) => setWishPrice(e.target.value)}
+            />
           </FormBox>
           <InsertWishinModal onClick={inserModalClose}>
             내 위시 올리기
@@ -207,10 +225,11 @@ const Activewish = (imgSrc) => {
 };
 
 const InsertPreview = styled.img`
-    maxWidth: "30vw",
-    maxHeight: "30vh",
-    border: "1px solid #ccc",
-    borderRadius: "10px",
+  width: 20vw;
+  height: 20vh;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-buttom: 20px;
 `;
 const InsertWish = styled.button`
   background-color: #4829d7;
@@ -221,7 +240,7 @@ const InsertWish = styled.button`
   border-radius: 10px;
   width: 15vw;
   height: 5.8vh;
-  margin-top: 1vh;
+  margin-top: 10px;
   font-weight: bold;
 `;
 const InsertImg = styled.button`
@@ -233,20 +252,29 @@ const InsertImg = styled.button`
   border-radius: 10px;
   width: 15vw;
   height: 5.8vh;
-  margin-top: 1vh;
+  margin-top: 15px;
+  margin-bottom: 5px;
   font-weight: bold;
 `;
 const FormBox = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 0 3vh 0 -5vh;
+  margin: 15px 0 10px 0;
+  align-items: center;
 `;
 const FormTitle = styled.h4`
   text-align: center;
   font-size: 1.5rem;
   font-weight: bold;
   color: black;
-  margin: 0 0 0 1vh;
+  margin: 0 55px 0 0;
+`;
+const FormPrice = styled.h4`
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: black;
+  margin: 0 5px 0 0;
 `;
 const FormInput = styled.input`
   padding: 8px;
