@@ -7,7 +7,7 @@ import { Modal } from "../../components/commons/Modal";
 import { PlanContext } from "../context/MoneyPlanContext";
 import axios from "axios";
 import { AuthContext } from "../../App";
-import {sendNotificationToParent} from "../../services/NotificationService";
+import { sendNotificationToParent } from "../../services/NotificationService";
 const TitleWapper = styled.div`
   display: flex;
   margin-top: 30px;
@@ -81,10 +81,16 @@ const OverlayMessage = styled.h1`
 
 const MoneyPlanPage = () => {
   const [isModalOpen, setModalOpen] = useState(false); // 모달 열림/닫힘 상태
-  const { plan, selectedYear, selectedMonth, overlayStatus, setOverlayStatus,setPlan } =
-    useContext(PlanContext); // Context에서 overlayStatus 가져오기
+  const {
+    plan,
+    selectedYear,
+    selectedMonth,
+    overlayStatus,
+    setOverlayStatus,
+    setPlan,
+  } = useContext(PlanContext); // Context에서 overlayStatus 가져오기
   const { memberNo, role, name, authorization } = useContext(AuthContext);
- 
+
   console.log("auth 확인하기", authorization);
   const today = new Date();
   const currentYear = today.getFullYear();
@@ -123,7 +129,7 @@ const MoneyPlanPage = () => {
       },
     })
       .then((res) => {
-        console.log("axios res", res);
+        console.log("axios res------", res);
         const planData = res.data;
         setPlan([
           { label: "쇼핑", value: planData.shopping ?? 0 },
@@ -145,7 +151,7 @@ const MoneyPlanPage = () => {
   };
   useEffect(() => {
     findParentNum();
-    getplan();
+
     if (plan) {
       setPlan([
         { label: "쇼핑", value: plan.shopping ?? 0 },
@@ -188,11 +194,11 @@ const MoneyPlanPage = () => {
       : 0,
   };
   console.log("MoneyPlanPage plan : ", plan);
-  console.log("MoneyPlanPage dataValues : ",plan);
+  console.log("MoneyPlanPage dataValues : ", plan);
 
   //나중에 로컬스토리지에서 데이터 받아오는거롤 수정해야함
   const token = authorization;
-  
+
   const [isLoading, setIsLoading] = useState(false); // 전송 중 로딩 상태
   const [errorMessage, setErrorMessage] = useState(null); // 에러 메시지 상태
   const submitJoin = (e) => {
@@ -214,7 +220,7 @@ const MoneyPlanPage = () => {
         setModalOpen(false); // 모달 닫기
         setIsLoading(false); // 로딩 상태 해제
         setOverlayStatus(true); //수정 불가 창업데이트
-        sendNotificationToParent(memberNo,parentNum,authorization,"","contract")
+        // sendNotificationToParent(memberNo,parentNum,authorization,"","contract")
       })
       .catch((err) => {
         console.error("Error:", err.message); // 오류 메시지 출력
@@ -227,7 +233,6 @@ const MoneyPlanPage = () => {
     console.log("MoneyPlanPage dataToSend : ", dataToSend); // 전송할 데이터 확인
   };
 
-  
   const isMatchingDate =
     selectedYear === currentYear && selectedMonth === currentMonth;
   console.log("선택된 날짜", selectedYear, selectedMonth);

@@ -23,10 +23,14 @@ export const WishItemCard = ({
   // const itemName = "아이폰 16"; // 아이템 이름
   // const itemPrice = 1550000;
   // const progressRate = 50; // 적금 진행율
-  const userImage = "/images/donny1Profile.png";
 
   return (
-    <Card onClick={onClick}>
+    <Card
+      onClick={onClick}
+      cardWidth={cardWidth}
+      cardHeight={cardHeight}
+      cardPadding={cardPadding}
+    >
       <ItemImg>
         <img src={imgSrc} alt={itemName} />
       </ItemImg>
@@ -36,7 +40,13 @@ export const WishItemCard = ({
         {/* 부모용 위시리스트에 childNum 1, 2로 아이 프로필 더미 이미지 넣을 예정 */}
         {childNum && (
           <UserImg>
-            <img src={userImage} />
+            <img
+              src={
+                childNum === 1
+                  ? "/images/donny1Profile.png"
+                  : "/images/donnySisterProfile.png"
+              }
+            />
           </UserImg>
         )}
         <ItemInfo>

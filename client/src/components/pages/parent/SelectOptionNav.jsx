@@ -2,27 +2,36 @@ import React, { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import axios from "axios";
 
-// TODO 날짜선택 : 월간리포트, 용돈계약서에서 하기, 위시리스트 보기에서는 제외
-const SelectOptionNav = ({ onHandleData }) => {
+/**
+ * SelectOptionNav 컴포넌트
+ * - 데이터 처리와 날짜 선택옵션 사용여부 제어
+ * - 날짜 선택옵션은 필요한 페이지에서만 사용 (현재 부모용 월간리포트와 용돈계약서에 적용, 위시리스트는 제외)
+ *
+ * @param {Function} onHandleData - 데이터 처리할 콜백 함수
+ * @returns {boolean} hasDateSelectOption - 날짜선택옵션 사용여부 (기본값: true)
+ */
+const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
   const token = localStorage.getItem("Authorization");
 
   const today = new Date();
 
   const [children, setChildren] = useState([]);
   const [selectedChildNum, setSelectedChildNum] = useState(1);
+  const [selectedChildName, setSelectedChildName] = useState(""); 
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
   const [isOpen, setIsOpen] = useState(false);
 
   const dropdownRef = useRef(null); // 드롭다운 영역을 참조하기 위한 useRef
-
   // 아이 이미지 더미 데이터 (2명)
   const childIamge = ["/images/sample-sister.png", "/images/donny1Profile.png"];
 
   // 자식 선택 처리
-  const handleChildSelect = (childNum) => {
+  const handleChildSelect = (childNum, childName) => {
     setSelectedChildNum(childNum);
-    onHandleData({ childNum }); // 부모 컴포넌트로 childNum 전달
+    setSelectedChildName(childName);
+  
+    onHandleData({ childNum, childName }); // 부모 컴포넌트로 childNum, childName 전달
   };
 
   // 날짜 선택 처리
@@ -49,6 +58,16 @@ const SelectOptionNav = ({ onHandleData }) => {
       .then((res) => {
         console.log("res : ", res.data);
         setChildren(res.data);
+
+        const firstChild = res.data[0];
+        setSelectedChildNum(firstChild.childNum);
+        setSelectedChildName(firstChild.name);
+
+        onHandleData({ 
+          childNum: firstChild.childNum, 
+          childName: firstChild.name, 
+        });
+
       })
       .catch((err) => {
         console.log("err : ", err);
@@ -65,9 +84,6 @@ const SelectOptionNav = ({ onHandleData }) => {
   useEffect(() => {
     getChildrenList();
 
-    // 초기값 부모로 전달
-    // onHandleData({ year: today.getFullYear(), month: today.getMonth() + 1 });
-
     // 클릭 이벤트 리스너 등록
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -76,7 +92,6 @@ const SelectOptionNav = ({ onHandleData }) => {
     };
   }, []);
 
-  // 날짜 선택
   return (
     <Outer>
       <SelectChildSection>
@@ -84,7 +99,7 @@ const SelectOptionNav = ({ onHandleData }) => {
         {children.map((child, index) => (
           <ChildContainer
             key={child.childNum}
-            onClick={() => handleChildSelect(child.childNum)}
+            onClick={() => handleChildSelect(child.childNum, child.name)}
           >
             <ImageDiv isSelected={child.childNum === selectedChildNum}>
               <img src={childIamge[index]} />
@@ -93,31 +108,34 @@ const SelectOptionNav = ({ onHandleData }) => {
           </ChildContainer>
         ))}
       </SelectChildSection>
+
       {/* 날짜 선택 */}
-      <SelectDateSection>
-        <SelectWrapper ref={dropdownRef}>
-          <SelectBox onClick={() => setIsOpen(!isOpen)}>
-            <>{`${selectedYear}년 ${selectedMonth}월`}</>
-            <img
-              src="/icons/down.png"
-              width={"15px"}
-              height={"15px"}
-              // style={{ marginLeft: "10px" }}
-            />
-          </SelectBox>
-          {isOpen && (
-            <Options>
-              {Array.from({ length: 12 }, (_, index) => index + 1).map(
-                (month) => (
-                  <Option key={month} onClick={() => handleDateSelect(month)}>
-                    {`${selectedYear}년 ${month}월`}
-                  </Option>
-                )
-              )}
-            </Options>
-          )}
-        </SelectWrapper>
-      </SelectDateSection>
+      {hasDateSelectOption && (
+        <SelectDateSection>
+          <SelectWrapper ref={dropdownRef}>
+            <SelectBox onClick={() => setIsOpen(!isOpen)}>
+              <>{`${selectedYear}년 ${selectedMonth}월`}</>
+              <img
+                src="/icons/down.png"
+                width={"15px"}
+                height={"15px"}
+                // style={{ marginLeft: "10px" }}
+              />
+            </SelectBox>
+            {isOpen && (
+              <Options>
+                {Array.from({ length: 12 }, (_, index) => index + 1).map(
+                  (month) => (
+                    <Option key={month} onClick={() => handleDateSelect(month)}>
+                      {`${selectedYear}년 ${month}월`}
+                    </Option>
+                  )
+                )}
+              </Options>
+            )}
+          </SelectWrapper>
+        </SelectDateSection>
+      )}
     </Outer>
   );
 };
@@ -125,10 +143,8 @@ const SelectOptionNav = ({ onHandleData }) => {
 const Outer = styled.div`
   display: flex;
   justify-content: space-between;
-
-  /* border: 1px solid black; */
 `;
-// 아이 선택
+
 const SelectChildSection = styled.div`
   display: flex;
   gap: 10px;
@@ -140,6 +156,7 @@ const SelectChildSection = styled.div`
 `;
 
 const ChildContainer = styled.div``;
+
 const ImageDiv = styled.div`
   cursor: pointer;
   width: 80px;
@@ -157,6 +174,7 @@ const ImageDiv = styled.div`
       box-shadow: 0 0 10px 5px rgba(72, 41, 215, 0.7);
     `}
 `;
+
 const NameLabel = styled.div`
   text-align: center;
 `;

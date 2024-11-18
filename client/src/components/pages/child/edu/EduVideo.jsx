@@ -10,10 +10,10 @@ const EduVideo = () => {
     axios({
       method: "GET",
       url: "http://localhost:9999/edu",
-    // 일일 한도가 있기 때문에 확인하고 싶을 때 주석 해제하기
-    //   headers: {
-    //     Authorization: `${token}`,
-    //   },
+    //일일 한도가 있기 때문에 확인하고 싶을 때 주석 해제하기
+      // headers: {
+      //   Authorization: `${token}`,
+      // },
     })
     .then((res) => {
       console.log(res.data);
