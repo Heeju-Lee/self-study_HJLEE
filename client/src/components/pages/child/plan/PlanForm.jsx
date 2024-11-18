@@ -75,11 +75,11 @@ const UpdateBtn = styled.button`
   font-weight: bold;
 `;
 const FormG = styled.div`
- display: grid;
-    grid-template-columns: 1fr auto; /* 첫 번째 칸은 콘텐츠 크기, 두 번째 칸은 남은 공간 차지 */
-    align-items: center;
-    padding: 10px;
-`
+  display: grid;
+  grid-template-columns: 1fr auto; /* 첫 번째 칸은 콘텐츠 크기, 두 번째 칸은 남은 공간 차지 */
+  align-items: center;
+  padding: 10px;
+`;
 const PlanForm = () => {
   const { plan, setPlan } = useContext(PlanContext);
 
@@ -91,31 +91,25 @@ const PlanForm = () => {
     saving: plan.saving,
     others: plan.others,
   });
-
+  console.log("현재 planForm의 plan ===", plan);
   // plan이 변경될 때마다 formData를 동기화
   useEffect(() => {
-    if (plan) {
-      setFormData({
-        food: plan.food ?? 0,
-        cvs: plan.cvs ?? 0,
-        shopping: plan.shopping ?? 0,
-        transport: plan.transport ?? 0,
-        saving: plan.saving ?? 0,
-        others: plan.others ?? 0,
-      });
-    }
+    setFormData({
+      food: plan?.food || 0,
+      cvs: plan?.cvs || 0,
+      shopping: plan?.shopping || 0,
+      transport: plan?.transport || 0,
+      saving: plan?.saving || 0,
+      others: plan?.others || 0,
+    });
   }, [plan]); // plan 상태가 변경될 때마다 formData를 갱신
 
-  // 입력값 변화 처리 함수
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    let numericValue = value.replace(/[^0-9]/g, ""); // 숫자만 남기기
-    const formattedValue = Number(numericValue).toLocaleString("ko-KR"); // 천 단위 구분기호 적용
-
-    // formData 업데이트
+    const numericValue = value.replace(/[^0-9]/g, ""); // 숫자만 추출
     setFormData((prevData) => ({
       ...prevData,
-      [name]: formattedValue,
+      [name]: numericValue, // 숫자로 저장
     }));
   };
 
@@ -141,7 +135,7 @@ const PlanForm = () => {
           <FormInput
             type="text"
             name="food"
-            value={formData.food || ""}
+            value={Number(formData.food).toLocaleString("ko-KR")}
             onChange={handleInputChange}
           />
         </FormG>
@@ -157,7 +151,7 @@ const PlanForm = () => {
           <FormInput
             type="text"
             name="cvs"
-            value={formData.cvs || ""}
+            value={Number(formData.cvs).toLocaleString("ko-KR")}
             onChange={handleInputChange}
           />
         </FormG>
@@ -173,7 +167,7 @@ const PlanForm = () => {
           <FormInput
             type="text"
             name="shopping"
-            value={formData.shopping || ""}
+            value={Number(formData.shopping).toLocaleString("ko-KR")}
             onChange={handleInputChange}
           />
         </FormG>
@@ -189,7 +183,7 @@ const PlanForm = () => {
           <FormInput
             type="text"
             name="transport"
-            value={formData.transport || ""}
+            value={Number(formData.transport).toLocaleString("ko-KR")}
             onChange={handleInputChange}
           />
         </FormG>
@@ -205,7 +199,7 @@ const PlanForm = () => {
           <FormInput
             type="text"
             name="saving"
-            value={formData.saving || ""}
+            value={Number(formData.saving).toLocaleString("ko-KR")}
             onChange={handleInputChange}
           />
         </FormG>
@@ -221,7 +215,7 @@ const PlanForm = () => {
           <FormInput
             type="text"
             name="others"
-            value={formData.others || ""}
+            value={Number(formData.others).toLocaleString("ko-KR")}
             onChange={handleInputChange}
           />
         </FormG>

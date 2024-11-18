@@ -1,7 +1,9 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import styled from "styled-components";
-
+import axios from "axios";
 import { PlanContext } from "../../../../pages/context/MoneyPlanContext";
+import { AuthContext } from "../../../../App";
+
 const SelectBoxContainer = styled.div`
   position: relative;
   width: 200px;
@@ -28,6 +30,7 @@ const OptionsList = styled.ul`
   padding: 0;
   margin: 5px 0 0;
   list-style: none;
+  z-index: 1200;
   display: ${(props) => (props.open ? "block" : "none")};
 `;
 
@@ -42,20 +45,83 @@ const OptionItem = styled.li`
 const SelectBox = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const { plan } = useContext(PlanContext);
-  // 더미 데이터
-  const options = [
-    { id: 1, value: "짜장면" },
-    { id: 2, value: "치킨" },
-    { id: 3, value: "곱창" },
-    { id: 4, value: "피자" },
-    { id: 5, value: "족발" },
-    { id: 6, value: "한강라면" },
-  ];
+  const [isLoading, setIsLoading] = useState(false); // 전송 중 로딩 상태
+  const [errorMessage, setErrorMessage] = useState(null); // 에러 메시지 상태
+  const { memberNo, role, name, authorization } = useContext(AuthContext);
+  const { setPlan, setSelectedYear, setSelectedMonth } =
+    useContext(PlanContext); // PlanContext 업데이트 함수
+
+  // 전달부터 12개월치 옵션 생성
+  const generateMonthOptions = () => {
+    const currentDate = new Date();
+    const options = [];
+
+    for (let i = 1; i <= 12; i++) {
+      const date = new Date(currentDate); // 현재 날짜 복사
+      date.setMonth(currentDate.getMonth() - i + 1); // 전달부터 12개월 전으로 이동
+      const monthYear = date.toLocaleString("ko-KR", {
+        year: "numeric",
+        month: "long",
+      });
+      options.push({ id: i, value: monthYear, date });
+    }
+
+    return options;
+  };
+
+  const options = useMemo(() => generateMonthOptions(), []); // 한번만 생성
+
+  // 기본값을 현재 달로 설정
+  useEffect(() => {
+    setSelectedOption(options[0]?.value); // 첫 번째 옵션(전달)으로 초기화
+    if (options[0]?.date) {
+      const initialDate = options[0]?.date;
+      setSelectedYear(initialDate.getFullYear());
+      setSelectedMonth(initialDate.getMonth() + 1);
+    }
+  }, [options, setSelectedYear, setSelectedMonth]);
 
   const handleOptionClick = (option) => {
     setSelectedOption(option.value);
     setIsOpen(false);
+
+    const year = option.date.getFullYear();
+    const month = option.date.getMonth() + 1;
+
+    // Context에 저장
+    setSelectedYear(year);
+    setSelectedMonth(month);
+
+    // API 호출
+    fetchPlanData(year, month);
+  };
+  //로컬스토리지에서 토큰 가져와야함
+  const token = authorization;
+  const fetchPlanData = (year, month) => {
+    setIsLoading(true);
+    setErrorMessage(null);
+
+    axios({
+      method: "GET",
+      url: `http://localhost:9999/children/show/plans?year=${year}&month=${month}`,
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        console.log("axios res", res);
+        setPlan(res.data); // PlanContext에 데이터 저장
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error:", err.message);
+        console.error("Error response:", err.response);
+        setIsLoading(false);
+        setErrorMessage(
+          "데이터를 가져오는 중 오류가 발생했습니다. 다시 시도해주세요."
+        );
+      });
   };
 
   return (
@@ -70,6 +136,8 @@ const SelectBox = () => {
           </OptionItem>
         ))}
       </OptionsList>
+      {isLoading && <p>로딩 중...</p>}
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
     </SelectBoxContainer>
   );
 };

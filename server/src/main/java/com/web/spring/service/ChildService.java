@@ -156,20 +156,24 @@ public class ChildService {
 	// 소비 계획 조회하기
 	@Transactional
   public PlanResponseDto showPlan(Long childNum, int year, int month) throws Exception {
+	    Plan plan = childRepository.findPlan(childNum, year, month);
+		   // plan이 null인지 체크
+	    if (plan == null) {
+	        return null; // Plan이 없으면 null 반환
+	    }
 
-		Plan plan = childRepository.findPlan(childNum, year, month);
-
-
-		return new PlanResponseDto(plan);
+	    // PlanResponseDto를 생성하여 반환
+	    PlanResponseDto pr = new PlanResponseDto(plan);
+	    return pr;
 	}
 
 	// 소비 계획 수정하기
 	@Transactional
-	public PlanResponseDto updatePlan(Long planNum, PlanRequestDto planRequestDto) throws Exception {
+	public PlanResponseDto updatePlan(Long childNum,int year,int month, PlanRequestDto planRequestDto) throws Exception {
 
-		System.out.println(planNum);
+		Plan findPlan = childRepository.findPlan(childNum, year, month);
 
-		Plan plan = planRepository.findById(planNum).orElseThrow(() -> new NoSuchElementException("PlanNum not found"));
+		Plan plan = planRepository.findById(findPlan.getPlanNum()).orElseThrow(() -> new NoSuchElementException("PlanNum not found"));
 
 		System.out.println(plan);
 		plan.setShopping(planRequestDto.getShopping());
@@ -322,12 +326,13 @@ public class ChildService {
 	@Transactional(readOnly = true)
 	public LinkedHashMap<String, Integer> monthPlan(Long childNum, int year, int month) {
 
+		
 		LinkedHashMap<String, Integer> response = new LinkedHashMap<>();
 		Optional<Child> child = findChild(childNum);
-
+		Plan defalutPlan = new Plan(0L, 0, 0, 0, 0, 0, 0);
 		Plan monthPlan = child.get().getPlans().stream()
 				.filter(plan -> plan.getModifiedAt().getMonthValue() == month && plan.getModifiedAt().getYear() == year)
-				.findFirst().orElseThrow();
+				.findFirst().orElse(defalutPlan);
 
 		response.put("shopping", monthPlan.getShopping());
 		response.put("food", monthPlan.getFood());

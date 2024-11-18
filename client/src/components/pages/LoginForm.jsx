@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LogingedContext } from "../../App";
 import styled from "styled-components";
-// import '@fortawesome/fontawesome-free/css/all.min.css';
+// import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const LoginForm = () => {
   let logingedCon = useContext(LogingedContext);
@@ -43,7 +43,7 @@ const LoginForm = () => {
       data: JSON.stringify(member),
     })
       .then((res) => {
-        console.log("res = ", res);
+        console.log("res = ", res.data);
 
         localStorage.setItem("memberNo", res.data.memberNo);
         localStorage.setItem("id", res.data.id);

@@ -1,15 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import Coin from './../../commons/Coin';
 
 export const Landing1 = () => {
   return (
     <Outer>
       <LeftContainer>
-        <img src="images/coin-1.svg" class="coin1" />        
-        <img src="images/coin-2.svg" class="coin2" />
-        <img src="images/coin-3.svg" class="coin3" />
-        <img src="images/stockCoin1.png" class = "stockCoin1"/>
+        <img src="images/coin-1.svg" class="coin1" alt="Large Coin" />        
+        <img src="images/coin-2.svg" class="coin2" alt="Small Left Coin" />
+        <img src="images/coin-3.svg" class="coin3"alt="Small Right Coin"  />
+        <img src="images/stockCoin1.png" class = "stockCoin1" alt="Bottom Coin" />
         {/* <img src="images/stockCoin2.png" class = "stockCoin2"/> */}
         <img src="images/final_Donny.png" class="Donny"/>
       </LeftContainer>
@@ -27,9 +26,9 @@ export const Landing1 = () => {
         </SliderWrapper>
 
         <h1><span style={{color : "#fd9827"}}>도니머니</span>가 알려줄게!!</h1>
-        <h5>아이의 입장에서 경제를 바라봅니다</h5>
-        <h5>경제를 알아야 세상을 읽을 수 있습니다</h5>
-        <h5>아이에게 세상을 이끌 힘을 길러주세요</h5>
+        <Description>아이의 입장에서 경제를 바라봅니다</Description>
+        <Description>경제를 알아야 세상을 읽을 수 있습니다</Description>
+        <Description>아이에게 세상을 이끌 힘을 길러주세요</Description>
       </RightContainer>
     </Outer>
   );
@@ -141,6 +140,11 @@ const Word = styled.div`
   top: 0%;
 
 `;
+
+const Description = styled.h5`
+  font-family: "HakgyoansimDunggeunmisoTTF-R";
+`;
+
 
 const Slider = styled.div`
   height:50px;

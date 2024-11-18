@@ -9,6 +9,9 @@ export const Button = ({
   borderRadius,
   hoverBgColor,
   text,
+  textColor,
+  positionCenter,
+  marginTop,
 }) => {
   return (
     <Outer
@@ -17,6 +20,9 @@ export const Button = ({
       height={height}
       borderRadius={borderRadius}
       hoverBgColor={hoverBgColor} // 버튼의 hover 배경색 필요시 사용
+      textColor={textColor}
+      positionCenter={positionCenter}
+      marginTop={marginTop}
     >
       {text}
     </Outer>
@@ -33,6 +39,9 @@ const Outer = styled.div`
   height: ${(props) => props.height || "50px"};
   background-color: ${(props) => props.bgColor || "#9774FB"};
   border-radius: ${(props) => props.borderRadius || "25px"};
+  color: ${(props) => props.textColor || "white"};
+  margin: ${(props) => props.positionCenter || "0 auto"};
+  margin-top: ${(props) => props.marginTop || "20px"};
 
   ${(props) =>
     props.hoverBgColor &&

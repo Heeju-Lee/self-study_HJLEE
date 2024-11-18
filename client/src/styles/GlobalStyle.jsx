@@ -16,6 +16,13 @@ export const GlobalStyle = createGlobalStyle`
     font-weight: 700;
     font-style: normal;
   }
+
+  @font-face {
+    font-family: 'HakgyoansimDunggeunmisoTTF-R';
+    src: url("/assets/fonts/Hakgyoansim_Dunggeunmiso_TTF_R.ttf");
+    font-weight: 700;
+    font-style: normal;
+  }
   
   /* 전역 스타일 정의 */
   body {
