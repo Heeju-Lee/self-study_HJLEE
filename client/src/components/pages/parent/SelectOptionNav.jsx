@@ -10,28 +10,39 @@ import axios from "axios";
  * @param {Function} onHandleData - 데이터 처리할 콜백 함수
  * @returns {boolean} hasDateSelectOption - 날짜선택옵션 사용여부 (기본값: true)
  */
-const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
+const SelectOptionNav = ({
+  onHandleData,
+  hasDateSelectOption = true,
+  childrenCenter, // 현재위시리스트 목록에서 사용중
+  selectAllChildren = false, // 아이 전체 선택 옵션
+}) => {
   const token = localStorage.getItem("Authorization");
 
   const today = new Date();
 
   const [children, setChildren] = useState([]);
   const [selectedChildNum, setSelectedChildNum] = useState(1);
-  const [selectedChildName, setSelectedChildName] = useState(""); 
+  const [selectedChildName, setSelectedChildName] = useState("");
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
   const [isOpen, setIsOpen] = useState(false);
 
   const dropdownRef = useRef(null); // 드롭다운 영역을 참조하기 위한 useRef
   // 아이 이미지 더미 데이터 (2명)
-  const childIamge = ["/images/sample-sister.png", "/images/donny1Profile.png"];
+  const childIamge = ["/images/donny1Profile.png", "/images/sample-sister.png"];
 
   // 자식 선택 처리
   const handleChildSelect = (childNum, childName) => {
     setSelectedChildNum(childNum);
     setSelectedChildName(childName);
-  
+
     onHandleData({ childNum, childName }); // 부모 컴포넌트로 childNum, childName 전달
+  };
+
+  // 자식 전체 선책 처리 - 부모 위시리스트 페이지 사용
+  const handleSelectAll = () => {
+    setSelectedChildNum(null);
+    onHandleData({ childNum: null });
   };
 
   // 날짜 선택 처리
@@ -63,11 +74,10 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
         setSelectedChildNum(firstChild.childNum);
         setSelectedChildName(firstChild.name);
 
-        onHandleData({ 
-          childNum: firstChild.childNum, 
-          childName: firstChild.name, 
+        onHandleData({
+          childNum: firstChild.childNum,
+          childName: firstChild.name,
         });
-
       })
       .catch((err) => {
         console.log("err : ", err);
@@ -84,6 +94,11 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
   useEffect(() => {
     getChildrenList();
 
+    if (selectAllChildren) setSelectedChildNum(null); // 부모 위시리스트에서 사용하는 경우
+
+    // 초기값 부모로 전달
+    // onHandleData({ year: today.getFullYear(), month: today.getMonth() + 1 });
+
     // 클릭 이벤트 리스너 등록
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -93,8 +108,16 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
   }, []);
 
   return (
-    <Outer>
+    <Outer childrenCenter={childrenCenter}>
       <SelectChildSection>
+        {selectAllChildren && (
+          <ImageDiv
+            isSelected={selectedChildNum === null}
+            onClick={() => handleSelectAll()}
+          >
+            All
+          </ImageDiv>
+        )}
         {/* 아이 배열만큼 이미지 보여줌 */}
         {children.map((child, index) => (
           <ChildContainer
@@ -142,16 +165,19 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
 
 const Outer = styled.div`
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  justify-content: ${(props) =>
+    props.childrenCenter ? "center" : "space-between"};
+  /* border: 1px solid black; */
 `;
 
 const SelectChildSection = styled.div`
   display: flex;
-  gap: 10px;
-  background-color: rgb(245, 245, 245);
+  gap: 24px;
+
   padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
   padding: 25px;
 `;
 
@@ -163,6 +189,12 @@ const ImageDiv = styled.div`
   height: 80px;
   border-radius: 50%;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(245, 245, 245);
+  margin-bottom: 5px;
+
   img {
     width: 100%;
     height: 100%;
@@ -171,7 +203,9 @@ const ImageDiv = styled.div`
   ${(props) =>
     props.isSelected &&
     css`
-      box-shadow: 0 0 10px 5px rgba(72, 41, 215, 0.7);
+      box-shadow: 0 0 0px 5px #ffd700;
+      /* box-shadow: 0 0 0px 5px #2ecc71; */
+      /* box-shadow: 0 0 0px 7px #ff6f61; */
     `}
 `;
 

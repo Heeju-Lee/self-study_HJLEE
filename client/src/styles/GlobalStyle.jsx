@@ -7,6 +7,16 @@ export const GlobalStyle = createGlobalStyle`
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+}
+body{
+  /* background-image: url("https://i.pinimg.com/1200x/41/65/78/41657884a3e5a5069cdc324b1e44c6ea.jpg"); */
+  /* background-image: url("https://i.pinimg.com/1200x/41/65/78/41657884a3e5a5069cdc324b1e44c6ea.jpg"); */
+  /* background-repeat: no-repeat;
+  background-size: cover; */
+  // background-color: #f0e6ff; /* 연한 보라색 */
+
+  /* background-color: #ECE9F7; */
 }
 
 /* 폰트 정의 */

@@ -127,3 +127,21 @@ export const sendNotificationToParent = async (
     console.error("부모에게 알림전송 실패");
   }
 };
+
+// parent_num 찾기
+export const findParentNum = async (childNum, authorization) => {
+  try {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASE_URL}/notification/findParentNo/${childNum}`,
+      {
+        headers: {
+          Authorization: `${authorization}`,
+        },
+      }
+    );
+    console.log("findParentNum : ", response.data);
+    return response.data; // parent_num 반환
+  } catch (error) {
+    console.log("부모 넘버 조회 에러 : ", error);
+  }
+};
