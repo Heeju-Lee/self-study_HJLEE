@@ -14,7 +14,7 @@ const AgreementPage = () => {
   });
 
   const handleChildData = (updateData) => {
-    console.log("data : ", updateData);
+    console.log("AgreementPage data : ", updateData);
 
     setSelectOption((prev) => ({
       ...prev,

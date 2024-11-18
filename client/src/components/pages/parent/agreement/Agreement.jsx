@@ -48,6 +48,8 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
       .catch( (err) => {
         console.log("결제 중 에러 발생", err);
     });
+
+    
   };
 
 
@@ -96,7 +98,7 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
       }
     })
     .then( (res) =>{
-      console.log(res.data);
+      console.log( "소비 계획 데이터 : " + res.data);
 
       //null/undefined 확인 + 빈 객체인지 확인(객체의 키 개수 개산)
       if( !res.data || Object.keys(res.data).length === 0){
@@ -112,7 +114,7 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
 
     })
     .catch( (err) => {
-      console.log("용돈 계약서 조회 중 에러 발생", err);
+      //console.log("용돈 계약서 조회 중 에러 발생", err);
       sethasPlan(false);
     });
 
@@ -122,7 +124,16 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
 
     return (
       <Outer>
-        <Container style={ {backgroundColor : isCurYearMonth(year, month) ? "#f6f2fd" : "lightgray"}}>
+        <Container
+          isCurrent={isCurYearMonth(year, month)}
+          hasPlan={hasPlan}
+        >
+          {hasPlan && !isCurYearMonth(year, month) && (
+            <ImageWrapper>
+              <img src="images/payComplete.png" alt="알림 이미지" />
+            </ImageWrapper> 
+          )}
+
           {hasPlan ? (
             <>
               <ContractTitle>용돈 계약서</ContractTitle>
@@ -200,7 +211,8 @@ const Outer = styled.div`
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-
+    background-color: ${({ hasPlan, isCurrent }) => hasPlan && !isCurrent ? 'gray' : 'transparent'};
+    color: ${({ hasPlan, isCurrent }) => hasPlan && !isCurrent ? 'white' : 'black'};
 `;
 
 const Container = styled.div`
@@ -209,13 +221,33 @@ const Container = styled.div`
   margin: 50px auto;
   background-color: #f6f2fd;
   /* background-image: url("images/contract.jpg"); */
-
   padding: 20px;
   background-size: contain; 
   background-repeat: no-repeat; 
   background-position: center; 
   text-align: center;
+
+  position: relative;
 `;
+
+const ImageWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: auto;
+  z-index: 10; 
+  text-align: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지가 영역에 맞게 조정됨 */
+    opacity: 0.9; /* 약간 투명하게 설정 (선택 사항) */
+  }
+`;
+
 
 const ContractTitle = styled.h1`
   color: #8529fd;

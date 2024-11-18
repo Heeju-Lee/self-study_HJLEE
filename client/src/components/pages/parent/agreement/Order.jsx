@@ -9,6 +9,16 @@ const Order = ({childNum, year, month, paymentStatusUpdate }) => {
 
     //결제 데이터
     const [payments, setPayments] = useState([]);
+    
+    //결제 타입 변환
+    const changePayType = (payType) =>{
+        const payTypeMap = {
+            card : "카드",
+            account  : "계좌",
+        };
+        
+        return payTypeMap[payType] || payType;
+    };
 
     useEffect ( () =>{
 
@@ -23,7 +33,7 @@ const Order = ({childNum, year, month, paymentStatusUpdate }) => {
           }
         })
         .then( (res) =>{
-          console.log(res.data);
+          console.log("orderData : "+ res.data);
     
           //null/undefined 확인 + 빈 객체인지 확인(객체의 키 개수 개산)
           if( !res.data || Object.keys(res.data).length === 0){
@@ -66,7 +76,7 @@ const Order = ({childNum, year, month, paymentStatusUpdate }) => {
                                         {payment.createdAt[0]}년 {payment.createdAt[1]}월 {payment.createdAt[2]}일
                                     </TableData>
                                     <TableData>{payment.amount.toLocaleString()} 원</TableData>
-                                    <TableData>{payment.payType}</TableData>
+                                    <TableData>{changePayType(payment.payType)}</TableData>
                                     <TableData>결제 완료</TableData>
                                 </TableRow>
                             ))}
