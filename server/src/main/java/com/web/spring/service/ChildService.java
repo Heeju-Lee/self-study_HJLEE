@@ -155,9 +155,9 @@ public class ChildService {
 
 	// 소비 계획 조회하기
 	@Transactional
-  public PlanResponseDto showPlan(Long childNum, int year, int month) throws Exception {
+  public PlanResponseDto showPlan(Long childNum, int year, int month) {
 
-		Plan plan = childRepository.findPlan(childNum, year, month);
+		Plan plan = childRepository.findPlan(childNum, year, month).orElseThrow(() -> new NoSuchElementException("Plan not found"));
 
 
 		return new PlanResponseDto(plan);
