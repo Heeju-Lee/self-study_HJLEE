@@ -7,7 +7,7 @@ import { Modal } from "../../components/commons/Modal";
 import { PlanContext } from "../context/MoneyPlanContext";
 import axios from "axios";
 import { AuthContext } from "../../App";
-
+import {sendNotificationToParent} from "../../services/NotificationService";
 const TitleWapper = styled.div`
   display: flex;
   margin-top: 30px;
@@ -81,19 +81,73 @@ const OverlayMessage = styled.h1`
 
 const MoneyPlanPage = () => {
   const [isModalOpen, setModalOpen] = useState(false); // 모달 열림/닫힘 상태
-  const { plan, selectedYear, selectedMonth, overlayStatus, setOverlayStatus } =
+  const { plan, selectedYear, selectedMonth, overlayStatus, setOverlayStatus,setPlan } =
     useContext(PlanContext); // Context에서 overlayStatus 가져오기
   const { memberNo, role, name, authorization } = useContext(AuthContext);
-  const [dataValues, setDataValues] = useState([]); // 데이터값 배열
+ 
   console.log("auth 확인하기", authorization);
   const today = new Date();
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth() + 1;
+  const [parentNum, setParentNum] = useState(null);
   // 데이터값 배열 생성
   // Context 값이 변경될 때 dataValues 동기화
+  // 부모찾기
+  const findParentNum = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/notification/findParentNo/${memberNo}`,
+        {
+          headers: {
+            Authorization: `${authorization}`,
+          },
+        }
+      );
+      console.log("부모찾기", response.data);
+      setParentNum(response.data);
+    } catch (error) {
+      console.log("부모 넘버 조회 에러 : ", error);
+    }
+  };
+  // 이달의 플랜 가져오기
+  const getplan = (e) => {
+    setIsLoading(true);
+    setErrorMessage(null);
+    axios({
+      method: "GET",
+      url: `http://localhost:9999/children/show/plans?year=${currentYear}&month=${currentMonth}`,
+      data: dataToSend,
+      headers: {
+        Authorization: token, // Authorization 헤더에 토큰 추가
+        "Content-Type": "application/json", // 데이터가 JSON 형식임을 명시
+      },
+    })
+      .then((res) => {
+        console.log("axios res", res);
+        const planData = res.data;
+        setPlan([
+          { label: "쇼핑", value: planData.shopping ?? 0 },
+          { label: "교통", value: planData.transport ?? 0 },
+          { label: "편의점", value: planData.cvs ?? 0 },
+          { label: "음식", value: planData.food ?? 0 },
+          { label: "기타", value: planData.others ?? 0 },
+          { label: "저축", value: planData.saving ?? 0 },
+        ]);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error:", err.message); // 오류 메시지 출력
+        console.error("Error response:", err.response); // 서버 응답 (응답이 있을 경우)
+        console.error("Error stack:", err.stack); // 오류 스택 추적
+        setIsLoading(false); // 로딩 상태 해제
+        setErrorMessage("전송 중 오류가 발생했습니다. 다시 시도해주세요.");
+      });
+  };
   useEffect(() => {
+    findParentNum();
+    getplan();
     if (plan) {
-      setDataValues([
+      setPlan([
         { label: "쇼핑", value: plan.shopping ?? 0 },
         { label: "교통", value: plan.transport ?? 0 },
         { label: "편의점", value: plan.cvs ?? 0 },
@@ -106,7 +160,7 @@ const MoneyPlanPage = () => {
 
   const handleSend = () => {
     // 모달을 열기 전에 Context 값을 기반으로 동기화
-    setDataValues([
+    setPlan([
       { label: "쇼핑", value: plan.shopping ?? 0 },
       { label: "교통", value: plan.transport ?? 0 },
       { label: "편의점", value: plan.cvs ?? 0 },
@@ -134,11 +188,11 @@ const MoneyPlanPage = () => {
       : 0,
   };
   console.log("MoneyPlanPage plan : ", plan);
-  console.log("MoneyPlanPage dataValues : ", dataValues);
+  console.log("MoneyPlanPage dataValues : ",plan);
 
   //나중에 로컬스토리지에서 데이터 받아오는거롤 수정해야함
   const token = authorization;
-
+  
   const [isLoading, setIsLoading] = useState(false); // 전송 중 로딩 상태
   const [errorMessage, setErrorMessage] = useState(null); // 에러 메시지 상태
   const submitJoin = (e) => {
@@ -160,6 +214,7 @@ const MoneyPlanPage = () => {
         setModalOpen(false); // 모달 닫기
         setIsLoading(false); // 로딩 상태 해제
         setOverlayStatus(true); //수정 불가 창업데이트
+        sendNotificationToParent(memberNo,parentNum,authorization,"","contract")
       })
       .catch((err) => {
         console.error("Error:", err.message); // 오류 메시지 출력
@@ -172,40 +227,7 @@ const MoneyPlanPage = () => {
     console.log("MoneyPlanPage dataToSend : ", dataToSend); // 전송할 데이터 확인
   };
 
-  const getplan = (e) => {
-    e.preventDefault(); // 폼 제출 시 새로고침 방지
-    setIsLoading(true);
-    setErrorMessage(null);
-    axios({
-      method: "GET",
-      url: `http://localhost:9999/children/show/plans?year=${currentYear}&month=${currentMonth}`,
-      data: dataToSend,
-      headers: {
-        Authorization: token, // Authorization 헤더에 토큰 추가
-        "Content-Type": "application/json", // 데이터가 JSON 형식임을 명시
-      },
-    })
-      .then((res) => {
-        console.log("axios res", res);
-        const planData = res.data;
-        setDataValues([
-          { label: "쇼핑", value: planData.shopping ?? 0 },
-          { label: "교통", value: planData.transport ?? 0 },
-          { label: "편의점", value: planData.cvs ?? 0 },
-          { label: "음식", value: planData.food ?? 0 },
-          { label: "기타", value: planData.others ?? 0 },
-          { label: "저축", value: planData.saving ?? 0 },
-        ]);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error:", err.message); // 오류 메시지 출력
-        console.error("Error response:", err.response); // 서버 응답 (응답이 있을 경우)
-        console.error("Error stack:", err.stack); // 오류 스택 추적
-        setIsLoading(false); // 로딩 상태 해제
-        setErrorMessage("전송 중 오류가 발생했습니다. 다시 시도해주세요.");
-      });
-  };
+  
   const isMatchingDate =
     selectedYear === currentYear && selectedMonth === currentMonth;
   console.log("선택된 날짜", selectedYear, selectedMonth);
@@ -247,7 +269,7 @@ const MoneyPlanPage = () => {
           <h3>보낼 계획 내용</h3>
           <div>
             {/* dataValues 배열을 순회하며 데이터를 표시 */}
-            {dataValues.map((item, index) => (
+            {plan.map((item, index) => (
               <p key={index}>
                 <strong>{item.label}:</strong> {item.value} 원
               </p>

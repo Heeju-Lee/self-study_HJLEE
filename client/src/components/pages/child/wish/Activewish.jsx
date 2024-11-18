@@ -1,17 +1,25 @@
-import React, { useRef, useState } from "react";
+import React, { useRef,  useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import Slider from "react-slick"; // react-slick 라이브러리 임포트
 import "slick-carousel/slick/slick.css"; // slick 스타일시트 임포트
 import "slick-carousel/slick/slick-theme.css";
 import { WishItemCard } from "../../../commons/WishItemCard";
-
+import axios from "axios";
+import { AuthContext } from "../../../../App";
 import { Modal } from "../../../commons/Modal";
 import WishDetailBox from "./WishDetailBox";
+
+
+
 const Activewish = (imgSrc) => {
+  const { memberNo,  name, authorization } = useContext(AuthContext);
+  const token = authorization;
   const [isModalOpen, setModalOpen] = useState(false); // 모달 열리고 닫고 상태 보관
   const [file, setFile] = useState(null); // 위시등록 파일 상태
   const fileInputRef = useRef(null); // 파일 입력창 참조
   const [previewUrl, setPreviewUrl] = useState(null); //위시등록전송 url 상태
+  const [wishName, setWishName] = useState(""); // 위시생성 이름 상태
+  const [wishPrice, setWishPrice] = useState(""); // 위시생성 가격 상태
   const [uploading, setUploading] = useState(false); // 업로드 로딩 상태
   const [wishDetail, setWishDetail] = useState(false); //디테일창 상태
   const [cards, setCards] = useState([
@@ -47,7 +55,39 @@ const Activewish = (imgSrc) => {
     itemName: "test3", // 아이템 이름
     itemPrice: 1550000, // 아이템 가격
     progressRate: 50, //진행률
+  }); //선택된 카드의 상태
+  const handleSubmitWish=() => {
+    if (!file || !wishName || !wishPrice) {
+      alert("모든 필드를 입력해 주세요."); // 파일과 텍스트 필드가 모두 채워졌는지 확인
+      return;
+    }
+     // FormData 객체 생성
+  const formData = new FormData();
+  formData.append("wishRequestDtoJson", JSON.stringify({
+    name: wishName,
+    price: wishPrice,
+  }));
+  formData.append("wishFile", file); // 파일 첨부
+  axios({
+    method: "POST",
+    url:`http://localhost:9999/children/wishes`,
+    date:file,
+    headers: {
+      Authorization: token, // Authorization 헤더에 토큰 추가
+      "Content-Type": "multipart/form-data", // 데이터가 multipart/form-data 형식임을 명시
+    },
+  }).then((res)=>{
+    console.log("위시 등록 성공:", res.data);
+    // 요청 성공 후 로직 (예: 모달 닫기, 상태 초기화 등)
+    setModalOpen(false); // 모달 닫기
+    setWishName(""); // 상태 초기화
+    setWishPrice("");
+    setFile(null); // 파일 초기화
+    addCard()
+  }).catch((err)=>{
+    console.error("위시 등록 실패:", err);
   });
+}
   //모달 오픈
   const inserModalOpen = () => {
     setModalOpen(true);
@@ -131,11 +171,15 @@ const Activewish = (imgSrc) => {
           />
           <FormBox>
             <FormTitle>이름</FormTitle>
-            <FormInput />
+            <FormInput type="text"
+    value={wishName}
+    onChange={(e) => setWishName(e.target.value)} />
           </FormBox>
           <FormBox>
             <FormTitle>물품 가격</FormTitle>
-            <FormInput />
+            <FormInput type="text"
+    value={wishPrice}
+    onChange={(e) => setWishPrice(e.target.value)}/>
           </FormBox>
           <InsertWishinModal onClick={inserModalClose}>
             내 위시 올리기

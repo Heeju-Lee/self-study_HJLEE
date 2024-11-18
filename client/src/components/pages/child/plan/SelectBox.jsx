@@ -48,7 +48,7 @@ const SelectBox = () => {
   const [isLoading, setIsLoading] = useState(false); // 전송 중 로딩 상태
   const [errorMessage, setErrorMessage] = useState(null); // 에러 메시지 상태
   const { memberNo, role, name, authorization } = useContext(AuthContext);
-  const { setPlan, setSelectedYear, setSelectedMonth } =
+  const { plan,setPlan, setSelectedYear, setSelectedMonth } =
     useContext(PlanContext); // PlanContext 업데이트 함수
 
   // 전달부터 12개월치 옵션 생성
@@ -95,7 +95,7 @@ const SelectBox = () => {
     // API 호출
     fetchPlanData(year, month);
   };
-  //로컬스토리지에서 토큰 가져와야함
+
   const token = authorization;
   const fetchPlanData = (year, month) => {
     setIsLoading(true);
@@ -111,7 +111,14 @@ const SelectBox = () => {
     })
       .then((res) => {
         console.log("axios res", res);
-        setPlan(res.data); // PlanContext에 데이터 저장
+        setPlan([
+          { label: "쇼핑", value: res.shopping ?? 0 },
+          { label: "교통", value: res.transport ?? 0 },
+          { label: "편의점", value: res.cvs ?? 0 },
+          { label: "음식", value: res.food ?? 0 },
+          { label: "기타", value: res.others ?? 0 },
+          { label: "저축", value: res.saving ?? 0 },
+        ]);// PlanContext에 데이터 저장
         setIsLoading(false);
       })
       .catch((err) => {
@@ -123,7 +130,7 @@ const SelectBox = () => {
         );
       });
   };
-
+console.log("현재의 Plna 확인==",plan); 
   return (
     <SelectBoxContainer>
       <SelectedOption onClick={() => setIsOpen(!isOpen)}>
