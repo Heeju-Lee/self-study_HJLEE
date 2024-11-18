@@ -17,6 +17,7 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
 
   const [children, setChildren] = useState([]);
   const [selectedChildNum, setSelectedChildNum] = useState(1);
+  const [selectedChildName, setSelectedChildName] = useState(""); 
   const [selectedYear, setSelectedYear] = useState(today.getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +29,9 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
   // 자식 선택 처리
   const handleChildSelect = (childNum, childName) => {
     setSelectedChildNum(childNum);
-    onHandleData({ childNum, childName }); // 부모 컴포넌트로 childNum과 childName 전달
+    setSelectedChildName(childName);
+  
+    onHandleData({ childNum, childName }); // 부모 컴포넌트로 childNum, childName 전달
   };
 
   // 날짜 선택 처리
@@ -55,6 +58,16 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
       .then((res) => {
         console.log("res : ", res.data);
         setChildren(res.data);
+
+        const firstChild = res.data[0];
+        setSelectedChildNum(firstChild.childNum);
+        setSelectedChildName(firstChild.name);
+
+        onHandleData({ 
+          childNum: firstChild.childNum, 
+          childName: firstChild.name, 
+        });
+
       })
       .catch((err) => {
         console.log("err : ", err);
@@ -86,7 +99,7 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
         {children.map((child, index) => (
           <ChildContainer
             key={child.childNum}
-            onClick={() => handleChildSelect(child.childNum, child.name)} // 자식 선택 시 childNum과 name을 전달
+            onClick={() => handleChildSelect(child.childNum, child.name)}
           >
             <ImageDiv isSelected={child.childNum === selectedChildNum}>
               <img src={childIamge[index]} />
@@ -210,5 +223,4 @@ const Option = styled.div`
     background-color: #e0e0e0;
   }
 `;
-
 export default SelectOptionNav;

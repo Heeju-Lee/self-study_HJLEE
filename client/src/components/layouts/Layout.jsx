@@ -38,7 +38,6 @@ const Section = styled.section.withConfig({
 const Main = styled.main`
   width: 100%;
   max-width: 1360px;
-
   padding: 140px 40px 0 40px; // 수정예정
   margin: 0 auto;
   flex-grow: 1;

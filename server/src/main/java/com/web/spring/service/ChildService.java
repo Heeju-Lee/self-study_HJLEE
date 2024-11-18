@@ -153,8 +153,8 @@ public class ChildService {
 		return new PlanResponseDto(plan);
 	}
 
-	// 소비 계획 조회하기
-	@Transactional
+// 소비 계획 조회하기
+@Transactional
   public PlanResponseDto showPlan(Long childNum, int year, int month) throws Exception {
 	    Plan plan = childRepository.findPlan(childNum, year, month);
 		   // plan이 null인지 체크
