@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
+
+import { Button } from "react-bootstrap";
+import MoneyPlanPage from "../../pages/child/MoneyPlanPage";
+
 import { LogingedContext, AuthContext } from "../../App";
 import { ParentNotificationIcon } from "../pages/parent/ParentNotificationIcon";
 import { ChildNotificationIcon } from "../pages/child/ChildNotificationIcon";
@@ -49,7 +53,7 @@ const Header = () => {
     <HeaderSection>
       <Container>
         {/* 로고 */}
-        <Link to="/">
+        <a href="/">
           <LeftSection>
             <LogoOuter>
               <img
@@ -61,7 +65,7 @@ const Header = () => {
             </LogoOuter>
             <p>도니머니</p>
           </LeftSection>
-        </Link>
+        </a>
 
         {/* 메뉴 */}
         {logingedCon.isLoggedIn &&
@@ -95,6 +99,7 @@ const Header = () => {
           ))}
 
         {/* 로그인, 로그아웃, 유저네임, 알림 영역 */}
+
         <RightSection>
           {!logingedCon.isLoggedIn && (
             <>
