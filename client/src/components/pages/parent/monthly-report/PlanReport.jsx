@@ -32,7 +32,7 @@ ChartJS.register(
     Filler// Radar 선들의 안쪽을 채우기 위한 register
 );
 
-const PlanReport = ({childNum, year,month,childName}) => {
+const PlanReport = ({childNum, year,month, childName}) => {
 
     const token = localStorage.getItem("Authorization");
     
@@ -231,7 +231,7 @@ const PlanReport = ({childNum, year,month,childName}) => {
 
     return (
         <>
-        <h2>아이 {childNum}의 {year}년 {month}월 리포트</h2>
+        <h2>{childName}의 {year}년 {month}월 리포트</h2>
         <ContainAll>
             {/* SelectOptionNav 컴포넌트에 값 전달 */}
             {/* Chart1 :: 카테고리별 계획 vs 소비 차트 생성 📊📈📉✏️🎓*/}
@@ -390,7 +390,8 @@ const Chart1BarAll = styled.div`
 `
 const Chart2Radar = styled.div`
     box-sizing: border-box;
-    width: 100%;
+    width: 100%;  // 부모 div의 100% 너비
+    height: 100%; // 부모 div의 100% 높이
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: rgb(255, 255, 255);
@@ -400,6 +401,8 @@ const Chart2Radar = styled.div`
     canvas {
         box-sizing: border-box;
         margin: 0 auto;
+        height: 90% !important;  // 캔버스를 부모 div에 맞게 조정
+        width: 90% !important;   // 캔버스를 부모 div에 맞게 조정
     }
     `
 export default PlanReport;

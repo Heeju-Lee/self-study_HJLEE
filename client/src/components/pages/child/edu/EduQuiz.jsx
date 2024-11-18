@@ -11,6 +11,17 @@ const EduQuiz = () => {
     const [scoreByCategory, setScoreByCategory] = useState({});
     const [showResult, setShowResult] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [curQuizResult, setCurQuizResult] = useState(null); // 현재 퀴즈 결과 상태
+    const [totalScore, setTotalScore] = useState(0); // 총점 상태
+
+    // 카테고리별 점수 합계를 위한 상태
+    const [curScoreByCategory, setCurScoreByCategory] = useState({
+        exchangeRate: 0,
+        government: 0,
+        history: 0,
+        investment: 0,
+        word: 0,
+    });
 
     const categoryMapping = {
         exchangeRate: "💵환율",
@@ -19,6 +30,44 @@ const EduQuiz = () => {
         government: "🏢정부",
         word: "📚경제용어",
     };
+
+    // GET 요청으로 퀴즈 결과 가져오기
+    useEffect(() => {
+        const fetchQuizResult = async () => {
+            try {
+                const response = await axios.get("http://localhost:9999/children/show/quiz", {
+                    headers: { Authorization: `${token}` },
+                });
+
+                // 퀴즈 결과 데이터 설정
+                const quizResult = response.data;
+
+                // curQuizResult 상태에 데이터 저장
+                setCurQuizResult(quizResult);
+
+                // 카테고리별 점수 계산
+                const newScores = {
+                    exchangeRate: quizResult.qExchangeRate || 0,
+                    government: quizResult.qGoverment || 0,
+                    history: quizResult.qHistory || 0,
+                    investment: quizResult.qInvestment || 0,
+                    word: quizResult.qWord || 0,
+                };
+
+                setCurScoreByCategory(newScores);
+
+                // 총점 계산
+                const total = Object.values(newScores).reduce((acc, score) => acc + score, 0);
+                setTotalScore(total); // 총점 업데이트
+            } catch (error) {
+                console.error("퀴즈 진행 상황 가져오기 오류:", error);
+            }
+        };
+
+        fetchQuizResult();
+    }, [token]); 
+
+    const progressBarWidth = totalScore / 50; 
 
     // API에서 퀴즈 데이터 가져오기
     useEffect(() => {
@@ -47,7 +96,7 @@ const EduQuiz = () => {
         fetchQuizData();
     }, [token]);
 
-    // 답변 처리
+    // 정답 처리
     const handleAnswer = (userAnswer) => {
         const currentQuestion = quizData[currentCategory][currentQuestionIndex];
         const isCorrect = userAnswer === currentQuestion.answer;
@@ -76,6 +125,7 @@ const EduQuiz = () => {
         }
     };
 
+    // 퀴즈 다 풀면 각각의 스코어를 전송
     const sendResultsToDB = async () => {
         try {
             const scoreArray = Object.entries(scoreByCategory).map(([category, score]) => ({
@@ -115,6 +165,7 @@ const EduQuiz = () => {
         );
     }
 
+    //해설 페이지
     const renderExplanation = () => {
         return (
             <ExplanationWrapper>
@@ -157,6 +208,7 @@ const EduQuiz = () => {
         );
     };
 
+    //각 카테고리별 스코어 계산
     const calculateScore = () => {
         let totalScore = 0;
         let totalQuestions = 0;
@@ -171,6 +223,12 @@ const EduQuiz = () => {
 
     return (
         <QuizContainer>
+
+            <ProgressBarWrapper>
+                <ProgressBar style={{ width: `${progressBarWidth}%` }} />
+                <CoinImage src="images/donnymoney-logo.png" alt="coin" />
+            </ProgressBarWrapper>
+
             {showResult ? (
                 <ResultContainer>
                     <h2>🎉퀴즈를 다 풀었습니다<span role="img" aria-label="celebrate"></span></h2>
@@ -212,7 +270,7 @@ const QuizContainer = styled.div`
     flex-direction: column;
     align-items: center;
     height: 100vh;
-    background-color: rgb(255, 255, 255);
+    /* background-color: rgb(255, 255, 255); */
     width: 100%;
 `;
 
@@ -349,4 +407,32 @@ const CategoryExplanation = styled.div`
     p{
         color: #2121fc;
     }
+`;
+// progessBar CSS
+const ProgressBarWrapper = styled.div`
+    width: 100%;
+    height: 30px;
+    background-color: #e0f2f1;
+    border-radius: 15px;
+    position: relative;
+    margin-top: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+const ProgressBar = styled.div`
+    height: 100%;
+    background-color: #004d40;
+    border-radius: 15px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease;
+`;
+
+const CoinImage = styled.img`
+    position: absolute;
+    top: -30px;
+    right: -10px;
+    width: 100px;
+    height: 100px;
 `;
