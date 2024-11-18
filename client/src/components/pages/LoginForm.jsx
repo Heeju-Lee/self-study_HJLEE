@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LogingedContext } from "../../App";
 import styled from "styled-components";
-import "@fortawesome/fontawesome-free/css/all.min.css";
+// import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const LoginForm = () => {
   let logingedCon = useContext(LogingedContext);

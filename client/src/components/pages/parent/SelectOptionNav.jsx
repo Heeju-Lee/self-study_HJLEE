@@ -23,7 +23,6 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const dropdownRef = useRef(null); // 드롭다운 영역을 참조하기 위한 useRef
-
   // 아이 이미지 더미 데이터 (2명)
   const childIamge = ["/images/sample-sister.png", "/images/donny1Profile.png"];
 
@@ -85,9 +84,6 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
   useEffect(() => {
     getChildrenList();
 
-    // 초기값 부모로 전달
-    // onHandleData({ year: today.getFullYear(), month: today.getMonth() + 1 });
-
     // 클릭 이벤트 리스너 등록
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -96,7 +92,6 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
     };
   }, []);
 
-  // 날짜 선택
   return (
     <Outer>
       <SelectChildSection>
@@ -113,6 +108,7 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
           </ChildContainer>
         ))}
       </SelectChildSection>
+
       {/* 날짜 선택 */}
       {hasDateSelectOption && (
         <SelectDateSection>
@@ -147,10 +143,8 @@ const SelectOptionNav = ({ onHandleData, hasDateSelectOption = true }) => {
 const Outer = styled.div`
   display: flex;
   justify-content: space-between;
-
-  /* border: 1px solid black; */
 `;
-// 아이 선택
+
 const SelectChildSection = styled.div`
   display: flex;
   gap: 10px;
@@ -162,6 +156,7 @@ const SelectChildSection = styled.div`
 `;
 
 const ChildContainer = styled.div``;
+
 const ImageDiv = styled.div`
   cursor: pointer;
   width: 80px;
@@ -179,6 +174,7 @@ const ImageDiv = styled.div`
       box-shadow: 0 0 10px 5px rgba(72, 41, 215, 0.7);
     `}
 `;
+
 const NameLabel = styled.div`
   text-align: center;
 `;

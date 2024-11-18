@@ -3,17 +3,27 @@ import { GlobalStyle } from "./styles/GlobalStyle";
 import Header from "./components/layouts/Header";
 import Navirouter from "./Navirouter";
 import "bootstrap/dist/css/bootstrap.min.css";
+
+import Layout from "./components/layouts/Layout";
+import PlanProvider from "./pages/context/MoneyPlanContext";
+// import PlanReport from "./components/pages/parent/PlanReport";
+// import MonthlyReportPage from "./pages/parent/MonthlyReportPage";
+
 import { createContext, useEffect, useState } from "react";
+import axios from "axios";
 
 /*useContext 를 이용해서 하위 컴포넌트들이 데이터 공유하기*/
 export const LogingedContext = createContext();
 export const AuthContext = createContext(); // 유저정보
 
 function App() {
+  // Axios 전역 설정
+  axios.defaults.baseURL =
+    process.env.REACT_APP_BASE_URL || "http://localhost:9999";
+  axios.defaults.headers.common["Content-Type"] = "application/json";
+
   const location = useLocation();
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   // 로그인 사용자 정보 저장
   const [userInfo, setUserInfo] = useState({
     memberNo: null,
@@ -70,16 +80,18 @@ createContex 를 이용하여 서로 공유할수 있도록 한다.
     <LogingedContext.Provider
       value={{ isLoggedIn: isLoggedIn, onLoggedChange: handleLoggedChange }}
     >
-      <AuthContext.Provider value={userInfo}>
-        <div>
-          {/* 전역 스타일 */}
-          <GlobalStyle scrollEnabled={scrollEnabled} />
-          {/* 헤더 (공통) */}
-          <Header />
-          {/* 각 페이지 */}
-          <Navirouter />
-        </div>
-      </AuthContext.Provider>
+      <PlanProvider>
+        <AuthContext.Provider value={userInfo}>
+          <div>
+            {/* 전역 스타일 */}
+            <GlobalStyle scrollEnabled={scrollEnabled} />
+            {/* 헤더 (공통) */}
+            <Header />
+            {/* 각 페이지 */}
+            <Navirouter />
+          </div>
+        </AuthContext.Provider>
+      </PlanProvider>
     </LogingedContext.Provider>
   );
 }
