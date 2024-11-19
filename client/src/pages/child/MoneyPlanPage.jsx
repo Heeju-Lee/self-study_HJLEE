@@ -208,7 +208,7 @@ const MoneyPlanPage = () => {
   };
   // 이달의 플랜 가져오기
   const getplan = (e) => {
-    e.preventDefault(); // 폼 제출 시 새로고침 방지
+    // e.preventDefault(); // 폼 제출 시 새로고침 방지
     setIsLoading(true);
     setErrorMessage(null);
     axios({
@@ -220,20 +220,20 @@ const MoneyPlanPage = () => {
         "Content-Type": "application/json", // 데이터가 JSON 형식임을 명시
       },
     })
-    .then((res) => {
-      console.log("axios res------", res);
-      const planData = res.data;
-      setPlan([
-        { label: "쇼핑", value: planData.shopping ?? 0 },
-        { label: "교통", value: planData.transport ?? 0 },
-        { label: "편의점", value: planData.cvs ?? 0 },
-        { label: "음식", value: planData.food ?? 0 },
-        { label: "기타", value: planData.others ?? 0 },
-        { label: "저축", value: planData.saving ?? 0 },
-      ]);
-      setIsLoading(false);
-      console.log("머니플랜페이지의 ", plan);
-    })
+      .then((res) => {
+        console.log("axios res------", res);
+        const planData = res.data;
+        setPlan([
+          { label: "쇼핑", value: planData.shopping ?? 0 },
+          { label: "교통", value: planData.transport ?? 0 },
+          { label: "편의점", value: planData.cvs ?? 0 },
+          { label: "음식", value: planData.food ?? 0 },
+          { label: "기타", value: planData.others ?? 0 },
+          { label: "저축", value: planData.saving ?? 0 },
+        ]);
+        setIsLoading(false);
+        console.log("머니플랜페이지의 ", plan);
+      })
 
       .catch((err) => {
         console.error("Error:", err.message); // 오류 메시지 출력
