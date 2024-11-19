@@ -20,7 +20,7 @@ const ReceiveMessage = () => {
         })
         .then((res) => {
             const data = res.data;
-            const firstFeedbackMessage = data.find(item => item.category === "feedback");
+            const firstFeedbackMessage = data.find(item => item.category === "parentMsg");
 
             if (firstFeedbackMessage) {
                 setNotificationData(firstFeedbackMessage);

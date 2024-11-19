@@ -12,7 +12,7 @@ const SendMessage = ({childNum}) => {
         parentNum: localStorage.getItem("memberNo"),
         childNum: childNum,
         message: "",
-        category: "feedback",
+        category: "parentMsg",
         senderType: "parent",
     });
 
