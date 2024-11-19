@@ -13,14 +13,14 @@ const ReceiveMessage = () => {
 
         axios({
             method: "GET",
-            url: `http://localhost:9999/notification/child/${childNum}`,
+            url: `${process.env.REACT_APP_BASE_URL}/notification/child/${childNum}`,
             headers: {
                 Authorization: `${token}`
             },
         })
         .then((res) => {
             const data = res.data;
-            const firstFeedbackMessage = data.find(item => item.category === "feedback");
+            const firstFeedbackMessage = data.find(item => item.category === "parentMsg");
 
             if (firstFeedbackMessage) {
                 setNotificationData(firstFeedbackMessage);
@@ -41,24 +41,27 @@ const ReceiveMessage = () => {
     return (
         <ContainAll>
             <ContainContent>
-                {notificationData === null && <p>도착한 메세지가 없습니다.</p>}
-                {notificationData !== null && !isMessageVisible && (
-                    <Title>✉️메세지가 도착했습니다✉️</Title>
+                {notificationData === null ? (
+                    <Title><p>✉️도착한 메세지가 없습니다.✉️</p></Title>
+                ) : (
+                    <>
+                        <Title>✉️메세지가 도착했습니다✉️</Title>
+                        <MessageWrapper>
+                            {!isMessageVisible ? (
+                                <MessagePrompt>
+                                    <p>버튼을 눌러 메시지를 확인하세요.</p>
+                                    <ConfirmButton onClick={showMessage}>확인하기</ConfirmButton>
+                                </MessagePrompt>
+                            ) : (
+                                <LetterBox>
+                                    <p>📜 To. 사랑스러운 우리 아이에게</p>
+                                    <Message>{notificationData.message}</Message>
+                                    <p>🖋️ From. 너를 사랑하는 부모님이</p>
+                                </LetterBox>
+                            )}
+                        </MessageWrapper>
+                    </>
                 )}
-                <MessageWrapper>
-                    {isMessageVisible && notificationData ? (
-                        <LetterBox>
-                            <p>📜 To. 사랑스러운 우리 아이에게</p>
-                            <Message>{notificationData.message}</Message>
-                            <p>🖋️ From. 너를 사랑하는 부모님이</p>
-                        </LetterBox>
-                    ) : (
-                        <MessagePrompt>
-                            <p>버튼을 눌러 메시지를 확인하세요.</p>
-                            <ConfirmButton onClick={showMessage}>확인하기</ConfirmButton>
-                        </MessagePrompt>
-                    )}
-                </MessageWrapper>
             </ContainContent>
         </ContainAll>
     );
@@ -84,7 +87,7 @@ const Title = styled.div`
     margin: 0 auto;
     margin: 20px 0px;
     text-align: center;
-    color: #8529fd;
+    /* color: #8529fd; */
 `;
 
 const ConfirmButton = styled.button`

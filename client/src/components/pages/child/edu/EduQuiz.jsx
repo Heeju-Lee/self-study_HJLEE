@@ -14,8 +14,8 @@ const EduQuiz = () => {
     const [curQuizResult, setCurQuizResult] = useState(null); // 현재 퀴즈 결과 상태
     const [totalScore, setTotalScore] = useState(0); // 총점 상태
 
-    // 카테고리별 점수 합계를 위한 상태
-    const [curScoreByCategory, setCurScoreByCategory] = useState({
+    // 현재까지 카테고리별 성취도
+    const [curAchivementByCategory, setCurAchivementByCategory] = useState({
         exchangeRate: 0,
         government: 0,
         history: 0,
@@ -31,11 +31,11 @@ const EduQuiz = () => {
         word: "📚경제용어",
     };
 
-    // GET 요청으로 퀴즈 결과 가져오기
+    // GET 요청으로 퀴즈 성취도 결과 가져오기
     useEffect(() => {
         const fetchQuizResult = async () => {
             try {
-                const response = await axios.get("http://localhost:9999/children/show/quiz", {
+                const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/children/show/quiz"`, {
                     headers: { Authorization: `${token}` },
                 });
 
@@ -54,9 +54,9 @@ const EduQuiz = () => {
                     word: quizResult.qWord || 0,
                 };
 
-                setCurScoreByCategory(newScores);
+                setCurAchivementByCategory(newScores);
 
-                // 총점 계산
+                // 카테고리별 점수 합계
                 const total = Object.values(newScores).reduce((acc, score) => acc + score, 0);
                 setTotalScore(total); // 총점 업데이트
             } catch (error) {
@@ -67,13 +67,14 @@ const EduQuiz = () => {
         fetchQuizResult();
     }, [token]); 
 
-    const progressBarWidth = totalScore / 50; 
+    // progressbar width
+    const progressBarWidth = (totalScore / 50)*100; 
 
     // API에서 퀴즈 데이터 가져오기
     useEffect(() => {
         const fetchQuizData = async () => {
             try {
-                const response = await axios.get("http://localhost:9999/children/quiz", {
+                const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/children/quiz`, {
                     headers: { Authorization: `${token}` },
                 });
 
@@ -132,9 +133,8 @@ const EduQuiz = () => {
                 category,
                 score,
             }));
-
             await axios.put(
-                "http://localhost:9999/children/update/quiz",
+                `${process.env.REACT_APP_BASE_URL}/children/update/quiz`,
                 scoreArray,
                 { headers: { Authorization: `${token}` } }
             );
@@ -223,12 +223,6 @@ const EduQuiz = () => {
 
     return (
         <QuizContainer>
-
-            <ProgressBarWrapper>
-                <ProgressBar style={{ width: `${progressBarWidth}%` }} />
-                <CoinImage src="images/donnymoney-logo.png" alt="coin" />
-            </ProgressBarWrapper>
-
             {showResult ? (
                 <ResultContainer>
                     <h2>🎉퀴즈를 다 풀었습니다<span role="img" aria-label="celebrate"></span></h2>
@@ -250,9 +244,7 @@ const EduQuiz = () => {
 
                         <ButtonWrapper>
                             <OXButton onClick={() => handleAnswer("1")}>O</OXButton>
-                            <ImageWrapper>
-                                <QuizImage src="images/donny.png" alt="양손 도니" />
-                            </ImageWrapper>
+                            <QuizImage src="images/donny.png" alt="양손 도니" />                          
                             <OXButton onClick={() => handleAnswer("0")}>X</OXButton>
                         </ButtonWrapper>
                     </QuestionContainer>
@@ -318,9 +310,10 @@ const CategoryHeader = styled.div`
 const ButtonWrapper = styled.div`
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 30px;
+    justify-content: space-between;
+    gap: 0px;
     margin-top: 40px;
+    padding: 20px;
 `;
 
 const OXButton = styled.button`
@@ -328,15 +321,16 @@ const OXButton = styled.button`
     color: white;
     border: none;
     border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    font-size: 36px;
+    width: 150px;
+    height: 150px;
+    font-size: 60px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     justify-content: center;
     align-items: center;
+    box-sizing: content-box;
 
     &:hover {
         background-color: #004d40;
@@ -347,14 +341,20 @@ const OXButton = styled.button`
     }
 `;
 
-const ImageWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-`;
-
 const QuizImage = styled.img`
-    width: 150px;
-    height: 150px;
+    width: 35%;
+    height: 35%;
+    animation: moveCharacter 500ms infinite alternate;
+    will-change: transform;
+
+@keyframes moveCharacter {
+  0% {
+    transform: translateY(20px);
+  }
+  100% {
+    transform: translateY(10px);
+  }
+}
 `;
 
 const ResultContainer = styled.div`
@@ -407,26 +407,6 @@ const CategoryExplanation = styled.div`
     p{
         color: #2121fc;
     }
-`;
-// progessBar CSS
-const ProgressBarWrapper = styled.div`
-    width: 100%;
-    height: 30px;
-    background-color: #e0f2f1;
-    border-radius: 15px;
-    position: relative;
-    margin-top: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-`;
-
-const ProgressBar = styled.div`
-    height: 100%;
-    background-color: #004d40;
-    border-radius: 15px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: width 0.3s ease;
 `;
 
 const CoinImage = styled.img`

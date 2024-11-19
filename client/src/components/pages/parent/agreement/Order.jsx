@@ -22,7 +22,7 @@ const Order = ({childNum, year, month, paymentStatusUpdate }) => {
 
     useEffect ( () =>{
 
-        axios.get("http://localhost:9999/parents/orders",{
+        axios.get(`${process.env.REACT_APP_BASE_URL}/parents/orders`,{
           params : {
             childNum: childNum,
             year: year,

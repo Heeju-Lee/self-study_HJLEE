@@ -57,7 +57,7 @@ const PaymentReport = () => {
 
     // 내 포인트 가져오기
     const showPoint = () => {
-        axios.get('children/get/point', {
+        axios.get(`${process.env.REACT_APP_BASE_URL}/children/get/point`, {
             headers: {
                 Authorization: localStorage.getItem("Authorization")
             }
@@ -73,7 +73,7 @@ const PaymentReport = () => {
 
     // 이번 달 내가 쓴 돈 가져오기
     const showMonthList = () => {
-        axios.get('children/payments', {
+        axios.get(`${process.env.REACT_APP_BASE_URL}/children/payments`, {
             params: {
                 year: year,
                 month: month,
@@ -95,7 +95,7 @@ const PaymentReport = () => {
 
     // 선택한 달의 소비 카테고리별로 가져오기
     const showPaymentChart = () => {
-        axios.get('children/payments/chart', {
+        axios.get(`${process.env.REACT_APP_BASE_URL}/children/payments/chart`, {
             params: {
                 year: year,
                 month: month,
@@ -117,7 +117,7 @@ const PaymentReport = () => {
 
     // 선택한 달의 계획 카테고리별로 가져오기
     const showPlanChart = () => {
-        axios.get('children/plan/chart', {
+        axios.get(`${process.env.REACT_APP_BASE_URL}/children/plan/chart`, {
             params: {
                 year: year,
                 month: month,
@@ -287,7 +287,7 @@ const PaymentReport = () => {
                         {isMonthList && !isChartVisible &&  (
             <Payment>
                 {monthList.length === 0 ? (
-                    <p>소비 내역을 불러오는 중...</p>
+                    <p style={{color:'blueviolet'}}>📢소비 내역이 없습니다</p>
                 ) : (
                     <MonthPayment>
                         <Title><span style={{color: "#8529fd"}}>{month}월</span> 내가 쓴 돈 </Title>

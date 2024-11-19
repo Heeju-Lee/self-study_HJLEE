@@ -77,7 +77,7 @@ const PlanReport = ({childNum, year,month, childName}) => {
         const fetchChildReport = async () => {
             setLoading(true);
             try {
-                const response = await axios.get("http://localhost:9999/parents/reports", {
+                const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/parents/reports`, {
                     params: {
                         childNum: childNum,
                         year: year,

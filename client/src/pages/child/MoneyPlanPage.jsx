@@ -148,7 +148,7 @@ const MoneyPlanPage = () => {
 
     axios({
       method: "POST",
-      url: `http://localhost:9999/children/plans?year=${currentYear}&month=${currentMonth}`,
+      url: `${process.env.REACT_APP_BASE_URL}/children/plans?year=${currentYear}&month=${currentMonth}`,
       data: dataToSend,
       headers: {
         Authorization: token, // Authorization 헤더에 토큰 추가
@@ -178,7 +178,7 @@ const MoneyPlanPage = () => {
     setErrorMessage(null);
     axios({
       method: "GET",
-      url: `http://localhost:9999/children/show/plans?year=${currentYear}&month=${currentMonth}`,
+      url: `${process.env.REACT_APP_BASE_URL}/children/show/plans?year=${currentYear}&month=${currentMonth}`,
       data: dataToSend,
       headers: {
         Authorization: token, // Authorization 헤더에 토큰 추가
