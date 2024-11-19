@@ -20,49 +20,36 @@ const Activewish = (imgSrc) => {
   const [wishPrice, setWishPrice] = useState(""); // 위시생성 가격 상태
   const [uploading, setUploading] = useState(false); // 업로드 로딩 상태
   const [wishDetail, setWishDetail] = useState(false); //디테일창 상태
-  const [cards, setCards] = useState([
-    {
-      id: 1,
-      imgSrc:
-        "https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/iphone-card-40-iphone16prohero-202409?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=1725567335931", // 아이템 이미지경로
-      itemName: "test1", // 아이템 이름
-      itemPrice: 1550000, // 아이템 가격
-      progressRate: 50,
-    },
-    {
-      id: 1,
-      imgSrc:
-        "https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/iphone-card-40-iphone16prohero-202409?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=1725567335931", // 아이템 이미지경로
-      itemName: "test2", // 아이템 이름
-      itemPrice: 1550000, // 아이템 가격
-      progressRate: 50,
-    },
-    {
-      id: 1,
-      imgSrc:
-        "https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/iphone-card-40-iphone16prohero-202409?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=1725567335931", // 아이템 이미지경로
-      itemName: "test3", // 아이템 이름
-      itemPrice: 1550000, // 아이템 가격
-      progressRate: 50,
-    },
-  ]); // 슬릭 카드  수 상태
+  const [cards, setCards] = useState([]); // 슬릭 카드  수 상태
+  const [selectedCard, setSelectedCard] = useState(null); // 선택된 카드 상태
+  
 
-  const [selectedCard, setSelectedCard] = useState({
-    imgSrc:
-      "https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/iphone-card-40-iphone16prohero-202409?wid=680&hei=528&fmt=p-jpg&qlt=95&.v=1725567335931", // 아이템 이미지경로
-    itemName: "test3", // 아이템 이름
-    itemPrice: 1550000, // 아이템 가격
-    progressRate: 50, //진행률
-  }); //선택된 카드의 상태
-  // 새로운 카드 생성
-  const newCard = {
-    id: cards.length + 1,
-    imgSrc: previewUrl, // 미리보기 이미지 URL 사용
-    itemName: wishName,
-    itemPrice: parseInt(wishPrice, 10), // 숫자로 변환
-    progressRate: 0, // 진행률 초기값
-  };
-  const handleSubmitWish = () => {
+  const showSlick =()=>{
+    axios({
+      method: "GET",
+      url: `http://localhost:9999/children/wishes/active`,
+      headers: {
+        Authorization: token, // Authorization 헤더에 토큰 추가
+        "Content-Type": "multipart/form-data", // 데이터가 multipart/form-data 형식임을 명시
+      },
+    })
+      .then((res) => {
+        const formattedData = res.data.map((item) => ({
+          id: item.wishNum, // wishNum을 id로 사용
+          imgSrc: item.img, // 이미지 URL
+          itemName: item.name, // 아이템 이름
+          itemPrice: item.price, // 아이템 가격
+          progressRate: (item.savingAmt / item.price) * 100 || 0, // 진행률 계산
+        }));
+        setCards(formattedData);
+      })
+      .catch((err) => {
+        console.error("위시 등록 실패:", err);
+      });
+  }
+
+  //카드 넣기...
+  const handleSubmitWish =async () => {
     if (!file || !wishName || !wishPrice) {
       alert("모든 필드를 입력해 주세요."); // 파일과 텍스트 필드가 모두 채워졌는지 확인
       return;
@@ -73,34 +60,58 @@ const Activewish = (imgSrc) => {
       "wishRequestDtoJson",
       JSON.stringify({
         name: wishName,
-        price: wishPrice,
+        price: parseInt(wishPrice, 10),
       })
     );
     formData.append("wishFile", file); // 파일 첨부
-    axios({
-      method: "POST",
-      url: `http://localhost:9999/children/wishes`,
-      date: file,
-      headers: {
-        Authorization: token, // Authorization 헤더에 토큰 추가
-        "Content-Type": "multipart/form-data", // 데이터가 multipart/form-data 형식임을 명시
-      },
-    })
-      .then((res) => {
-        console.log("위시 등록 성공:", res.data);
-        // 요청 성공 후 로직 (예: 모달 닫기, 상태 초기화 등)
-        // 상태 초기화
-        setWishName("");
-        setWishPrice("");
-        setFile(null);
-        setPreviewUrl(null);
-        // 카드 추가
-        setCards((prevCards) => [...prevCards, newCard]);
-        setModalOpen(false); // 모달 닫기
-      })
-      .catch((err) => {
-        console.error("위시 등록 실패:", err);
-      });
+    try {
+      const response = await axios.post(
+        "http://localhost:9999/children/wishes",
+        formData,
+        {
+          headers: {
+            Authorization: token, // Authorization 헤더에 토큰 추가
+            "Content-Type": "multipart/form-data", // 데이터 형식 명시
+          },
+        }
+      );
+  
+      console.log("위시 등록 성공:", response.data);
+         // 데이터가 배열인지 객체인지 확인 후 처리
+    if (Array.isArray(response.data)) {
+      const newCards = response.data.map(item => ({
+        id: item.wishNum,
+        imgSrc: item.img,
+        itemName: item.name,
+        itemPrice: item.price,
+        progressRate: 0,
+        savingAmt:item.savingAmt,
+      }));
+      setCards(prevCards => [...prevCards, ...newCards]);
+    } else {
+      const newCard = {
+        id: response.data.wishNum,
+        imgSrc: response.data.img,
+        itemName: response.data.name,
+        itemPrice: response.data.price,
+        progressRate: 0,
+        savingAmt:response.data.savingAmt,
+      };
+      setCards(prevCards => [...prevCards, newCard]);
+    }
+
+      
+      // 요청 성공 후 상태 초기화 및 모달 닫기
+      setWishName(""); // 위시 이름 초기화
+      setWishPrice(""); // 위시 가격 초기화
+      setFile(null); // 파일 초기화
+      setPreviewUrl(null); // 미리보기 URL 초기화
+      setModalOpen(false); // 모달 닫기
+      alert("위시가 성공적으로 등록되었습니다!");
+    } catch (error) {
+      console.error("위시 등록 실패:", error);
+      alert("위시 등록에 실패했습니다. 다시 시도해 주세요.");
+    }
   };
   //모달 오픈
   const inserModalOpen = () => {
@@ -156,11 +167,14 @@ const Activewish = (imgSrc) => {
       },
     ],
   };
-  //디데일 창 핸들러
-  const showDetail = () => {
-    setWishDetail(true);
+    // 카드 클릭 핸들러
+  const showDetail = (card) => {
+    setSelectedCard(card); // 클릭된 카드 데이터 설정
+    setWishDetail(true); // 디테일 창 열기
   };
-
+  useEffect(() => {
+    showSlick()
+  }, []);
   return (
     <>
       <InsertWish onClick={inserModalOpen}>위시 등록하기</InsertWish>
@@ -199,7 +213,7 @@ const Activewish = (imgSrc) => {
               onChange={(e) => setWishPrice(e.target.value)}
             />
           </FormBox>
-          <InsertWishinModal onClick={inserModalClose}>
+          <InsertWishinModal onClick={handleSubmitWish}>
             내 위시 올리기
           </InsertWishinModal>
         </Modal>
