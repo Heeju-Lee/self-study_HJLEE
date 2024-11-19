@@ -101,6 +101,13 @@ const SelectBox = () => {
     setIsLoading(true);
     setErrorMessage(null);
 
+    const token = authorization || localStorage.getItem("authToken");
+    if (!token) {
+      setErrorMessage("인증 토큰이 없습니다.");
+      setIsLoading(false);
+      return;
+    }
+
     axios({
       method: "GET",
       url: `${process.env.REACT_APP_BASE_URL}/children/show/plans?year=${year}&month=${month}`,
@@ -110,17 +117,16 @@ const SelectBox = () => {
       },
     })
       .then((res) => {
-        console.log("axios res", res);
-        setPlan(res.data); // PlanContext에 데이터 저장
+        console.log("API Response:", res);
+        setPlan(res.data); // 데이터 구조 확인 후 업데이트
         setIsLoading(false);
       })
       .catch((err) => {
-        console.error("Error:", err.message);
-        console.error("Error response:", err.response);
-        setIsLoading(false);
+        console.error("API Error:", err.response || err.message);
         setErrorMessage(
           "데이터를 가져오는 중 오류가 발생했습니다. 다시 시도해주세요."
         );
+        setIsLoading(false);
       });
   };
 

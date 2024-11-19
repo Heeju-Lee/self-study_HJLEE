@@ -16,9 +16,11 @@ export const WishItemCard = ({
   cardFontColor, // Card font color (필수 x)
   progressBarHeight, // ProgressBar height (필수 x)
   childNum, // childNum (필수 x, 현재 부모 위시리스트 목록용)
+  onClick, //Mywhish의 detail을 보기
 }) => {
   return (
     <Card
+      onClick={onClick}
       cardWidth={cardWidth}
       cardHeight={cardHeight}
       cardPadding={cardPadding}

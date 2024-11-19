@@ -3,12 +3,18 @@ import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import styled from "styled-components";
 import { PlanContext } from "../../../../pages/context/MoneyPlanContext";
+import { formatCurrency } from "../../../../services/GlobalFunction";
 
 ChartJS.register(ArcElement, Tooltip);
 
 const DoughnutChart = () => {
   const { plan } = useContext(PlanContext);
   const [formattedDataValues, setFormattedDataValues] = useState([]);
+  // 데이터를 숫자로 변환하는 함수
+  const parseValue = (value) => {
+    const parsedValue = parseFloat(value); // 문자열을 숫자로 변환
+    return isNaN(parsedValue) ? 0 : parsedValue; // NaN이면 0으로 처리
+  };
   // 데이터 값 처리: plan 값이 없을 경우 기본값 0으로 처리
   const dataValues = [
     { label: "쇼핑", value: plan.shopping },
@@ -67,12 +73,12 @@ const DoughnutChart = () => {
   useEffect(() => {
     if (plan) {
       const updatedValues = [
-        { label: "쇼핑", value: plan.shopping || 0 },
-        { label: "교통", value: plan.transport || 0 },
-        { label: "편의점", value: plan.cvs || 0 },
-        { label: "음식", value: plan.food || 0 },
-        { label: "기타", value: plan.others || 0 },
-        { label: "저축", value: plan.saving || 0 },
+        { label: "쇼핑", value: parseValue(plan.shopping) || 0 },
+        { label: "교통", value: parseValue(plan.transport) || 0 },
+        { label: "편의점", value: parseValue(plan.cvs) || 0 },
+        { label: "음식", value: parseValue(plan.food) || 0 },
+        { label: "기타", value: parseValue(plan.others) || 0 },
+        { label: "저축", value: parseValue(plan.saving) || 0 },
       ].map((item) => ({
         ...item,
         formattedValue: item.value
@@ -84,7 +90,7 @@ const DoughnutChart = () => {
       updatedValues.sort((a, b) => b.value - a.value);
       setFormattedDataValues(updatedValues);
     }
-  }, [plan]);
+  }, []);
 
   const sortedLabels = formattedDataValues.map((item) => item.label);
   const sortedDataValues = formattedDataValues.map((item) => item.value);
@@ -111,10 +117,7 @@ const DoughnutChart = () => {
   };
 
   const sumdata = sortedDataValues.reduce((acc, value) => acc + value, 0);
-  const sumConma = sumdata
-    ? sumdata.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    : "0";
-
+  const sumConma = formatCurrency(sumdata);
   return (
     <>
       {sortedDataValues.every((value) => value === 0) ? (

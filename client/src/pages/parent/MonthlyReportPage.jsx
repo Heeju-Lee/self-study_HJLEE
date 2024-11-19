@@ -26,21 +26,21 @@ const MonthlyReportPage = () => {
 
   return (
     <>
-    {role === "ROLE_CHILD" && (<AccessDeniedPage />)}
-    {role === "ROLE_PARENT" && (
-      <>
-        <ContainAll>
-          <SelectOptionNav onHandleData={handleChildData} />
-          <PlanReport 
-            childNum={selectOption.childNum} 
-            year={selectOption.year} 
-            month={selectOption.month}
-            childName={selectOption.childName}
-          />
-        </ContainAll>
-        <SendMessage childNum={selectOption.childNum} />
-      </>
-    )}
+      {role === "ROLE_CHILD" && <AccessDeniedPage />}
+      {role === "ROLE_PARENT" && (
+        <>
+          <ContainAll>
+            <SelectOptionNav onHandleData={handleChildData} />
+            <PlanReport
+              childNum={selectOption.childNum}
+              year={selectOption.year}
+              month={selectOption.month}
+              childName={selectOption.childName}
+            />
+          </ContainAll>
+          <SendMessage childNum={selectOption.childNum} />
+        </>
+      )}
     </>
   );
 };
@@ -51,6 +51,6 @@ const ContainAll = styled.div`
   margin-top: 50px; */
 
   margin-bottom: 150px;
-`
+`;
 
 export default MonthlyReportPage;

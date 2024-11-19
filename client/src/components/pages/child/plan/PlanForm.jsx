@@ -5,6 +5,7 @@ import { Form, Button, FormGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { PlanContext } from "../../../../pages/context/MoneyPlanContext";
+import { AuthContext } from "../../../../App";
 
 const Container = styled.div`
   background-color: #886eff;
@@ -82,7 +83,7 @@ const FormG = styled.div`
 `;
 const PlanForm = () => {
   const { plan, setPlan } = useContext(PlanContext);
-
+  const { authorization } = useContext(AuthContext); // AuthContext에서 토큰 가져오기
   const [formData, setFormData] = useState({
     food: plan.food,
     cvs: plan.cvs,
@@ -91,35 +92,63 @@ const PlanForm = () => {
     saving: plan.saving,
     others: plan.others,
   });
-  console.log("현재 planForm의 plan ===", plan);
-  // plan이 변경될 때마다 formData를 동기화
+
+  const token = authorization;
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth() + 1;
+
+  // 초기값을 API에서 가져오기
   useEffect(() => {
-    setFormData({
-      food: plan?.food || 0,
-      cvs: plan?.cvs || 0,
-      shopping: plan?.shopping || 0,
-      transport: plan?.transport || 0,
-      saving: plan?.saving || 0,
-      others: plan?.others || 0,
-    });
-  }, [plan]); // plan 상태가 변경될 때마다 formData를 갱신
+    const fetchInitialData = async () => {
+      try {
+        const response = await axios({
+          method: "GET",
+          url: `http://localhost:9999/children/show/plans?year=${currentYear}&month=${currentMonth}`,
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        });
+        console.log("Initial API Response:", response.data);
+
+        // 가져온 데이터를 PlanContext와 formData에 설정
+        const planData = response.data;
+        setPlan(planData);
+        setFormData({
+          food: planData.food || 0,
+          cvs: planData.cvs || 0,
+          shopping: planData.shopping || 0,
+          transport: planData.transport || 0,
+          saving: planData.saving || 0,
+          others: planData.others || 0,
+        });
+      } catch (error) {
+        console.error(
+          "Error fetching initial data:",
+          error.response || error.message
+        );
+      }
+    };
+
+    fetchInitialData();
+  }, [currentYear, currentMonth, setPlan, token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const numericValue = value.replace(/[^0-9]/g, ""); // 숫자만 추출
     setFormData((prevData) => ({
       ...prevData,
-      [name]: numericValue, // 숫자로 저장
+      [name]: numericValue,
     }));
   };
 
-  // 상태 업데이트 함수
   const handleUpdatePlan = () => {
     console.log("Updating Plan:", formData);
-    // formData를 plan으로 업데이트
     setPlan(formData);
     alert("상태가 업데이트되었습니다.");
   };
+
   return (
     <Container>
       <Title>카테고리</Title>

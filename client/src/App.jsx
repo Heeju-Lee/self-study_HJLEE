@@ -9,8 +9,8 @@ import PlanProvider from "./pages/context/MoneyPlanContext";
 // import PlanReport from "./components/pages/parent/PlanReport";
 // import MonthlyReportPage from "./pages/parent/MonthlyReportPage";
 
-import { createContext, useEffect, useState } from "react";
 import axios from "axios";
+import { createContext, useEffect, useState } from "react";
 
 /*useContext 를 이용해서 하위 컴포넌트들이 데이터 공유하기*/
 export const LogingedContext = createContext();
@@ -23,6 +23,7 @@ function App() {
   axios.defaults.headers.common["Content-Type"] = "application/json";
 
   const location = useLocation();
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   // 로그인 사용자 정보 저장
   const [userInfo, setUserInfo] = useState({
