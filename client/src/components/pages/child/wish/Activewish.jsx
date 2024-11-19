@@ -257,7 +257,7 @@ const InsertPreview = styled.img`
   height: 20vh;
   border: 1px solid #ccc;
   border-radius: 10px;
-  margin-buttom: 20px;
+  margin-bottom: 20px;
 `;
 const InsertWish = styled.button`
   background-color: #4829d7;

@@ -274,7 +274,7 @@ const ProgressBar = styled.div`
     content: "";
     position: absolute;
     height: 100%;
-    width: ${(props) => (props.progressRate ? props.progressRate : 0)}%;
+    width: ${(props) => (props.$progressRate ? props.$progressRate : 0)}%;
     background-color: #448c27;
     transition: width 0.3s ease-in-out;
   }
