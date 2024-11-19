@@ -57,7 +57,7 @@ const RegisterPage = () => {
     if (e.target.name === "id" && e.target.value.trim() !== "") {
       axios({
         method: "GET",
-        url: `http://localhost:9999/children/signup/${e.target.value}`,
+        url: `${process.env.REACT_APP_BASE_URL}/children/signup/${e.target.value}`,
       })
         .then((res) => {
           // console.log(res);
@@ -75,7 +75,7 @@ const RegisterPage = () => {
     if (parentInfo.name !== "" && parentInfo.phone !== "") {
       axios({
         method: "POST",
-        url: "http://localhost:9999/children/signup/findMyParent",
+        url: `${process.env.REACT_APP_BASE_URL}/children/signup/findMyParent`,
         data: parentInfo,
       })
         .then((res) => {
@@ -132,7 +132,7 @@ const RegisterPage = () => {
     }
     axios({
       method: "POST",
-      url: "http://localhost:9999/children/signup",
+      url: `${process.env.REACT_APP_BASE_URL}/children/signup`,
       data: child,
     })
       .then((res) => {

@@ -27,14 +27,6 @@ export const wishlistDummyData = [
     progressRate: 45,
   },
   {
-    childNum: 1,
-    imgSrc:
-      "https://cdn.eyesmag.com/content/uploads/posts/2021/01/14/nintendo-switch-super-mario-35-limited-edition-01-004d820c-dfe9-4e7e-82f7-ab9c7d003803.jpg",
-    itemName: "닌텐도 스위치 OLED",
-    itemPrice: 450000,
-    progressRate: 10,
-  },
-  {
     childNum: 2,
     imgSrc: "https://pbs.twimg.com/media/Ehnzh3bVkAAJcnB.jpg",
     itemName: "쿠로미 인형",
@@ -44,18 +36,26 @@ export const wishlistDummyData = [
   {
     childNum: 1,
     imgSrc:
-      "https://cafe24.poxo.com/ec01/bagissue/UVTjSep0dwP4/wX7AtHyXEMVyGvv8xSZOVGgFkpOMtJlJfERo9UQAUEQxZAwvCf6arr/cVAPSp6K5cz+UGrxRQ==/_/web/product/medium/202208/b107f08c3d745a0b81686591a2899bca.jpg",
-    itemName: "백팩",
-    itemPrice: 105000,
-    progressRate: 40,
+      "https://cdn.eyesmag.com/content/uploads/posts/2021/01/14/nintendo-switch-super-mario-35-limited-edition-01-004d820c-dfe9-4e7e-82f7-ab9c7d003803.jpg",
+    itemName: "닌텐도 스위치 OLED",
+    itemPrice: 450000,
+    progressRate: 10,
+  },
+  {
+    childNum: 2,
+    imgSrc:
+      "https://static-resource.mlb-korea.com/cdn-cgi/image/q=75,w=876,format=auto,fit=scale-down,onerror=redirect/images/goods/ec/M24F3ATRB304450MGD/thnail/E74970C89C0F4D81A63C0D71ACCD93AD.png",
+    itemName: "후드집업",
+    itemPrice: 100000,
+    progressRate: 65,
   },
   {
     childNum: 1,
     imgSrc:
-      "https://ae01.alicdn.com/kf/Sd335ff5d502043e6b4023f7461d71bdc9.jpg_640x640q90.jpg",
-    itemName: "PS5 디스크 에디션",
-    itemPrice: 600000,
-    progressRate: 25,
+      "https://cafe24.poxo.com/ec01/bagissue/UVTjSep0dwP4/wX7AtHyXEMVyGvv8xSZOVGgFkpOMtJlJfERo9UQAUEQxZAwvCf6arr/cVAPSp6K5cz+UGrxRQ==/_/web/product/medium/202208/b107f08c3d745a0b81686591a2899bca.jpg",
+    itemName: "백팩",
+    itemPrice: 105000,
+    progressRate: 40,
   },
   {
     childNum: 2,
@@ -68,17 +68,17 @@ export const wishlistDummyData = [
   {
     childNum: 2,
     imgSrc:
-      "https://static-resource.mlb-korea.com/cdn-cgi/image/q=75,w=876,format=auto,fit=scale-down,onerror=redirect/images/goods/ec/M24F3ATRB304450MGD/thnail/E74970C89C0F4D81A63C0D71ACCD93AD.png",
-    itemName: "후드집업",
-    itemPrice: 100000,
-    progressRate: 65,
-  },
-  {
-    childNum: 2,
-    imgSrc:
       "https://lh5.googleusercontent.com/proxy/26hc56eKGnbVGrbvrW1vPJyEn1IW10Q7b5V1siz9T2yR_wGD_buOq2x3VyXzV2Zzfdnom2eYClpHnWsSjjsRde27nytOA71xOhl_MwCkZ5Ov--NO1Id_XtbLuM5ihbFwmM-E5SNyEPxqQgSLblavMP9AmA8g44GuYcNtiQaTMZE",
     itemName: "삼성 갤럭시 탭 S9",
     itemPrice: 840000,
     progressRate: 50,
+  },
+  {
+    childNum: 1,
+    imgSrc:
+      "https://ae01.alicdn.com/kf/Sd335ff5d502043e6b4023f7461d71bdc9.jpg_640x640q90.jpg",
+    itemName: "PS5 디스크 에디션",
+    itemPrice: 600000,
+    progressRate: 25,
   },
 ];

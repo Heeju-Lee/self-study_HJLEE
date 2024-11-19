@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import { Modal } from '../../../commons/Modal';
+import { Modal } from '../../../commons/Modal'; 
+import { sendNotificationToChild } from '../../../../services/NotificationService';
 
 // props를 하나의 객체로 받는다.
 const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
@@ -14,6 +15,9 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
       contractDate: "",  // 계약 날짜
   });
 
+  const parentNum = localStorage.getItem("memberNo");
+  const authorization = localStorage.getItem("Authorization");
+
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 여부 확인
   const [hasPlan, sethasPlan] = useState(false);   //리포트 존재 여부 확인
 
@@ -21,7 +25,7 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
   const Payment = () => {  
     
     setIsModalOpen(true); //모달 창 띄우기 
-    axios.post("http://localhost:9999/parents/orders",
+    axios.post(`${process.env.REACT_APP_BASE_URL}/parents/orders`,
         {
           childNum: childNum,
           amount : contractData.totalAmount,
@@ -42,6 +46,15 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
         else{
           console.log("결제 성공 " + res.data)
           onPaymentSuccess(); // 상위 컴포넌트에 결제 성공 알림
+
+          console.log(childNum +", "+ parentNum  +", " + authorization);
+
+          sendNotificationToChild(  
+            childNum,
+            parentNum,
+            authorization,
+            `부모님이 용돈 ${contractData.totalAmount.toLocaleString()} 원을 지급했습니다.`, // 한마디의 내용
+            "money");
         }
 
       })
@@ -87,7 +100,7 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
   //소비 계획 가져오기
   useEffect ( () =>{
 
-    axios.get("http://localhost:9999/parents/contracts",{
+    axios.get(`${process.env.REACT_APP_BASE_URL}/parents/contracts`,{
       params : {
         childNum: childNum,
         year: year,
@@ -285,13 +298,14 @@ const Value = styled.span`
 
 const Stamp = styled.div`
   text-align: right;
-  color: black;
+  color: #ffffff;
   background-image: url('images/stamp.png');
   background-size: contain; 
   background-repeat: no-repeat; 
   background-position: center; 
-  padding: 10px; 
+  padding: 20px; 
   display: inline-block;
+  font-size: 15px;
 `;
 
 const CategoryList = styled.div`

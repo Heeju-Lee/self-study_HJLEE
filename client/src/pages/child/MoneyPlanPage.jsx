@@ -115,41 +115,7 @@ const MoneyPlanPage = () => {
       console.log("부모 넘버 조회 에러 : ", error);
     }
   };
-  // 이달의 플랜 가져오기
-  const getplan = (e) => {
-    setIsLoading(true);
-    setErrorMessage(null);
-    axios({
-      method: "GET",
-      url: `http://localhost:9999/children/show/plans?year=${currentYear}&month=${currentMonth}`,
-      data: dataToSend,
-      headers: {
-        Authorization: token, // Authorization 헤더에 토큰 추가
-        "Content-Type": "application/json", // 데이터가 JSON 형식임을 명시
-      },
-    })
-      .then((res) => {
-        console.log("axios res------", res);
-        const planData = res.data;
-        setPlan([
-          { label: "쇼핑", value: planData.shopping ?? 0 },
-          { label: "교통", value: planData.transport ?? 0 },
-          { label: "편의점", value: planData.cvs ?? 0 },
-          { label: "음식", value: planData.food ?? 0 },
-          { label: "기타", value: planData.others ?? 0 },
-          { label: "저축", value: planData.saving ?? 0 },
-        ]);
-        setIsLoading(false);
-        console.log("머니플랜페이지의 ", plan);
-      })
-      .catch((err) => {
-        console.error("Error:", err.message); // 오류 메시지 출력
-        console.error("Error response:", err.response); // 서버 응답 (응답이 있을 경우)
-        console.error("Error stack:", err.stack); // 오류 스택 추적
-        setIsLoading(false); // 로딩 상태 해제
-        setErrorMessage("전송 중 오류가 발생했습니다. 다시 시도해주세요.");
-      });
-  };
+
   useEffect(() => {
     findParentNum();
     getplan();
@@ -210,7 +176,7 @@ const MoneyPlanPage = () => {
 
     axios({
       method: "POST",
-      url: `http://localhost:9999/children/plans?year=${currentYear}&month=${currentMonth}`,
+      url: `${process.env.REACT_APP_BASE_URL}/children/plans?year=${currentYear}&month=${currentMonth}`,
       data: dataToSend,
       headers: {
         Authorization: token, // Authorization 헤더에 토큰 추가
@@ -240,7 +206,43 @@ const MoneyPlanPage = () => {
       });
     console.log("MoneyPlanPage dataToSend : ", dataToSend); // 전송할 데이터 확인
   };
+  // 이달의 플랜 가져오기
+  const getplan = (e) => {
+    e.preventDefault(); // 폼 제출 시 새로고침 방지
+    setIsLoading(true);
+    setErrorMessage(null);
+    axios({
+      method: "GET",
+      url: `http://localhost:9999/children/show/plans?year=${currentYear}&month=${currentMonth}`,
+      data: dataToSend,
+      headers: {
+        Authorization: token, // Authorization 헤더에 토큰 추가
+        "Content-Type": "application/json", // 데이터가 JSON 형식임을 명시
+      },
+    })
+    .then((res) => {
+      console.log("axios res------", res);
+      const planData = res.data;
+      setPlan([
+        { label: "쇼핑", value: planData.shopping ?? 0 },
+        { label: "교통", value: planData.transport ?? 0 },
+        { label: "편의점", value: planData.cvs ?? 0 },
+        { label: "음식", value: planData.food ?? 0 },
+        { label: "기타", value: planData.others ?? 0 },
+        { label: "저축", value: planData.saving ?? 0 },
+      ]);
+      setIsLoading(false);
+      console.log("머니플랜페이지의 ", plan);
+    })
 
+      .catch((err) => {
+        console.error("Error:", err.message); // 오류 메시지 출력
+        console.error("Error response:", err.response); // 서버 응답 (응답이 있을 경우)
+        console.error("Error stack:", err.stack); // 오류 스택 추적
+        setIsLoading(false); // 로딩 상태 해제
+        setErrorMessage("전송 중 오류가 발생했습니다. 다시 시도해주세요.");
+      });
+  };
   const isMatchingDate =
     selectedYear === currentYear && selectedMonth === currentMonth;
   console.log("선택된 날짜", selectedYear, selectedMonth);

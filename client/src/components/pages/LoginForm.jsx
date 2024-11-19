@@ -36,7 +36,7 @@ const LoginForm = () => {
     console.log("Sending login request with data: ", member); // 요청 데이터 확인
     axios({
       method: "POST",
-      url: "http://localhost:9999/login",
+      url: `${process.env.REACT_APP_BASE_URL}/login`,
       headers: {
         "Content-Type": "application/json",
       },

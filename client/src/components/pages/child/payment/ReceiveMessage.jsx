@@ -11,6 +11,7 @@
 
 //     useEffect(() => {
 
+<<<<<<< HEAD
 //         axios({
 //             method: "GET",
 //             url: `http://localhost:9999/notification/child/${childNum}`,
@@ -21,6 +22,18 @@
 //         .then((res) => {
 //             const data = res.data;
 //             const firstFeedbackMessage = data.find(item => item.category === "feedback");
+=======
+        axios({
+            method: "GET",
+            url: `${process.env.REACT_APP_BASE_URL}/notification/child/${childNum}`,
+            headers: {
+                Authorization: `${token}`
+            },
+        })
+        .then((res) => {
+            const data = res.data;
+            const firstFeedbackMessage = data.find(item => item.category === "parentMsg");
+>>>>>>> 18b2d89e0bc09b870df274442a9109a1f5374cb4
 
 //             if (firstFeedbackMessage) {
 //                 setNotificationData(firstFeedbackMessage);
@@ -38,6 +51,7 @@
 //         setIsMessageVisible(true);
 //     };
 
+<<<<<<< HEAD
 //     return (
 //         <ContainAll>
 //             <ContainContent>
@@ -63,6 +77,36 @@
 //         </ContainAll>
 //     );
 // };
+=======
+    return (
+        <ContainAll>
+            <ContainContent>
+                {notificationData === null ? (
+                    <Title><p>✉️도착한 메세지가 없습니다.✉️</p></Title>
+                ) : (
+                    <>
+                        <Title>✉️메세지가 도착했습니다✉️</Title>
+                        <MessageWrapper>
+                            {!isMessageVisible ? (
+                                <MessagePrompt>
+                                    <p>버튼을 눌러 메시지를 확인하세요.</p>
+                                    <ConfirmButton onClick={showMessage}>확인하기</ConfirmButton>
+                                </MessagePrompt>
+                            ) : (
+                                <LetterBox>
+                                    <p>📜 To. 사랑스러운 우리 아이에게</p>
+                                    <Message>{notificationData.message}</Message>
+                                    <p>🖋️ From. 너를 사랑하는 부모님이</p>
+                                </LetterBox>
+                            )}
+                        </MessageWrapper>
+                    </>
+                )}
+            </ContainContent>
+        </ContainAll>
+    );
+};
+>>>>>>> 18b2d89e0bc09b870df274442a9109a1f5374cb4
 
 // const ContainAll = styled.div`
 //     margin: 0 auto;
@@ -79,6 +123,7 @@
 //     margin: 0px 20px;
 // `;
 
+<<<<<<< HEAD
 // const Title = styled.div`
 //     font-size: 30px;
 //     margin: 0 auto;
@@ -86,6 +131,15 @@
 //     text-align: center;
 //     color: #8529fd;
 // `;
+=======
+const Title = styled.div`
+    font-size: 30px;
+    margin: 0 auto;
+    margin: 20px 0px;
+    text-align: center;
+    /* color: #8529fd; */
+`;
+>>>>>>> 18b2d89e0bc09b870df274442a9109a1f5374cb4
 
 // const ConfirmButton = styled.button`
 //     width: fit-content;
