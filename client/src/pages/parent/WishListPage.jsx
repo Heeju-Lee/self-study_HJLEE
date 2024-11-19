@@ -24,7 +24,7 @@ const WishListPage = () => {
       <Title>우리 아이 위시리스트</Title>
       <SelectOptionNav
         hasDateSelectOption={false}
-        childrenCenter
+        childrenCenter={true}
         selectAllChildren={true}
         onHandleData={handleChildData}
       />
@@ -40,14 +40,14 @@ const WishListPage = () => {
             imgSrc={item.imgSrc}
             itemName={item.itemName}
             itemPrice={item.itemPrice}
-            progressRate={item.progressRate}
+            $progressRate={item.progressRate}
             // cardWidth={"200px"}
             // cardBgColor={"#FFD25C"}
-            cardWidth={"260px"}
-            cardHeight={"350px"}
-            cardBgColor={item.childNum === 1 ? "#9774FB" : "#FEBA6F"}
-            cardFontColor={item.childNum === 1 && "#ffffff"}
-            cardPadding={"25px"}
+            $cardWidth={"260px"}
+            $cardHeight={"350px"}
+            $cardBgColor={item.childNum === 1 ? "#9774FB" : "#FEBA6F"}
+            $cardFontColor={item.childNum === 1 && "#ffffff"}
+            $cardPadding={"25px"}
           />
         ))}
       </ListContainer>

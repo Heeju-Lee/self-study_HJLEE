@@ -29,8 +29,8 @@ export const WishItemCard = ({
         <img src={imgSrc || "/images/no-image.png"} alt={itemName} />
       </ItemImg>
       <ProgressBar
-        progressRate={progressRate || 0}
-        progressBarHeight={progressBarHeight}
+        $progressRate={progressRate || 0}
+        $progressBarHeight={progressBarHeight}
       ></ProgressBar>
 
       <ItemDetail>
@@ -57,14 +57,14 @@ export const WishItemCard = ({
 
 const Card = styled.div`
   cursor: pointer;
-  width: ${(props) => props.cardWidth || "300px"};
-  height: ${(props) => props.cardHeight || "370px"};
-  padding: ${(props) => props.cardPadding || "30px"};
-  gap: ${(props) => props.gap || "10px"};
+  width: ${(props) => props.$cardWidth || "300px"};
+  height: ${(props) => props.$cardHeight || "370px"};
+  padding: ${(props) => props.$cardPadding || "30px"};
+  gap: ${(props) => props.$gap || "10px"};
 
   border-radius: 20px;
-  background-color: ${(props) => props.cardBgColor || "#ececec"};
-  color: ${(props) => props.cardFontColor || "#3D3D3D"};
+  background-color: ${(props) => props.$cardBgColor || "#ececec"};
+  color: ${(props) => props.$cardFontColor || "#3D3D3D"};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -88,7 +88,7 @@ const ItemImg = styled.div`
 const ProgressBar = styled.div`
   position: relative;
   height: 15px;
-  background-color: ${(props) => props.progressBarHeight || "#ececec"};
+  background-color: ${(props) => props.$progressBarHeight || "#ececec"};
   border-radius: 10px;
   overflow: hidden;
   margin: 10px 0;
@@ -97,7 +97,7 @@ const ProgressBar = styled.div`
     content: "";
     position: absolute;
     height: 100%;
-    width: ${(props) => props.progressRate || 0}%;
+    width: ${(props) => props.$progressRate || 0}%;
     background-color: #4caf50;
     transition: width 0.3s ease-in-out;
   }
