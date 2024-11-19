@@ -40,6 +40,7 @@ const Activewish = (imgSrc) => {
           itemName: item.name, // 아이템 이름
           itemPrice: item.price, // 아이템 가격
           progressRate: (item.savingAmt / item.price) * 100 || 0, // 진행률 계산
+          savingAmt:item.savingAmt, //저축한 돈
         }));
         setCards(formattedData);
       })
@@ -137,20 +138,20 @@ const Activewish = (imgSrc) => {
     }
   };
 
-  // 카드 추가 핸들러
-  const addCard = () => {
-    const newCard = {
-      id: cards.length + 1,
-      content: `Card ${cards.length + 1}`,
-    };
-    setCards([...cards, newCard]); // 기존 카드에 새로운 카드 추가
-  };
-  // 카드 삭제 핸들러
-  const removeCard = () => {
-    if (cards.length > 0) {
-      setCards(cards.slice(0, -1)); // 마지막 카드 제거
-    }
-  };
+  // // 카드 추가 핸들러
+  // const addCard = () => {
+  //   const newCard = {
+  //     id: cards.length + 1,
+  //     content: `Card ${cards.length + 1}`,
+  //   };
+  //   setCards([...cards, newCard]); // 기존 카드에 새로운 카드 추가
+  // };
+  // // 카드 삭제 핸들러
+  // const removeCard = () => {
+  //   if (cards.length > 0) {
+  //     setCards(cards.slice(0, -1)); // 마지막 카드 제거
+  //   }
+  // };
   // Slick Slider 설정 옵션
   const settings = {
     dots: true, // 하단 점 네비게이션 활성화
@@ -172,9 +173,22 @@ const Activewish = (imgSrc) => {
     setSelectedCard(card); // 클릭된 카드 데이터 설정
     setWishDetail(true); // 디테일 창 열기
   };
+  // WishDetailBox 업데이트
+  const handleSelectCard = (updateData) =>{
+    console.log("handleSelectCard =========> ", updateData);
+    /////////여기 상태를 수정해야함
+    setSelectedCard({...updateData});
+  }
   useEffect(() => {
-    showSlick()
+    showSlick() 
   }, []);
+
+  useEffect(() => {
+    console.log("Selected card updated:", selectedCard);
+    // 이 로직이 정말 필요한지 확인 후 사용
+}, [selectedCard]);
+
+
   return (
     <>
       <InsertWish onClick={inserModalOpen}>위시 등록하기</InsertWish>
@@ -233,7 +247,7 @@ const Activewish = (imgSrc) => {
           ))}
         </Slider>
       </div>
-      {wishDetail && <WishDetailBox selectedCard={selectedCard} />}
+      {wishDetail && <WishDetailBox selectedCard={selectedCard}  updateParentState={handleSelectCard}  />}
     </>
   );
 };
