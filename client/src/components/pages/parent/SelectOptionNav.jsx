@@ -61,23 +61,25 @@ const SelectOptionNav = ({
   const getChildrenList = () => {
     axios({
       method: "GET",
-      url: `http://localhost:9999/parents/findChildren`,
+      url: `${process.env.REACT_APP_BASE_URL}/parents/findChildren`,
       headers: {
         Authorization: `${token}`,
       },
     })
       .then((res) => {
-        console.log("res : ", res.data);
+        // console.log("res : ", res.data);
         setChildren(res.data);
 
-        const firstChild = res.data[0];
-        setSelectedChildNum(firstChild.childNum);
-        setSelectedChildName(firstChild.name);
+        if (!selectAllChildren) {
+          const firstChild = res.data[0];
+          setSelectedChildNum(firstChild.childNum);
+          setSelectedChildName(firstChild.name);
 
-        onHandleData({
-          childNum: firstChild.childNum,
-          childName: firstChild.name,
-        });
+          onHandleData({
+            childNum: firstChild.childNum,
+            childName: firstChild.name,
+          });
+        }
       })
       .catch((err) => {
         console.log("err : ", err);
@@ -92,10 +94,15 @@ const SelectOptionNav = ({
   };
 
   useEffect(() => {
+    if (selectAllChildren) {
+      setSelectedChildNum(null); // 초기값을 "All"로 설정
+      onHandleData({ childNum: null });
+    } else {
+    }
     getChildrenList();
+  }, [selectAllChildren]);
 
-    if (selectAllChildren) setSelectedChildNum(null); // 부모 위시리스트에서 사용하는 경우
-
+  useEffect(() => {
     // 초기값 부모로 전달
     // onHandleData({ year: today.getFullYear(), month: today.getMonth() + 1 });
 
@@ -108,11 +115,11 @@ const SelectOptionNav = ({
   }, []);
 
   return (
-    <Outer childrenCenter={childrenCenter}>
+    <Outer $childrenCenter={childrenCenter}>
       <SelectChildSection>
         {selectAllChildren && (
           <ImageDiv
-            isSelected={selectedChildNum === null}
+            $isSelected={selectedChildNum === null}
             onClick={() => handleSelectAll()}
           >
             All
@@ -124,7 +131,7 @@ const SelectOptionNav = ({
             key={child.childNum}
             onClick={() => handleChildSelect(child.childNum, child.name)}
           >
-            <ImageDiv isSelected={child.childNum === selectedChildNum}>
+            <ImageDiv $isSelected={child.childNum === selectedChildNum}>
               <img src={childIamge[index]} />
             </ImageDiv>
             <NameLabel>{child.name}</NameLabel>
@@ -165,10 +172,8 @@ const SelectOptionNav = ({
 
 const Outer = styled.div`
   display: flex;
-  /* justify-content: space-between; */
   justify-content: ${(props) =>
-    props.childrenCenter ? "center" : "space-between"};
-  /* border: 1px solid black; */
+    props.$childrenCenter ? "center" : "space-between"};
 `;
 
 const SelectChildSection = styled.div`
@@ -201,7 +206,7 @@ const ImageDiv = styled.div`
   }
 
   ${(props) =>
-    props.isSelected &&
+    props.$isSelected &&
     css`
       box-shadow: 0 0 0px 5px #ffd700;
       /* box-shadow: 0 0 0px 5px #2ecc71; */

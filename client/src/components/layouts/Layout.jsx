@@ -19,7 +19,7 @@ const Section = styled.section.withConfig({
   display: flex;
   flex-direction: column;
   /* 백그라운드 이미지 추가 */
-  background-image: url("images/vecteezy_purple-watercolor-abstract-texture-rectangle-background_10753918.JPG");
+  /* background-image: url("images/vecteezy_purple-watercolor-abstract-texture-rectangle-background_10753918.JPG"); */
   /* background-image: url('images/vecteezy_greenboard-background-chalkboard-with-wooden-frame-in-room_15746041.jpg'); */
   /* background-image: url('images/vecteezy_blank-notebook-a-pencil-and-space-are-on-top-of-a-yellow_5194078.jpg'); */
   /* background-image: url('images/beige-paper-texture-background_11041609.jpg'); */
