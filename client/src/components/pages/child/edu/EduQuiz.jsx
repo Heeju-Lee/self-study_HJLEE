@@ -35,7 +35,7 @@ const EduQuiz = () => {
     useEffect(() => {
         const fetchQuizResult = async () => {
             try {
-                const response = await axios.get("http://localhost:9999/children/show/quiz", {
+                const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/children/show/quiz"`, {
                     headers: { Authorization: `${token}` },
                 });
 
@@ -74,7 +74,7 @@ const EduQuiz = () => {
     useEffect(() => {
         const fetchQuizData = async () => {
             try {
-                const response = await axios.get("http://localhost:9999/children/quiz", {
+                const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/children/quiz`, {
                     headers: { Authorization: `${token}` },
                 });
 
@@ -133,9 +133,8 @@ const EduQuiz = () => {
                 category,
                 score,
             }));
-
             await axios.put(
-                "http://localhost:9999/children/update/quiz",
+                `${process.env.REACT_APP_BASE_URL}/children/update/quiz`,
                 scoreArray,
                 { headers: { Authorization: `${token}` } }
             );

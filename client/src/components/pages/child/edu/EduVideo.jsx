@@ -10,7 +10,7 @@ const EduVideo = () => {
     axios({
       method: "GET",
       //일일 한도가 있기 때문에 확인하고 싶을 때 "/" 제거 후 사용
-      url: "http://localhost:9999/edu/",
+      url: `${process.env.REACT_APP_BASE_URL}edu/`,
       headers: {
         Authorization: `${token}`,
       },

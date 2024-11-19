@@ -25,7 +25,7 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
   const Payment = () => {  
     
     setIsModalOpen(true); //모달 창 띄우기 
-    axios.post("http://localhost:9999/parents/orders",
+    axios.post(`${process.env.REACT_APP_BASE_URL}/parents/orders`,
         {
           childNum: childNum,
           amount : contractData.totalAmount,
@@ -100,7 +100,7 @@ const Agreement = ({childNum, year, month, childName, onPaymentSuccess}) => {
   //소비 계획 가져오기
   useEffect ( () =>{
 
-    axios.get("http://localhost:9999/parents/contracts",{
+    axios.get(`${process.env.REACT_APP_BASE_URL}/parents/contracts`,{
       params : {
         childNum: childNum,
         year: year,
@@ -298,13 +298,14 @@ const Value = styled.span`
 
 const Stamp = styled.div`
   text-align: right;
-  color: black;
+  color: #ffffff;
   background-image: url('images/stamp.png');
   background-size: contain; 
   background-repeat: no-repeat; 
   background-position: center; 
-  padding: 10px; 
+  padding: 20px; 
   display: inline-block;
+  font-size: 15px;
 `;
 
 const CategoryList = styled.div`
